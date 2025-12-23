@@ -157,9 +157,42 @@ const eliminarVacunas = async (req, res) => {
     }
 };
 
+
+const obtenerVacunaPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Búsqueda en la base de datos por id_vacuna
+        const [Vacuna] = await db.query('SELECT * FROM vacunas WHERE id_vacuna = ?', [id]);
+
+        if (Vacuna.length === 0) {
+            // Si no se encuentra la vacuna, retornar 404
+            return res.status(404).json({
+                success: false,
+                mensaje: "Vacuna no encontrada"
+            });
+        }
+
+        // Si se encuentra, retornar el objeto único (no el array)
+        res.status(200).json({
+            success: true,
+            mensaje: "Vacuna obtenida exitosamente",
+            data: Vacuna[0] // Retorna el primer y único elemento del array
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al obtener la Vacuna por ID",
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     obtenerVacunas,
     crearVacunas,
     actualizarVacunas,
     eliminarVacunas,
+    obtenerVacunaPorId
 };
