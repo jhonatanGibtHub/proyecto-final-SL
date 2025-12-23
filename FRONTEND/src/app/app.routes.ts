@@ -6,9 +6,9 @@ export const routes: Routes = [
     { path: '', redirectTo: '/vacunas', pathMatch: 'full' }, 
     
     // 2. Rutas del Módulo Vacunas
-    { path: 'vacunas', component: VacunaListComponent },
-    { path: 'vacunas/nuevo', component: VacunaFromComponent },
-    { path: 'vacunas/editar/:id', component: VacunaFromComponent },
+    //{ path: 'vacunas', component: VacunaListComponent },
+    //{ path: 'vacunas/nuevo', component: VacunaFromComponent },
+    //{ path: 'vacunas/editar/:id', component: VacunaFromComponent },
     
     // 3. Ruta comodín para manejar URL no encontradas
     { path: '**', redirectTo: '/vacunas' },
