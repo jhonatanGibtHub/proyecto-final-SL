@@ -5,10 +5,14 @@ const {
     crearVacunas,
     actualizarVacunas,
     eliminarVacunas,
+    obtenerVacunaPorId
 } = require('../controllers/vacunasController');
 
 
 router.get('/', obtenerVacunas); 
+
+
+router.get('/:id', obtenerVacunaPorId);
 
 router.post('/', crearVacunas); 
 
