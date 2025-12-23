@@ -1,0 +1,51 @@
+:host {
+  display: inline-flex;
+  position: sticky;
+  top: 0;
+}
+
+header {
+  background-color: var(--c-color-secundary-1);
+  padding: 10px 50px;
+  gap: 15px;
+  display: inline-flex;
+  align-items: center;
+  width: 100vw;
+  border-bottom: 1px solid var(--c-color-secundary-2);
+  transition: background-color var(--transition-change-color-theme);
+
+}
+
+nav {
+  display: flex;
+  flex: 1;
+  gap: 30px;
+  justify-content: center;
+}
+
+.logo span{
+  font-size: var(--font-14);
+  font-weight: 500;
+}
+
+.menu__link {
+  color: green;
+  line-height: 2;
+  position: relative;
+}
+
+.menu__link::before {
+  content: '';
+  width: 0;
+  height: 3px;
+  border-radius: 2px;
+  background-color: green;
+  position: absolute;
+  bottom: -.25rem;
+  left: 0;
+  transition: width .3s;
+}
+
+.menu__link:hover::before {
+  width: 100%;
+}

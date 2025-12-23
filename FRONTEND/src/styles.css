@@ -1,1 +1,525 @@
-/* You can add global styles to this file, and also import other style files */
+*,
+*::before,
+*::after {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+:host,
+:root {
+
+    /* Permite a los navegadores usar UI nativa en light/dark */
+    color-scheme: light dark;
+
+    /* Spacing */
+    --spacing: .25rem;
+
+    /* Border radius */
+    --button-border-radius: 7px;
+
+    /* Tipografías */
+    --font-10: 0.615rem;
+    --font-12: 0.75rem;
+    --font-14: 0.875rem;
+    --font-16: 1rem;
+    --font-18: 1.125rem;
+
+    /* Grises OKLCH */
+    --gray-1000: oklch(16.93% .004 285.95);
+    --gray-900: oklch(19.37% .006 300.98);
+    --gray-800: oklch(25.16% .008 308.11);
+    --gray-700: oklch(36.98% .014 302.71);
+    --gray-600: oklch(44% .019 306.08);
+    --gray-500: oklch(54.84% .023 304.99);
+    --gray-400: oklch(70.9% .015 304.04);
+    --gray-300: oklch(84.01% .009 308.34);
+    --gray-200: oklch(91.75% .004 301.42);
+    --gray-100: oklch(97.12% .002 325.59);
+    --gray-50: oklch(98.81% 0 0);
+
+    /* Scroll */
+    --scroll-thumb-bg-color: #ccc9cf;
+    --scroll-thumb-bg-color-hv: #746e7c;
+
+    /* Colores por defecto (modo automático) */
+    --c-color-secundary-1: rgb(255, 255, 255);
+    /* Light */
+    --c-color-secundary-2: rgb(220, 220, 220);
+    /* Light */
+    --color-font: rgb(0, 0, 0);
+}
+
+html.color-scheme-light {
+    color-scheme: light;
+
+    --scroll-thumb-bg-color: #ccc9cf;
+    --scroll-thumb-bg-color-hv: #746e7c;
+
+    --c-color-secundary-1: rgb(255, 255, 255);
+    --c-color-secundary-2: rgb(220, 220, 220);
+
+    --color-font: rgb(0, 0, 0);
+}
+
+html.color-scheme-dark {
+    color-scheme: dark;
+
+    --scroll-thumb-bg-color: #746e7c;
+    --scroll-thumb-bg-color-hv: #a39fa9;
+
+    --c-color-secundary-1: rgb(38, 38, 38);
+    --c-color-secundary-2: rgb(84, 84, 84);
+
+    --color-font: rgb(255, 255, 255);
+}
+
+
+body.color-scheme-transition {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scroll-thumb-bg-color);
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scroll-thumb-bg-color-hv);
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+table {
+    margin: 10px 0;
+    width: fit-content;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 7px;
+    box-shadow: 0 2px 0 var(--gray-200);
+    margin-bottom: 4px;
+}
+
+thead {
+    background: var(--gray-700);
+    color: white;
+
+}
+
+thead th {
+    padding: 10px 16px;
+    text-align: left;
+    font-size: var(--font-12);
+    letter-spacing: 0.5px;
+}
+
+tbody tr {
+    background: #ffffff;
+    transition: 0.2s;
+}
+
+tbody tr td:last-child {
+    display: inline-flex;
+    gap: 10px;
+}
+
+tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+tbody tr:hover {
+    background: #eef2ff;
+
+}
+
+tbody td {
+    padding: 10px 16px;
+    font-size: var(--font-12);
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+
+svg {
+    display: block;
+    color: var(--color-font);
+}
+
+
+[class^="icono-"] {
+    width: calc(var(--spacing) * var(--i));
+    height: calc(var(--spacing) * var(--i));
+}
+
+.icono-1 {
+    --i: 5;
+}
+
+.icono-2 {
+    --i: 6;
+}
+
+.icono-3 {
+    --i: 7;
+}
+
+.icono-4 {
+    --i: 8;
+}
+
+
+button {
+    border: none;
+    background: none;
+    display: inline-flex;
+    align-items: center;
+    align-content: center;
+    user-select: none;
+    cursor: pointer;
+    gap: 10px;
+}
+
+button span {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-14);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+a {
+    border: none;
+    text-decoration: none;
+    background: none;
+    display: inline-flex;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+    gap: 10px;
+
+}
+
+a span {
+    color: var(--color-font);
+    display: flex;
+    align-items: center;
+    font-size: var(--font-14);
+    font-weight: 300;
+    white-space: nowrap;
+}
+
+
+
+.btn {
+    position: relative;
+    padding: 10px 14px;
+    box-shadow: var(--button-box-shadow);
+    transition: transform ease 100ms;
+    border-radius: var(--button-border-radius);
+    background-color: var(--btn-bg);
+
+    z-index: 0;
+}
+
+span {
+    color: var(--btn-text, #222);
+}
+
+.btn::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: calc(100% - 2px);
+    background-color: var(--btn-bg-accent);
+    border-radius: inherit;
+    transition: height 100ms ease, background-color 100ms;
+    z-index: -1;
+}
+
+.btn:hover::after {
+    background-color: var(--btn-bg-hover);
+}
+
+.btn:active {
+    transform: translateY(2px);
+}
+
+.btn:active::after {
+    height: 100%;
+}
+
+.btn-primary {
+    --btn-bg: #3ea300;
+    --btn-bg-accent: #02e615;
+    --btn-bg-hover: #57da00;
+    --btn-text: #222;
+}
+
+.btn-danger {
+    --btn-bg: #c62828;
+    --btn-bg-accent: #e53935;
+    --btn-bg-hover: #b71c1c;
+    --btn-text: #fff;
+}
+
+.btn-info {
+    --btn-bg: #1976d2;
+    --btn-bg-accent: #42a5f5;
+    --btn-bg-hover: #1e88e5;
+    --btn-text: #fff;
+}
+
+.btn-secondary {
+    --btn-bg: #c4cad0;
+    --btn-bg-accent: #dce1e8;
+    --btn-bg-hover: #c0c6cd;
+    --btn-text: #000;
+}
+
+.btn-yellow {
+    --btn-bg: #f4c20d;
+    --btn-bg-accent: #ffdb4d;
+    --btn-bg-hover: #ffd633;
+    --btn-text: #222;
+}
+
+.btn-orange {
+    --btn-bg: #fb8c00;
+    --btn-bg-accent: #ffa726;
+    --btn-bg-hover: #ff9800;
+    --btn-text: #fff;
+}
+
+.btn-purple {
+    --btn-bg: #8e24aa;
+    --btn-bg-accent: #ba68c8;
+    --btn-bg-hover: #9c27b0;
+    --btn-text: #fff;
+}
+
+.btn-pink {
+    --btn-bg: #d81b60;
+    --btn-bg-accent: #f06292;
+    --btn-bg-hover: #e91e63;
+    --btn-text: #fff;
+}
+
+.btn-black {
+    --btn-bg: #000;
+    --btn-bg-accent: #333;
+    --btn-bg-hover: #111;
+    --btn-text: #fff;
+}
+
+.btn-white {
+    --btn-bg: #ffffff;
+    --btn-bg-accent: #f0f0f0;
+    --btn-bg-hover: #fafafa;
+    --btn-text: #000;
+}
+
+.btn-disabled {
+    --btn-bg: #d6d6d6;
+    --btn-bg-accent: #c2c2c2;
+    --btn-bg-hover: #d6d6d6;
+    --btn-text: #8a8a8a;
+
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.flex-end {
+    margin: 10px 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+form {
+
+    display: flex;
+    flex-direction: column;
+    width: 450px;
+    padding: 10px 10px;
+
+    label {
+        margin-top: 10px;
+    }
+}
+
+label {
+    color: var(--gray-500);
+    margin-left: 5px;
+    margin-bottom: 3px;
+    font-size: var(--font-14);
+    font-weight: 600;
+}
+
+.titulo {
+    font-size: var(--font-18);
+    font-weight: 800;
+    margin: 10px 0;
+}
+
+input {
+    width: 100%;
+    background-color: var(--gray-50);
+    border: 1px solid var(--gray-300);
+    height: auto;
+    display: flex;
+    align-items: center;
+    font-size: var(--font-14);
+    padding: 10px 14px;
+    transition: 0.2s ease-in-out;
+
+    &:focus-within {
+        border: 1px solid rgb(15, 126, 237);
+
+    }
+}
+
+input::placeholder {
+    color: var(--gray-400);
+}
+
+input:focus {
+    outline: none;
+}
+
+select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;
+    border: 1px solid #9e9e9e;
+    background-color: white;
+    transition: all 0.2s ease;
+    outline: none;
+    cursor: pointer;
+}
+
+select:hover {
+    border-color: #616161;
+}
+
+select:focus {
+    border-color: rgb(15, 126, 237);
+}
+
+select option {
+    padding: 8px;
+}
+
+
+
+
+/* ---- BORDE PERSONALIZADO ---- */
+.mat-mdc-form-field .mdc-notched-outline__leading,
+.mat-mdc-form-field .mdc-notched-outline__notch,
+.mat-mdc-form-field .mdc-notched-outline__trailing {
+    border-width: 1px !important;
+    border-color: var(--gray-300) !important;
+    transition: border-color .1s ease-in-out;
+}
+
+/* HOVER */
+.mat-mdc-form-field:hover .mdc-notched-outline__leading,
+.mat-mdc-form-field:hover .mdc-notched-outline__notch,
+.mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+    border-color: rgb(15, 126, 237) !important;
+}
+
+/* FOCUS */
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+    border-color: rgb(15, 126, 237) !important;
+}
+
+
+
+/* ---- ALTURA DEL TRIGGER (el texto dentro del select) ---- */
+.mat-mdc-select-trigger {
+    padding: 0 14px !important;
+    font-size: var(--font-14) !important;
+}
+
+.mat-mdc-form-field {
+
+    display: inline-flex;
+
+}
+
+
+.mdc-text-field--outlined .mat-mdc-form-field-infix,
+.mdc-text-field--no-label .mat-mdc-form-field-infix {
+    --mat-form-field-container-vertical-padding: 10px !important;
+    --mat-form-field-container-height: 0px !important;
+}
+
+.mat-mdc-form-field-bottom-align {
+    display: none;
+}
+
+
+.mat-mdc-text-field-wrapper .mdc-text-field .mdc-text-field--outlined .mdc-text-field--no-label .mdc-text-field--invalid {
+    padding: 0px 0px !important;
+}
+
+/* PANEL DEL SELECT */
+.mat-mdc-select-panel {
+    background: var(--gray-50) !important;
+    border-radius: var(--button-border-radius) !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18) !important;
+    margin-top: 5px;
+    padding: 0px 0px !important;
+    animation: slideDown .15s ease-out;
+}
+
+/* Animación suave */
+@keyframes slideDown {
+    from {
+        transform: translateY(-5px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* TEXTO DE LAS OPCIONES */
+.mat-mdc-option .mdc-list-item__primary-text {
+    font-size: var(--font-14) !important;
+    color: var(--color-font) !important;
+    padding: 0px 0px;
+}
+
+/* HOVER */
+.mat-mdc-option:hover {
+    background-color: var(--gray-100) !important;
+}
+
+/* SELECCIONADO */
+.mat-mdc-option.mdc-list-item--selected {
+    background-color: rgba(15, 126, 237, 0.568) !important;
+}

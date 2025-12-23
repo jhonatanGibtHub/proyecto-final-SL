@@ -1,0 +1,35 @@
+
+.toggle {
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: background-color 200ms;
+}
+
+.input {
+    display: none;
+}
+
+.icon {
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
+    transition: transform 200ms;
+    line-height: 0.1;
+}
+
+.icon--moon {
+    transition-delay: 50ms;
+}
+
+.icon--sun {
+    transform: scale(0);
+}
+
+#switch:checked+.icon--moon {
+    transform: rotate(360deg) scale(0);
+}
+
+#switch:checked~.icon--sun {
+    transition-delay: 50ms;
+    transform: scale(1) rotate(360deg);
+}
