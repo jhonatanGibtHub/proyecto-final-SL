@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 // Importamos el servicio y las interfaces
-import { VacunasService } from '../../services/vacunas.service';
-import { Vacuna } from '../../models/vacuna'; // Asumo que el modelo está en vacunas.ts
+import { VacunasService } from '../../core/services/vacunas.service';
+import { Vacuna } from '../../core/models/vacuna'; // Asumo que el modelo está en vacunas.ts
 
 
 @Component({

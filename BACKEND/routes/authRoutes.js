@@ -4,8 +4,8 @@ const { body } = require('express-validator');
 const {
     registrarUsuario,
     login,
-    obtenerPerfil,
-    verificarToken
+    loginGoogle,
+    obtenerPerfil
 } = require('../controllers/authController');
 const { verificarToken: middlewareToken } = require('../middleware/auth.middleware');
 
@@ -21,9 +21,9 @@ const validacionRegistro = [
 // Rutas públicas
 router.post('/registro', validacionRegistro, registrarUsuario);
 router.post('/login', login);
+router.post('/login/google', loginGoogle);
 
 // Rutas protegidas
 router.get('/perfil', middlewareToken, obtenerPerfil);
-router.get('/verificar', middlewareToken, verificarToken);
 
 module.exports = router;

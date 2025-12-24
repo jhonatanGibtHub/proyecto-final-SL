@@ -8,7 +8,7 @@ img.bg-move {
     position: absolute;
     top: -300px;
     right: 0;
-    opacity: 0.03;
+    opacity: 0.05;
     z-index: -1;
 
     animation: moverVertical 12s ease-in-out infinite;

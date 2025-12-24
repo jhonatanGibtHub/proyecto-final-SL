@@ -8,9 +8,7 @@
     --header-padding: 10px 50px;
     --header-height: 70px;
   --header-width: 100vw;
-    --background-color: var(--blue-50);
 
-  --border-color: var(--blue-200);
   --aside-padding: 30px 10px 20px 10px;
 
   
@@ -26,8 +24,6 @@
 header {
     width: var(--header-width);
     height: var(--header-height);
-    background: var(--background-color);
-    border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     padding: var(--header-padding);
@@ -46,8 +42,6 @@ aside {
     flex-direction: column;
     
     width: 200px;
-    background: var(--background-color);
-    border-right: 1px solid var(--border-color);
     height: 100%;
     padding: var(--aside-padding);
     overflow-x: hidden;

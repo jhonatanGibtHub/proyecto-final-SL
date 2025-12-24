@@ -38,11 +38,6 @@ label span{
     color: rgb(34,34,34);
 }
 
-.back-container{
-    display: inline-flex;
-    gap: 10px;
-}
-
 
 .btn-dark {
     background-color: rgb(54, 54, 54);
@@ -108,4 +103,33 @@ label span{
   font-size: 0.8rem;
   font-weight: 600;
   color: #333;
+}
+
+.alert {
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-size: var(--font-14);
+}
+
+.alert-error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef5350;
+}
+
+.alert-success {
+    background-color: #e8f5e8;
+    color: #2e7d32;
+    border: 1px solid #4caf50;
+}
+
+.error-message {
+    color: #c62828;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.input input.error {
+    border-color: #c62828;
 }

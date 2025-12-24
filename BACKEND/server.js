@@ -15,6 +15,7 @@ const sensoresTempRoutes = require('./routes/sensoresTempRoutes');
 const lotesRoutes = require('./routes/lotesRoutes');
 const medicionesTempRoutes = require('./routes/medicionesTempRoutes');
 const registroMovimientoRoutes = require('./routes/registroMovimientoRoutes');
+const authRoutes = require('./routes/authRoutes');
 const alertasCadenaFrioRoutes = require('./routes/alertasCadenaFrioRoutes');
 
 
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true})); 
 
 
+app.use('/api/auth', authRoutes);
 app.use('/api/vacunas', vacunasRoutes); 
 app.use('/api/ubicaciones', ubicacionesRoutes); 
 app.use('/api/transportistas', transportistasRoutes); 
@@ -47,11 +49,7 @@ app.get('/', (req, res) => {
     res.json({
         mensaje: "API STGCF - Sistema de Trazabilidad y Cadena de Frío para Vacunas (v1.0)",
         status: "Online",
-        endpoints_principales: [
-            "/api/mediciones",
-            "/api/alertas",
-            "/api/stock"
-        ]
+        
     });
 });
  

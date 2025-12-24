@@ -179,20 +179,86 @@ const obtenerPerfil = async (req, res) => {
 };
 
 /**
- * Verificar token (renovación)
- * GET /api/auth/verificar
+ * Login con Google
+ * POST /api/auth/google
  */
-const verificarToken = (req, res) => {
-    res.json({
-        success: true,
-        mensaje: 'Token válido',
-        usuario: req.usuario
-    });
+const loginGoogle = async (req, res) => {
+    try {
+        const { idToken } = req.body;
+        const jwt = require('jsonwebtoken');
+        const decoded = jwt.decode(idToken);
+
+        if (!decoded || !decoded.email) {
+            return res.status(400).json({
+                success: false,
+                mensaje: 'Token inválido'
+            });
+        }
+
+        const { email, name, picture } = decoded;
+
+        // Buscar usuario por email
+        const [usuarios] = await db.query(
+            'SELECT * FROM usuarios WHERE email = ? ',
+            [email]
+        );
+
+        let usuario;
+
+        if (usuarios.length === 0) {
+            console.log('Usuario no encontrado:', email);
+            // Usuario no existe, devolver error para que se registre
+            return res.status(404).json({
+                success: false,
+                error: {
+                    type: 'USER_NOT_FOUND'
+                }
+            });
+        }
+
+        usuario = usuarios[0];
+
+        // Generar token JWT
+        const token = jwt.sign(
+            {
+                id: usuario.id,
+                nombre: usuario.nombre,
+                email: usuario.email,
+                rol: usuario.rol
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        // Actualizar última conexión
+        await db.query(
+            'UPDATE usuarios SET ultima_conexion = CURRENT_TIMESTAMP WHERE id = ?',
+            [usuario.id]
+        );
+
+        res.json({
+            success: true,
+            mensaje: 'Login exitoso',
+            token,
+            usuario: {
+                id: usuario.id,
+                nombre: usuario.nombre,
+                email: usuario.email,
+                rol: usuario.rol
+            }
+        });
+    } catch (error) {
+        console.error('Error en login Google:', error);
+        res.status(500).json({
+            success: false,
+            mensaje: 'Error en login con Google'
+        });
+    }
 };
 
 module.exports = {
     registrarUsuario,
     login,
-    obtenerPerfil,
-    verificarToken
+    loginGoogle,
+    obtenerPerfil
 };

@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 // 1. IMPORTAMOS LA ENTIDAD Y EL TIPO DE RESPUESTA DE NUESTRO PROYECTO STGCF
-import { Vacuna, VacunaResponse } from '../../models/vacuna'; 
-import { VacunasService } from '../../services/vacunas.service'
+import { Vacuna, VacunaResponse } from '../../core/models/vacuna'; 
+import { VacunasService } from '../../core/services/vacunas.service'
 
 
 @Component({

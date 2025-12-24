@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { UserMenuComponent } from '../../shared/user-menu/user-menu.component';
 import { ButtonColorThemeComponent } from '../../shared/button-color-theme/button-color-theme.component';
 
 @Component({
   selector: 'app-app-router',
   imports: [
+    UserMenuComponent,
     RouterOutlet,
     CommonModule,
     RouterLink

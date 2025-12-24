@@ -3,8 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { environment } from '../../../environment/environment';
-import { AuthService } from '../../../services/auth/auth.service';
-import { AuthGoogleService } from '../../../services/auth/auth-google.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
 import { jwtDecode } from 'jwt-decode';
 
 declare const google: any;
@@ -21,13 +20,12 @@ export class AuthLoginComponent implements OnInit {
 
   loading: boolean = false;
   error: string = '';
-  returnUrl: string = '/libros';
+  returnUrl: string = '/app';
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private authGoogleService: AuthGoogleService,
     private route: ActivatedRoute
   ) {
 
@@ -40,7 +38,7 @@ export class AuthLoginComponent implements OnInit {
   ngOnInit(): void {
 
     // Obtener returnUrl de los query params
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/libros';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/app';
 
     // Si ya está autenticado, redirigir
     if (this.authService.isAuthenticated()) {
@@ -91,16 +89,22 @@ export class AuthLoginComponent implements OnInit {
 
   onCredential(response: any) {
     const idToken = response.credential;
+    this.authService.loginGoogle(idToken).subscribe({
+      next: (token) => {
+        this.router.navigate([this.returnUrl]);
+      },
+      error: (err) => {
+        if (err.status === 404 && err.error?.error?.type === 'USER_NOT_FOUND') {
+          const decodedToken: any = jwtDecode(idToken);
 
-    const decodedToken: any = jwtDecode(idToken);
-
-    console.log(decodedToken);
-
-    this.router.navigate(['auth/google'], {
-      state: {
-        email: decodedToken.email,
-        picture: decodedToken.picture,
-        name: decodedToken.name
+          this.router.navigate(['/auth/google'], {
+            state: {
+              email: decodedToken.email,
+              picture: decodedToken.picture,
+              name: decodedToken.name
+            }
+          });
+        }
       }
     });
   }

@@ -168,7 +168,7 @@ svg {
     width: calc(var(--spacing) * var(--i));
     height: calc(var(--spacing) * var(--i));
 }
-
+.icono-0 {--i: 4;}
 .icono-1 {--i: 5;}
 .icono-2 {--i: 6;}
 .icono-3 {--i: 7;}

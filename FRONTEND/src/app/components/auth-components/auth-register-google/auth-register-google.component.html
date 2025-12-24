@@ -1,10 +1,17 @@
-<form id="loginForm" autocomplete="off">
-
+<form id="registerGoogleForm" [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
 
     <h1 class="page-tittle">Crear mi cuenta con google</h1>
     <p class="page-description">Completa los siguientes campos para finalizar la creación de tu cuenta.</p>
 
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-error">
+        {{ errorMessage }}
+    </div>
 
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+    </div>
 
     <div class="google-user-container">
         <img *ngIf="picture" [src]="picture" alt="Foto de perfil de Google" class="google-user-picture" />
@@ -14,9 +21,9 @@
         </div>
     </div>
 
-    <input type="hidden" formControlName="email" id="email" [value]="email" />
-    <input type="hidden" formControlName="nombre" id="nombre" [value]="nombres" />
-
+    <input type="hidden" formControlName="email" [value]="email"/>
+    <input type="hidden" formControlName="name" [value]="nombres"/>
+    
     <div class="input-container" (click)="inputpassword.focus()">
 
         <label for="password">
@@ -46,21 +53,30 @@
 
         <div class="input">
             <input #inputpassword formControlName="password" placeholder="Ingrese su contraseña." id="password"
-                name="password" type="password">
+                name="password" type="password" [class.error]="password?.invalid && password?.touched">
+        </div>
+        <div *ngIf="password?.invalid && password?.touched" class="error-message">
+            <span *ngIf="password?.errors?.['required']">La contraseña es obligatoria</span>
+            <span *ngIf="password?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</span>
         </div>
     </div>
 
-
-
-
-    <button class="btn-dark" type="submit">
-        <span>Registrarse</span>
+    <button class="btn-dark" type="submit" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Registrarse</span>
+        <span *ngIf="isLoading">Registrando...</span>
     </button>
 
     <button class="btn-default" routerLink="/auth/login">
-
-        <svg class = "icono-1" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill="#000000" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path><path fill="#000000" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path></g></svg>
-        
+        <svg class="icono-1" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier">
+                <path fill="#000000" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
+                <path fill="#000000"
+                    d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z">
+                </path>
+            </g>
+        </svg>
         <span>Volver</span>
     </button>
 
