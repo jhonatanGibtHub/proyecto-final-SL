@@ -100,7 +100,14 @@ label span{
 
 .google-user-email {
   margin: 0;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.google-user-nombre {
+  margin: 0;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #333;
 }

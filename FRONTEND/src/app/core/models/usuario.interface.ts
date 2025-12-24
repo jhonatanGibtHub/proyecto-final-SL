@@ -3,6 +3,8 @@ export interface Usuario {
   nombre: string;
   email: string;
   rol: 'admin' | 'usuario';
+  is_google_account?: boolean;
+  picture?: string;
   fecha_registro?: Date;
   ultima_conexion?: Date;
 }
@@ -10,6 +12,7 @@ export interface Usuario {
 export interface LoginRequest {
   email: string;
   password: string;
+  is_google_account?: boolean;
 }
 
 export interface LoginResponse {
@@ -24,6 +27,8 @@ export interface RegistroRequest {
   email: string;
   password: string;
   rol?: 'admin' | 'usuario';
+  is_google_account?: boolean;
+  picture?: string;
 }
 
 export interface AuthResponse {
@@ -31,25 +36,4 @@ export interface AuthResponse {
   mensaje?: string;
   data?: any;
   error?: string;
-}
-export interface GoogleUserData {
-  email: string;
-  picture: string;
-  name: string;
-}
-export interface GoogleRegistroRequest {
-  nombre: string;
-  email: string;
-  password: string;
-  rol?: 'admin' | 'usuario';
-  picture?: string;
-}
-export interface GoogleRegistroResponse {
-  success: boolean;
-  mensaje?: string;
-  data?: any;
-  error?: string;
-}
-export interface GoogleLoginRequest {
-  idToken: string;
 }

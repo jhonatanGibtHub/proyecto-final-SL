@@ -10,7 +10,7 @@ import { AuthService } from '../../../core/services/auth/auth.service';
     CommonModule,
     RouterLink,
     ReactiveFormsModule
-],
+  ],
   templateUrl: './auth-register-google.component.html',
   styleUrl: './auth-register-google.component.css'
 })
@@ -19,9 +19,8 @@ export class AuthRegisterGoogleComponent {
   email: string = '';
   picture: string = '';
   nombres: string = '';
-  
+
   registerForm: FormGroup;
-  isLoading = false;
   errorMessage = '';
   successMessage = '';
 
@@ -32,7 +31,6 @@ export class AuthRegisterGoogleComponent {
   ) {
     this.registerForm = this.fb.group({
       nombre: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
     });
 
     const navigation = this.router.getCurrentNavigation();
@@ -44,37 +42,37 @@ export class AuthRegisterGoogleComponent {
       this.picture = state.picture;
       this.registerForm.patchValue({ nombre: state.name });
     } else {
-      // Si no hay state, redirigir al login
       this.router.navigate(['/auth/login']);
     }
   }
 
   onSubmit() {
     if (this.registerForm.valid) {
-      this.isLoading = true;
+     
       this.errorMessage = '';
       this.successMessage = '';
 
       const formData = {
         ...this.registerForm.value,
         email: this.email,
-        picture: this.picture
+        picture: this.picture,
+        is_google_account: true,
+        password: this.generateRandomPassword()
       };
 
       this.authService.registro(formData).subscribe({
         next: (response) => {
-          this.isLoading = false;
+         
           if (response.success) {
             this.successMessage = response.mensaje || 'Usuario registrado exitosamente con Google';
-            setTimeout(() => {
-              this.router.navigate(['/auth/login']);
-            }, 2000);
+            
+              this.router.navigate(['/app']);
+            
           } else {
             this.errorMessage = response.mensaje || 'Error al registrar usuario';
           }
         },
         error: (error) => {
-          this.isLoading = false;
           this.errorMessage = error.error?.mensaje || 'Error al registrar usuario con Google';
         }
       });
@@ -92,4 +90,14 @@ export class AuthRegisterGoogleComponent {
 
   get nombre() { return this.registerForm.get('nombre'); }
   get password() { return this.registerForm.get('password'); }
+
+  generateRandomPassword(): string {
+    const length = 20;
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=';
+    let password = '';
+    for (let i = 0, n = charset.length; i < length; ++i) {
+      password += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return password;
+  }
 } 

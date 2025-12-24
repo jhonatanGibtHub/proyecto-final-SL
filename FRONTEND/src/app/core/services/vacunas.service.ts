@@ -9,8 +9,6 @@ import { Observable } from 'rxjs';
 })
 export class VacunasService {
 
-
-  
   private apiUrl = `${environment.apiUrl}/vacunas`
   constructor(private http: HttpClient) { }
 

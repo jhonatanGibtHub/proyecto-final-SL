@@ -15,6 +15,9 @@
         {{ successMessage }}
     </div>
 
+    <input type="hidden" formControlName="is_google_account" [value]="0"/>
+    <input type="hidden" formControlName="picture" [value]="null"/>
+
     <div class="input-container" (click)="nombreUsuario.focus()">
 
         <label for="nombreUsuario">
