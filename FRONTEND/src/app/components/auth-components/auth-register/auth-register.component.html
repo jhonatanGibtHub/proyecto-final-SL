@@ -1,0 +1,110 @@
+<form id="loginForm" autocomplete="off">
+
+
+    <h1 class="page-tittle">Crear mi cuenta</h1>
+
+    <p class="page-description">Completa tus
+        datos personales para crear tu cuenta y comenzar a administrar.</p>
+
+
+    <div class="input-container" (click)="nombreUsuario.focus()">
+
+        <label for="nombreUsuario">
+            <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path
+                        d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </svg>
+            <span>
+                Nombre de usuario
+            </span>
+        </label>
+
+
+        <div class="input">
+            <input #nombreUsuario formControlName="nombre" placeholder="username123" id="nombre" type="text"
+                name="nombre">
+        </div>
+
+    </div>
+
+    <div class="input-container" (click)="inputemail.focus()">
+
+        <label for="username">
+            <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path
+                        d="M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12ZM16 12V13.5C16 14.8807 17.1193 16 18.5 16V16C19.8807 16 21 14.8807 21 13.5V12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21H16"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </svg>
+            <span>
+                Correo electronico
+            </span>
+        </label>
+
+
+        <div class="input">
+            <input #inputemail formControlName="email" placeholder="example@gmail.com" id="email" type="text"
+                name="email">
+        </div>
+
+    </div>
+
+
+
+
+
+    <div class="input-container" (click)="inputpassword.focus()">
+
+        <label for="password">
+            <svg class="icono-1" fill="currentColor" viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <defs>
+                        <style>
+                            .cls-1 {
+                                fill: none;
+                            }
+                        </style>
+                    </defs>
+                    <path
+                        d="M21,2a8.9977,8.9977,0,0,0-8.6119,11.6118L2,24v6H8L18.3881,19.6118A9,9,0,1,0,21,2Zm0,16a7.0125,7.0125,0,0,1-2.0322-.3022L17.821,17.35l-.8472.8472-3.1811,3.1812L12.4141,20,11,21.4141l1.3787,1.3786-1.5859,1.586L9.4141,23,8,24.4141l1.3787,1.3786L7.1716,28H4V24.8284l9.8023-9.8023.8472-.8474-.3473-1.1467A7,7,0,1,1,21,18Z">
+                    </path>
+                    <circle cx="22" cy="10" r="2"></circle>
+                    <rect id="_Transparent_Rectangle_" data-name="<Transparent Rectangle>" class="cls-1" width="32"
+                        height="32"></rect>
+                </g>
+            </svg>
+            <span>
+                Contraseña
+            </span>
+        </label>
+
+        <div class="input">
+            <input #inputpassword formControlName="password" placeholder="Ingrese su contraseña." id="password"
+                name="password" type="password">
+        </div>
+    </div>
+
+
+
+
+    <button class="btn-dark" type="submit">
+        <span>Registrarse</span>
+    </button>
+
+    <button class="btn-default" routerLink="/auth/login">
+        <svg class = "icono-1" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill="#000000" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path><path fill="#000000" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path></g></svg>
+        <span>Ir a Iniciar Sesión</span>
+    </button>
+
+
+</form>

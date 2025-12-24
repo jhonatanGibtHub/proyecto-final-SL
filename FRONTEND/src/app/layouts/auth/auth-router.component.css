@@ -1,0 +1,27 @@
+
+:host {
+    position: relative;
+    overflow: hidden; /* evita que se vea fuera del contenedor */
+}
+
+img.bg-move {
+    position: absolute;
+    top: -300px;
+    right: 0;
+    opacity: 0.03;
+    z-index: -1;
+
+    animation: moverVertical 12s ease-in-out infinite;
+}
+
+@keyframes moverVertical {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(40px); /* distancia hacia abajo */
+    }
+    100% {
+        transform: translateY(0);
+    }
+}

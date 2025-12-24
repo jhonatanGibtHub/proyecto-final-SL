@@ -6,7 +6,6 @@ import { ButtonColorThemeComponent } from '../../shared/button-color-theme/butto
 @Component({
   selector: 'app-app-router',
   imports: [
-    ButtonColorThemeComponent,
     RouterOutlet,
     CommonModule,
     RouterLink

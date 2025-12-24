@@ -1,0 +1,68 @@
+<form id="loginForm" autocomplete="off">
+
+
+    <h1 class="page-tittle">Crear mi cuenta con google</h1>
+    <p class="page-description">Completa los siguientes campos para finalizar la creación de tu cuenta.</p>
+
+
+
+    <div class="google-user-container">
+        <img *ngIf="picture" [src]="picture" alt="Foto de perfil de Google" class="google-user-picture" />
+
+        <div class="google-user-details">
+            <p class="google-user-email">{{ email }}</p>
+        </div>
+    </div>
+
+    <input type="hidden" formControlName="email" id="email" [value]="email" />
+    <input type="hidden" formControlName="nombre" id="nombre" [value]="nombres" />
+
+    <div class="input-container" (click)="inputpassword.focus()">
+
+        <label for="password">
+            <svg class="icono-1" fill="currentColor" viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <defs>
+                        <style>
+                            .cls-1 {
+                                fill: none;
+                            }
+                        </style>
+                    </defs>
+                    <path
+                        d="M21,2a8.9977,8.9977,0,0,0-8.6119,11.6118L2,24v6H8L18.3881,19.6118A9,9,0,1,0,21,2Zm0,16a7.0125,7.0125,0,0,1-2.0322-.3022L17.821,17.35l-.8472.8472-3.1811,3.1812L12.4141,20,11,21.4141l1.3787,1.3786-1.5859,1.586L9.4141,23,8,24.4141l1.3787,1.3786L7.1716,28H4V24.8284l9.8023-9.8023.8472-.8474-.3473-1.1467A7,7,0,1,1,21,18Z">
+                    </path>
+                    <circle cx="22" cy="10" r="2"></circle>
+                    <rect id="_Transparent_Rectangle_" data-name="<Transparent Rectangle>" class="cls-1" width="32"
+                        height="32"></rect>
+                </g>
+            </svg>
+            <span>
+                Contraseña
+            </span>
+        </label>
+
+        <div class="input">
+            <input #inputpassword formControlName="password" placeholder="Ingrese su contraseña." id="password"
+                name="password" type="password">
+        </div>
+    </div>
+
+
+
+
+    <button class="btn-dark" type="submit">
+        <span>Registrarse</span>
+    </button>
+
+    <button class="btn-default" routerLink="/auth/login">
+
+        <svg class = "icono-1" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill="#000000" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path><path fill="#000000" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path></g></svg>
+        
+        <span>Volver</span>
+    </button>
+
+
+</form>

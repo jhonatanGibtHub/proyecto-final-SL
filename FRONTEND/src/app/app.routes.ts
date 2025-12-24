@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
+import { VacunaListComponent } from './components/vacuna-list/vacuna-list.component';
+import { VacunaFromComponent } from './components/vacuna-from/vacuna-from.component';
 
 export const routes: Routes = [
 
     // 1. Redirección al iniciar: Redirige '/' a '/vacunas'
-    { path: '', redirectTo: '/vacunas', pathMatch: 'full' }, 
+    //{ path: '', redirectTo: '/vacunas', pathMatch: 'full' }, 
     
     // 2. Rutas del Módulo Vacunas
     //{ path: 'vacunas', component: VacunaListComponent },
@@ -11,7 +13,10 @@ export const routes: Routes = [
     //{ path: 'vacunas/editar/:id', component: VacunaFromComponent },
     
     // 3. Ruta comodín para manejar URL no encontradas
-    { path: '**', redirectTo: '/vacunas' },
+    //{ path: '**', redirectTo: '/vacunas' },
+
+
+
     
     { path: '', redirectTo: '', pathMatch: 'full' },
     {
@@ -22,6 +27,13 @@ export const routes: Routes = [
         path: 'app',
         loadChildren: () => import('./layouts/app/layout-app-router').then(m => m.AppRoutes)
     },
+
+    {
+        path: 'auth',
+        loadChildren: () => import('./layouts/auth/layout-auth-router').then(m => m.AuthRoutes)
+    },
+
+
     { path: '**', redirectTo: '' }
 
 ];
