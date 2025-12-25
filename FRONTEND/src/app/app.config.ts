@@ -5,8 +5,10 @@ import { routes } from './app.routes';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { environment } from './environment/environment';
-import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,7 +16,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(
       withFetch(),
-      withInterceptors([authInterceptor, errorInterceptor])),
+      withInterceptors([
+        //errorInterceptor
+      ])),
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {
@@ -28,6 +32,11 @@ export const appConfig: ApplicationConfig = {
         onError: (err) => console.error('Google auth error', err),
       } as SocialAuthServiceConfig,
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ]
 };
 

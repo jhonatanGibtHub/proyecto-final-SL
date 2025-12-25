@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 8.0.40, for Win64 (x86_64)
 --
--- Host: localhost    Database: proyecto_final_sl
+-- Host: 127.0.0.1    Database: proyecto_final_sl
 -- ------------------------------------------------------
--- Server version	8.0.40
+-- Server version	9.1.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -259,6 +259,38 @@ INSERT INTO `ubicaciones` VALUES (1,'Almacén Nacional','Almacén Central','Lima
 UNLOCK TABLES;
 
 --
+-- Table structure for table `usuarios`
+--
+
+DROP TABLE IF EXISTS `usuarios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `usuarios` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) DEFAULT NULL,
+  `picture` varchar(150) DEFAULT NULL,
+  `email` varchar(150) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `is_google_account` tinyint(1) DEFAULT NULL,
+  `rol` enum('admin','usuario') DEFAULT 'usuario',
+  `activo` tinyint(1) DEFAULT NULL,
+  `fecha_registro` timestamp NULL DEFAULT NULL,
+  `ultima_conexion` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuarios`
+--
+
+LOCK TABLES `usuarios` WRITE;
+/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
+INSERT INTO `usuarios` VALUES (21,'Ricardo Yanhua','https://lh3.googleusercontent.com/a/ACg8ocIWVwmUV3vgZAgDH5BacVh5LlcJoE007Dmq4aOgbCY-5WRBeA=s96-c','ricardoyanhua@gmail.com','$2b$10$EoLduCITtLMaixPqMB5.i.j7tCJZfH7uQEKRfLNDx78G5u9XeqKWK',1,'usuario',1,NULL,'2025-12-25 04:38:57'),(22,'asdasdasd',NULL,'ricardoyanhua@gmail.com','$2b$10$6wf.tQxVnodaJ0kAoc9xvekPC6RZHP72I0rACmOKv1wckOArl02Vi',0,'usuario',1,NULL,'2025-12-25 05:38:28'),(23,'qweqweqwe',NULL,'qweqweqwe@qweqweqwe.com','$2b$10$qfhLyeP0qBawnEEB91OPUOnSAfcN/lnQUpmYEIwN1ui6igFG4l6ie',0,'usuario',1,NULL,'2025-12-25 06:03:52'),(24,'zxczxczxc',NULL,'zxczxczxc@zxczxczxc.com','$2b$10$armQCmkiYEYfJzHnR2keRu6RA.Xr50HvZAP5pggz6fncHECVDujnW',0,'usuario',1,NULL,'2025-12-25 06:05:47'),(25,'rtyrtyrty',NULL,'rtyrtyrty@gmail.com','$2b$10$x.GHMUicw7s2d4NUhFfkI.kyL/84nV56eQNcFI9Mi1PbpC4Dem.oq',0,'usuario',1,NULL,'2025-12-25 06:09:18'),(26,'dfgdfgdfg',NULL,'dfgdfgdfg@dfgdfgdfg.com','$2b$10$w0waNRTDFN3qNWwyWVEHGugcuIfTFbUWb7pbQyg21A2WtdGE/otXu',0,'usuario',1,NULL,'2025-12-25 11:41:13');
+/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `vacunas`
 --
 
@@ -294,4 +326,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-18 20:27:20
+-- Dump completed on 2025-12-25  6:42:35

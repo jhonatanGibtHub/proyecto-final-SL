@@ -1,7 +1,6 @@
 const db = require("../config/database");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { validationResult } = require("express-validator");
 
 /**
  * Registrar nuevo usuario
@@ -9,28 +8,20 @@ const { validationResult } = require("express-validator");
  */
 const registrarUsuario = async (req, res) => {
   try {
-    // Validar errores
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        errores: errors.array(),
-      });
-    }
-
     const { nombre, email, password, rol, is_google_account, picture } =
       req.body;
 
     // Verificar si el email ya existe
     if (!is_google_account) {
-      const [usuarioExistente] = await db.query(
-        "SELECT * FROM usuarios WHERE email = ?",
+      const [USUARIO_EXISTE] = await db.query(
+        "SELECT * FROM usuarios WHERE email = ? AND is_google_account = 0",
         [email]
       );
 
-      if (usuarioExistente.length > 0) {
+      if (USUARIO_EXISTE.length > 0) {
         return res.status(400).json({
           success: false,
+          type: "USER_EXIST",
           mensaje: "El email ya está registrado",
         });
       }
@@ -43,7 +34,7 @@ const registrarUsuario = async (req, res) => {
     const passwordHash = await bcrypt.hash(password, salt);
 
     // Insertar usuario
-    const [resultado] = await db.query(
+    const [USUARIO_REGISTRAR] = await db.query(
       "INSERT INTO usuarios (nombre, email, password, rol, is_google_account, picture, activo) VALUES (?, ?, ?, ?, ?, ?, ?)",
       [
         nombre,
@@ -60,7 +51,7 @@ const registrarUsuario = async (req, res) => {
       success: true,
       mensaje: "Usuario registrado exitosamente",
       data: {
-        id: resultado.insertId,
+        id: USUARIO_REGISTRAR.insertId,
         nombre,
         email,
         rol: rol || "usuario",
@@ -84,13 +75,10 @@ const registrarUsuario = async (req, res) => {
  */
 const login = async (req, res) => {
   try {
-    const { email, password, is_google_account } = req.body;
-    console.log(email);
-    console.log(password);
-    console.log(is_google_account);
+    const { email, password } = req.body;
 
     // Validar campos
-    if (!email || !password || is_google_account) {
+    if (!email || !password) {
       return res.status(400).json({
         success: false,
         mensaje: "Email y password son obligatorios",
@@ -99,7 +87,7 @@ const login = async (req, res) => {
 
     // Buscar usuario
     const [usuarios] = await db.query(
-      "SELECT * FROM usuarios WHERE email = ? AND activo = 1",
+      "SELECT * FROM usuarios WHERE email = ? AND activo = 1 AND is_google_account = 0",
       [email]
     );
 
@@ -112,16 +100,14 @@ const login = async (req, res) => {
 
     const usuario = usuarios[0];
 
-    if (!is_google_account) {
-      // Verificar password
-      const passwordValido = await bcrypt.compare(password, usuario.password);
+    // Verificar password
+    const passwordValido = await bcrypt.compare(password, usuario.password);
 
-      if (!passwordValido) {
-        return res.status(401).json({
-          success: false,
-          mensaje: "Credenciales inválidas",
-        });
-      }
+    if (!passwordValido) {
+      return res.status(401).json({
+        success: false,
+        mensaje: "Credenciales inválidas",
+      });
     }
 
     // Actualizar última conexión
@@ -134,8 +120,8 @@ const login = async (req, res) => {
     const token = jwt.sign(
       {
         id: usuario.id,
-        email: usuario.email,
         nombre: usuario.nombre,
+        email: usuario.email,
         rol: usuario.rol,
         picture: usuario.picture,
       },
@@ -165,6 +151,133 @@ const login = async (req, res) => {
   }
 };
 
+async function generateRandomPassword() {
+  const length = 20;
+  const charset =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+
+  let password = "";
+
+  for (let i = 0, n = charset.length; i < length; i++) {
+    password += charset.charAt(Math.floor(Math.random() * n));
+  }
+
+  const saltRounds = parseInt(process.env.BCRYPT_ROUNDS, 10) || 10;
+  const passwordHash = await bcrypt.hash(password, saltRounds);
+
+  return passwordHash;
+}
+/**
+ * Login con Google
+ * POST /api/auth/google
+ */
+
+const loginGoogle = async (req, res) => {
+  try {
+    const { idToken } = req.body;
+
+    if (!idToken) {
+      return res.status(400).json({
+        success: false,
+        mensaje: "Token requerido",
+      });
+    }
+
+    // ⚠️ OJO: decode NO valida el token (solo lee el payload)
+    const decoded = jwt.decode(idToken);
+
+    if (!decoded || !decoded.email) {
+      return res.status(400).json({
+        success: false,
+        mensaje: "Token inválido",
+      });
+    }
+
+    const { email, name, picture } = decoded;
+
+    // Buscar usuario Google activo
+    const [usuarios] = await db.query(
+      `SELECT * FROM usuarios 
+       WHERE email = ? 
+       AND activo = 1 
+       AND is_google_account = 1`,
+      [email]
+    );
+
+    let usuario;
+
+    if (usuarios.length === 0) {
+      // Crear usuario Google
+      const passwordHash = await generateRandomPassword();
+      const [result] = await db.query(
+        `INSERT INTO usuarios 
+         (nombre, email, password, is_google_account, picture, activo)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [
+          name,
+          email,
+          passwordHash,
+          true,
+          picture,
+          true,
+        ]
+      );
+
+      // Obtener usuario recién creado
+      const [nuevoUsuario] = await db.query(
+        "SELECT * FROM usuarios WHERE id = ?",
+        [result.insertId]
+      );
+
+      usuario = nuevoUsuario[0];
+    } else {
+      usuario = usuarios[0];
+    }
+
+    // Generar JWT propio
+    const token = jwt.sign(
+      {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol,
+        is_google_account: usuario.is_google_account,
+        picture: usuario.picture,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    // Actualizar última conexión
+    await db.query(
+      "UPDATE usuarios SET ultima_conexion = CURRENT_TIMESTAMP WHERE id = ?",
+      [usuario.id]
+    );
+
+    return res.json({
+      success: true,
+      mensaje: "Login exitoso",
+      token,
+      usuario: {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol,
+        is_google_account: usuario.is_google_account,
+        picture: usuario.picture,
+      },
+    });
+
+  } catch (error) {
+    console.error("Error en login Google:", error);
+    return res.status(500).json({
+      success: false,
+      mensaje: "Error en login con Google",
+    });
+  }
+};
+
+
 /**
  * Obtener perfil del usuario autenticado
  * GET /api/auth/perfil
@@ -193,86 +306,6 @@ const obtenerPerfil = async (req, res) => {
       success: false,
       mensaje: "Error al obtener perfil",
       error: error.message,
-    });
-  }
-};
-
-/**
- * Login con Google
- * POST /api/auth/google
- */
-const loginGoogle = async (req, res) => {
-  try {
-    const { idToken } = req.body;
-    const jwt = require("jsonwebtoken");
-    const decoded = jwt.decode(idToken);
-
-    if (!decoded || !decoded.email) {
-      return res.status(400).json({
-        success: false,
-        mensaje: "Token inválido",
-      });
-    }
-
-    const { email, name, picture } = decoded;
-
-    // Buscar usuario por email
-    const [usuarios] = await db.query(
-      "SELECT * FROM usuarios WHERE email = ? AND activo = 1 AND is_google_account = 1",
-      [email]
-    );
-
-    let usuario;
-
-    if (usuarios.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          type: "USER_NOT_FOUND",
-        },
-      });
-    }
-
-    usuario = usuarios[0];
-
-    // Generar token JWT
-    const token = jwt.sign(
-      {
-        id: usuario.id,
-        nombre: usuario.nombre,
-        email: usuario.email,
-        rol: usuario.rol,
-        is_google_account: usuario.is_google_account,
-        picture: usuario.picture,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "24h" }
-    );
-
-    // Actualizar última conexión
-    await db.query(
-      "UPDATE usuarios SET ultima_conexion = CURRENT_TIMESTAMP WHERE id = ?",
-      [usuario.id]
-    );
-
-    res.json({
-      success: true,
-      mensaje: "Login exitoso",
-      token,
-      usuario: {
-        id: usuario.id,
-        nombre: usuario.nombre,
-        email: usuario.email,
-        rol: usuario.rol,
-        is_google_account: usuario.is_google_account,
-        picture: usuario.picture,
-      },
-    });
-  } catch (error) {
-    console.error("Error en login Google:", error);
-    res.status(500).json({
-      success: false,
-      mensaje: "Error en login con Google",
     });
   }
 };

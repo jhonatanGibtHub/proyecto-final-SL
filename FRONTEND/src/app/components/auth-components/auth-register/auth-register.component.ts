@@ -12,9 +12,6 @@ import { CommonModule } from '@angular/common';
 })
 export class AuthRegisterComponent {
   registerForm: FormGroup;
-  isLoading = false;
-  errorMessage = '';
-  successMessage = '';
 
   constructor(
     private fb: FormBuilder,
@@ -22,51 +19,31 @@ export class AuthRegisterComponent {
     private router: Router
   ) {
     this.registerForm = this.fb.group({
+
       nombre: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      is_google_account: [false]
     });
   }
 
   onSubmit() {
     if (this.registerForm.valid) {
-      this.isLoading = true;
-      this.errorMessage = '';
-      this.successMessage = '';
-
       const formData = this.registerForm.value;
-
       this.authService.registro(formData).subscribe({
         next: (response) => {
-          this.isLoading = false;
           if (response.success) {
-            this.successMessage = response.mensaje || 'Usuario registrado exitosamente';
-            // Optionally navigate to login after a delay
-            setTimeout(() => {
-              this.router.navigate(['/auth/login']);
-            }, 2000);
-          } else {
-            this.errorMessage = response.mensaje || 'Error al registrar usuario';
-          }
-        },
-        error: (error) => {
-          this.isLoading = false;
-          this.errorMessage = error.error?.mensaje || 'Error al registrar usuario';
+              this.authService.login(formData).subscribe(
+                {
+                  next: (response) => {
+                      this.router.navigate(['/auth/app']);
+                  }
+                }
+              );
+          } 
         }
       });
-    } else {
-      this.markFormGroupTouched();
     }
   }
 
-  private markFormGroupTouched() {
-    Object.keys(this.registerForm.controls).forEach(key => {
-      const control = this.registerForm.get(key);
-      control?.markAsTouched();
-    });
-  }
-
-  get nombre() { return this.registerForm.get('nombre'); }
-  get email() { return this.registerForm.get('email'); }
-  get password() { return this.registerForm.get('password'); }
 }

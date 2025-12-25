@@ -17,7 +17,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
       if (error.status === 403) {
         // No tiene permisos
-        router.navigate(['/libros']);
+        router.navigate(['']);
       }
 
       return throwError(() => error);

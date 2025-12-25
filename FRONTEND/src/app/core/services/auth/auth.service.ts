@@ -10,6 +10,8 @@ import {
   AuthResponse
 } from '../../models/usuario.interface';
 import { environment } from '../../../environment/environment';
+import { jwtDecode } from 'jwt-decode';
+import { JwtPayload } from '../../models/jwt/JwtPayloadModel';
 
 @Injectable({
   providedIn: 'root'
@@ -99,7 +101,7 @@ export class AuthService {
     this.currentUserSubject.next(authResult.usuario);
   }
 
- getUsernameFromToken(): string | null {
+  getUsernameFromToken(): string | null {
     const token = this.getToken();
     if (!token) return null;
     try {
@@ -140,12 +142,11 @@ export class AuthService {
     const token = this.getToken();
     if (!token) return false;
 
-    // Verificar si el token no está expirado
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const expiracion = payload.exp * 1000;
-      return Date.now() < expiracion;
-    } catch (error) {
+      const decoded = jwtDecode<JwtPayload>(token);
+      const ahora = Math.floor(Date.now() / 1000);
+      return decoded.exp > ahora;
+    } catch {
       return false;
     }
   }

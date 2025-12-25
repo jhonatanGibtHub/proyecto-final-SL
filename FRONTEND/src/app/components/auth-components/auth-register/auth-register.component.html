@@ -1,22 +1,12 @@
-<form id="registerForm" [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
+<form id="registerForm" [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="on">
 
     <h1 class="page-tittle">Crear mi cuenta</h1>
 
     <p class="page-description">Completa tus
         datos personales para crear tu cuenta y comenzar a administrar.</p>
 
-    <!-- Error Message -->
-    <div *ngIf="errorMessage" class="alert alert-error">
-        {{ errorMessage }}
-    </div>
-
-    <!-- Success Message -->
-    <div *ngIf="successMessage" class="alert alert-success">
-        {{ successMessage }}
-    </div>
-
-    <input type="hidden" formControlName="is_google_account" [value]="0"/>
-    <input type="hidden" formControlName="picture" [value]="null"/>
+    <input type="hidden" formControlName="is_google_account" />
+    <input type="hidden" formControlName="picture"/>
 
     <div class="input-container" (click)="nombreUsuario.focus()">
 
@@ -36,12 +26,10 @@
         </label>
 
         <div class="input">
-            <input #nombreUsuario formControlName="nombre" placeholder="username123" id="nombre" type="text"
-                name="nombre" [class.error]="nombre?.invalid && nombre?.touched">
+            <input #nombreUsuario formControlName="nombre" placeholder="username123" id="nombre" type="text" autocomplete="given-name"
+                name="nombre">
         </div>
-        <div *ngIf="nombre?.invalid && nombre?.touched" class="error-message">
-            <span *ngIf="nombre?.errors?.['required']">El nombre es obligatorio</span>
-        </div>
+        
 
     </div>
 
@@ -63,13 +51,10 @@
         </label>
 
         <div class="input">
-            <input #inputemail formControlName="email" placeholder="example@gmail.com" id="email" type="email"
-                name="email" [class.error]="email?.invalid && email?.touched">
+            <input #inputemail formControlName="email" placeholder="example@gmail.com" id="email" type="email" autocomplete="username"
+                name="username" >
         </div>
-        <div *ngIf="email?.invalid && email?.touched" class="error-message">
-            <span *ngIf="email?.errors?.['required']">El email es obligatorio</span>
-            <span *ngIf="email?.errors?.['email']">Email inválido</span>
-        </div>
+       
 
     </div>
 
@@ -101,23 +86,22 @@
         </label>
 
         <div class="input">
-            <input #inputpassword formControlName="password" placeholder="Ingrese su contraseña." id="password"
-                name="password" type="password" [class.error]="password?.invalid && password?.touched">
+            <input #inputpassword formControlName="password" placeholder="Ingrese su contraseña." id="password" autocomplete="new-password"
+                name="password" type="password">
         </div>
-        <div *ngIf="password?.invalid && password?.touched" class="error-message">
-            <span *ngIf="password?.errors?.['required']">La contraseña es obligatoria</span>
-            <span *ngIf="password?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</span>
-        </div>
+       
     </div>
 
-    <button class="btn-dark" type="submit" [disabled]="isLoading">
-        <span *ngIf="!isLoading">Registrarse</span>
-        <span *ngIf="isLoading">Registrando...</span>
+    <button class="btn-dark" type="submit">
+        <span >Registrarse</span>
+        
     </button>
 
-    <button class="btn-default" routerLink="/auth/login">
-        <svg class = "icono-1" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill="#000000" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path><path fill="#000000" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path></g></svg>
-        <span>Ir a Iniciar Sesión</span>
-    </button>
+    <div class = "flex-center">
+        <a  routerLink="/auth/login" class="recover-link"> Ya tengo una cuenta</a>
+    </div>
+    
+
+
 
 </form>
