@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterLinkWithHref, RouterOutlet } from '@angular/router';
 import { UserMenuComponent } from '../../shared/user-menu/user-menu.component';
-import { ButtonColorThemeComponent } from '../../shared/button-color-theme/button-color-theme.component';
 
 @Component({
   selector: 'app-app-router',
@@ -10,7 +9,9 @@ import { ButtonColorThemeComponent } from '../../shared/button-color-theme/butto
     UserMenuComponent,
     RouterOutlet,
     CommonModule,
-    RouterLink
+    RouterLink,
+    RouterLinkWithHref,
+    RouterLinkActive
   ],
   templateUrl: './app-router.component.html',
   styleUrl: './app-router.component.css'

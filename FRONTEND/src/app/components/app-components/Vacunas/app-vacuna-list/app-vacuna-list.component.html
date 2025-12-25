@@ -1,0 +1,88 @@
+<div class="flex-between">
+
+    <h2 class="page-tittle">Lista de Vacunas</h2>
+
+    <div class="flex-end">
+        <button (click)="abrirModalNuevo()" class="btn btn-blue">
+            <svg class="icono-1 " viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path
+                        d="M11 8C11 7.44772 11.4477 7 12 7C12.5523 7 13 7.44771 13 8V11H16C16.5523 11 17 11.4477 17 12C17 12.5523 16.5523 13 16 13H13V16C13 16.5523 12.5523 17 12 17C11.4477 17 11 16.5523 11 16V13H8C7.44772 13 7 12.5523 7 12C7 11.4477 7.44771 11 8 11H11V8Z"
+                        fill="currentColor"></path>
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M23 4C23 2.34315 21.6569 1 20 1H4C2.34315 1 1 2.34315 1 4V20C1 21.6569 2.34315 23 4 23H20C21.6569 23 23 21.6569 23 20V4ZM21 4C21 3.44772 20.5523 3 20 3H4C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21H20C20.5523 21 21 20.5523 21 20V4Z"
+                        fill="currentColor"></path>
+                </g>
+            </svg>
+
+            <span>Nueva Vacuna</span> </button>
+    </div>
+
+</div>
+
+
+
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre Comercial</th>
+            <th>Fabricante</th>
+            <th>Temp Mínima (°C)</th>
+            <th>Temp Máxima (°C)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let vacuna of vacunas">
+            <td> {{ vacuna.id_vacuna }} </td>
+            <td> {{ vacuna.nombre_comercial }} </td>
+            <td> {{ vacuna.fabricante }} </td>
+            <td> {{ vacuna.temp_min_c }} </td>
+            <td> {{ vacuna.temp_max_c }} </td>
+            <td>
+                <div class = "acciones">
+                    <button class = "btn btn-blue" (click)="abrirModalEditar(vacuna.id_vacuna!)">
+                    <svg class = "icono-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z"
+                                fill="currentColor"></path>
+                        </g>
+                    </svg>
+
+                </button>
+
+                <button (click)="eliminarVacuna(vacuna.id_vacuna!)" class="btn btn-danger">
+                    <svg class="icono-0" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        fill="#000000">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path
+                                d="M960 160h-291.2a160 160 0 0 0-313.6 0H64a32 32 0 0 0 0 64h896a32 32 0 0 0 0-64zM512 96a96 96 0 0 1 90.24 64h-180.48A96 96 0 0 1 512 96zM844.16 290.56a32 32 0 0 0-34.88 6.72A32 32 0 0 0 800 320a32 32 0 1 0 64 0 33.6 33.6 0 0 0-9.28-22.72 32 32 0 0 0-10.56-6.72zM832 416a32 32 0 0 0-32 32v96a32 32 0 0 0 64 0v-96a32 32 0 0 0-32-32zM832 640a32 32 0 0 0-32 32v224a32 32 0 0 1-32 32H256a32 32 0 0 1-32-32V320a32 32 0 0 0-64 0v576a96 96 0 0 0 96 96h512a96 96 0 0 0 96-96v-224a32 32 0 0 0-32-32z"
+                                fill="currentColor"></path>
+                            <path
+                                d="M384 768V352a32 32 0 0 0-64 0v416a32 32 0 0 0 64 0zM544 768V352a32 32 0 0 0-64 0v416a32 32 0 0 0 64 0zM704 768V352a32 32 0 0 0-64 0v416a32 32 0 0 0 64 0z"
+                                fill="currentColor"></path>
+                        </g>
+                    </svg>
+                </button>   
+                </div>
+            
+            </td>
+        </tr>
+        <tr *ngIf="vacunas.length === 0 && !error">
+            <td colspan="6" style="text-align: center;">No hay vacunas registradas en el sistema.</td>
+        </tr>
+    </tbody>
+</table>
+
+<app-app-vacuna-form (vacunaGuardado)="cargarVacunas()"></app-app-vacuna-form>
+
+

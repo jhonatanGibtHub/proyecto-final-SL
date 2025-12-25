@@ -30,9 +30,6 @@ export class AuthService {
     this.loadUserFromStorage();
   }
 
-  /**
-   * Iniciar sesión
-   */
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(
@@ -57,36 +54,18 @@ export class AuthService {
       );
   }
 
-  /**
-   * Registrar nuevo usuario
-   */
   registro(datos: RegistroRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/registro`, datos);
   }
 
-
-
-  /**
-   * Obtener perfil del usuario autenticado
-   */
   obtenerPerfil(): Observable<AuthResponse> {
     return this.http.get<AuthResponse>(`${this.apiUrl}/perfil`);
   }
 
-
-
-  /**
-   * Verificar si el token es válido
-   */
   verificarToken(): Observable<AuthResponse> {
     return this.http.get<AuthResponse>(`${this.apiUrl}/verificar`);
   }
 
-
-
-  /**
-   * Cerrar sesión
-   */
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
@@ -94,27 +73,20 @@ export class AuthService {
     this.router.navigate(['/auth/login']);
   }
 
-
   private setSession(authResult: LoginResponse): void {
     localStorage.setItem('token', authResult.token);
     localStorage.setItem('usuario', JSON.stringify(authResult.usuario));
     this.currentUserSubject.next(authResult.usuario);
   }
 
-  getUsernameFromToken(): string | null {
-    const token = this.getToken();
-    if (!token) return null;
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.nombre || null;
-    } catch (error) {
-      return null;
-    }
+  getUsername(): string | null {
+    return this.getCurrentUser()?.nombre ?? null;
+  }
+  
+  getPicture(): string | null {
+    return this.getCurrentUser()?.picture ?? null;
   }
 
-  /**
-   * Cargar usuario desde localStorage
-   */
   private loadUserFromStorage(): void {
     const usuarioString = localStorage.getItem('usuario');
     if (usuarioString) {
@@ -122,26 +94,18 @@ export class AuthService {
         const usuario = JSON.parse(usuarioString);
         this.currentUserSubject.next(usuario);
       } catch (error) {
-        console.error('Error al cargar usuario del localStorage:', error);
         this.logout();
       }
     }
   }
 
-  /**
-   * Obtener token
-   */
   getToken(): string | null {
     return localStorage.getItem('token');
   }
 
-  /**
-   * Verificar si está autenticado
-   */
   isAuthenticated(): boolean {
     const token = this.getToken();
     if (!token) return false;
-
     try {
       const decoded = jwtDecode<JwtPayload>(token);
       const ahora = Math.floor(Date.now() / 1000);
@@ -151,16 +115,10 @@ export class AuthService {
     }
   }
 
-  /**
-   * Obtener usuario actual
-   */
   getCurrentUser(): Usuario | null {
     return this.currentUserSubject.value;
   }
 
-  /**
-   * Verificar si es administrador
-   */
   isAdmin(): boolean {
     const usuario = this.getCurrentUser();
     return usuario?.rol === 'admin';

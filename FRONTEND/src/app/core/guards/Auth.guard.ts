@@ -6,16 +6,15 @@ import { AuthService } from '../services/auth/auth.service';
   providedIn: 'root'
 })
 
-export class NoAuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) { }
-
   canActivate(): boolean {
-    if (this.authService.isAuthenticated()) {
-      this.router.navigateByUrl('');
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigateByUrl('/auth/login');
       return false;
     }
     return true;

@@ -6,7 +6,7 @@ import { AuthService } from '../services/auth/auth.service';
   providedIn: 'root'
 })
 
-export class NoAuthGuard implements CanActivate {
+export class AdminRoleGuard implements CanActivate {
 
   constructor(
     private authService: AuthService,
@@ -14,11 +14,11 @@ export class NoAuthGuard implements CanActivate {
   ) { }
 
   canActivate(): boolean {
-    if (this.authService.isAuthenticated()) {
-      this.router.navigateByUrl('');
-      return false;
+    if (this.authService.isAuthenticated() && this.authService.isAdmin()) {
+      this.router.navigateByUrl('/app');
+      return false; 
     }
     return true;
   }
-
+  
 }

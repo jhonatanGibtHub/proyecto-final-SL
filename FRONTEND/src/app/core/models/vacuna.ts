@@ -9,7 +9,7 @@ export interface Vacuna {
 
 export interface VacunaResponse {
     success: boolean;
-    data?: Vacuna | Vacuna[]; // Puede ser una vacuna o un arreglo de vacunas
+    data?: Vacuna | Vacuna[];
     count?: number;
     mensaje?: string;
     error?: string;

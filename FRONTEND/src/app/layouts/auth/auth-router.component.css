@@ -1,29 +1,42 @@
-
 :host {
     position: relative;
-    overflow: hidden; /* evita que se vea fuera del contenedor */
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
-img.bg-move {
-    position: absolute;
-    top: -300px;
-    right: 0;
-    opacity: 0.05;
+.bg-container {
+    position: fixed;
+    inset: 0;
     z-index: -1;
-
-    animation: moverVertical 12s ease-in-out infinite;
+    overflow: hidden;
 }
 
-@keyframes moverVertical {
-    0% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(40px); /* distancia hacia abajo */
-    }
-    100% {
-        transform: translateY(0);
-    }
+.bg-track {
+    position: absolute;
+    width: 100%;
+    height: calc(1920px * 2);
+
+    background-image: url('/imagen_fondo_transparente.png');
+    background-repeat: repeat-y;
+    background-size: auto 1920px;
+    opacity: 0.04;
+    animation: scrollDown 80s linear infinite;
 }
 
+.bg-color {
+    position: absolute;
+    inset: 0;
+    background: #1e8fff10;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+}
 
+@keyframes scrollDown {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-1920px);
+    }
+}

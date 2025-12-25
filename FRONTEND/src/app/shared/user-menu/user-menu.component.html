@@ -3,7 +3,7 @@
     <div class="user" (click)="toggleMenu()">
         <img *ngIf="picture" [src]="picture" alt="Foto de perfil de Google" class="google-user-picture" />
 
-        <svg class = "icono-1" viewBox="0 0 61.7998 61.7998" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+        <svg *ngIf="!picture" class = "icono-1" viewBox="0 0 61.7998 61.7998" xmlns="http://www.w3.org/2000/svg" fill="#000000">
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
             <g id="SVGRepo_iconCarrier">

@@ -1,13 +1,10 @@
 import { Component } from '@angular/core';
-import { ButtonColorThemeComponent } from '../button-color-theme/button-color-theme.component';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-header-web',
-  imports: [
-    RouterLink
-  ],
+  imports: [],
   templateUrl: './header-web.component.html',
   styleUrl: './header-web.component.css'
 })

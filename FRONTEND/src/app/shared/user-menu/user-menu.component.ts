@@ -20,7 +20,8 @@ export class UserMenuComponent {
 
   ) {
 
-    this.username = this.authService.getUsernameFromToken();
+    this.username = this.authService.getUsername();
+    this.picture = this.authService.getPicture();
 
   }
 

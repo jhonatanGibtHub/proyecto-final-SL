@@ -1,9 +1,11 @@
 
 export interface JwtPayload {
+
   sub: string;
-  roles: string;       // Aún es string (ej: "ROLE_USER ROLE_ADMIN")
+  roles: string;
   picture: string;
-  exp: number;         // <-- ahora obligatorio
+  exp: number;
   iat?: number;
   iss?: string;
+
 }

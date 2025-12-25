@@ -5,16 +5,52 @@
     width: 100vw;
     overflow: hidden;
 
-    --header-padding: 10px 50px;
+    --header-padding: 10px 50px 10px 30px;
     --header-height: 70px;
-  --header-width: 100vw;
+    --header-width: 100vw;
+}
 
-  --aside-padding: 30px 10px 20px 10px;
+.btn-aside {
+    display: inline-flex;
+    justify-content: end;
+    padding: 10px 25px;
 
-  
+    span {
+        font-size: var(--font-20);
+        color: var(--color-font);
+    }
+
+    svg {
+        color: var(--color-font);
+    }
 }
 
 
+.btn-aside:hover {
+    border-top: 3px solid var(--blue-900);
+
+    svg {
+        color: var(--blue-900);
+    }
+
+    span {
+        color: var(--blue-900);
+    }
+}
+
+
+
+.active-btn {
+    border-top: 3px solid var(--blue-900);
+
+    span {
+        color: var(--blue-900);
+        font-weight: 800;
+    }
+    svg{
+        color: var(--blue-900);
+    }
+}
 
 .scroll-container {
     overflow-y: scroll;
@@ -40,21 +76,20 @@ main {
 aside {
     display: flex;
     flex-direction: column;
-    
-    width: 200px;
+    padding-top: 50px;
+    width: 230px;
     height: 100%;
-    padding: var(--aside-padding);
     overflow-x: hidden;
-    transition: width 0.05s ease;
     white-space: nowrap;
-    gap: 10px;
+
+    gap: 20px;
 }
 
 aside.collapsed {
     width: 76.7912px;
-   
+
     button {
-       
+
         width: fit-content;
     }
 
@@ -65,8 +100,37 @@ aside.collapsed {
 
 section {
     flex: 1;
-    padding: 20px;
+    padding: 20px 40px;
     overflow-y: auto;
     background: var(--c-color-secundary-1);
     transition: all 0.3s ease;
+}
+
+
+.bg-container {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.bg-track {
+    position: absolute;
+    width: 100%;
+    height: calc(1080px);
+
+    background-image: url('/fondo_app.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    background-position: center;
+    opacity: 0.2;
+}
+
+.bg-color {
+    position: absolute;
+    inset: 0;
+    background: var(--blue-50);
+    mix-blend-mode: multiply;
+    pointer-events: none;
 }

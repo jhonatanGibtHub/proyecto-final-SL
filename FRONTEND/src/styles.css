@@ -16,19 +16,16 @@ body {
 
 :host,
 :root {
-    /* Permite a los navegadores usar UI nativa en light/dark */
-    color-scheme: light dark;
-
     /* Spacing */
     --spacing: .25rem;
 
     /* Border radius */
-    --border-radius-default-1: 8px;
+    --border-radius-default-1: 5px;
     --border-radius-default-2: 12px;
 
-    --button-padding-default: 8px 14px;
+    --button-padding-default: 8px 10px;
 
-    --button-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --button-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
 
     /* Tipografías */
     --font-10: 0.615rem;
@@ -36,6 +33,10 @@ body {
     --font-14: 0.875rem;
     --font-16: 1rem;
     --font-18: 1.125rem;
+    --font-20: 1.25rem;
+    --font-22: 1.375rem;
+    --font-24: 1.5rem;
+
 
     /* Grises OKLCH */
     --gray-900: oklch(18% 0.004 300);
@@ -43,14 +44,15 @@ body {
     --gray-500: oklch(55% 0.020 305);
     --gray-300: oklch(80% 0.010 305);
     --gray-200: oklch(92% 0.004 300);
+    --gray-100: oklch(96% 0.002 300);
     --gray-50: oklch(99% 0 0);
 
     --blue-900: oklch(20% 0.06 250);
-    --blue-700: oklch(35% 0.09 250);
+    --blue-700: oklch(27.04% 0.03101 247.22);
     --blue-500: oklch(55% 0.13 250);
     --blue-300: oklch(80% 0.08 250);
     --blue-200: oklch(92% 0.05 250);
-    --blue-50: oklch(99% 0.01 250);
+    --blue-50: oklch(97% 0.02 250);
 
     --green-900: oklch(20% 0.05 145);
     --green-700: oklch(35% 0.08 145);
@@ -68,83 +70,57 @@ body {
     --color-font: #04009a;
 }
 
-/*
-html.color-scheme-light {
-    color-scheme: light;
-
-    --scroll-thumb-bg-color: #ccc9cf;
-    --scroll-thumb-bg-color-hv: #746e7c;
-
-    --c-color-secundary-1: rgb(255, 255, 255);
-    --c-color-secundary-2: rgb(220, 220, 220);
-
-    --color-font: rgb(0, 0, 0);
+::-webkit-scrollbar {
+    width: 8px;
 }
 
-html.color-scheme-dark {
-    color-scheme: dark;
-
-    --scroll-thumb-bg-color: #746e7c;
-    --scroll-thumb-bg-color-hv: #a39fa9;
-
-    --c-color-secundary-1: rgb(38, 38, 38);
-    --c-color-secundary-2: rgb(84, 84, 84);
-
-    --color-font: rgb(255, 255, 255);
+::-webkit-scrollbar-thumb {
+    background: var(--scroll-thumb-bg-color);
+    border-radius: 8px;
 }
 
-body.color-scheme-transition {
-    transition: background-color 0.3s ease, color 0.3s ease;
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scroll-thumb-bg-color-hv);
 }
 
-*/
+::-webkit-scrollbar-track {
+    background: transparent;
+}
 
-::-webkit-scrollbar {width: 8px;}
-::-webkit-scrollbar-thumb {background: var(--scroll-thumb-bg-color);border-radius: 8px;}
-::-webkit-scrollbar-thumb:hover {background: var(--scroll-thumb-bg-color-hv);}
-::-webkit-scrollbar-track {background: transparent;}
+
+
 
 
 table {
     margin: 10px 0;
-    width: fit-content;
+    width: 100%;
     border-collapse: collapse;
     overflow: hidden;
     border-radius: 7px;
-    box-shadow: 0 2px 0 var(--gray-200);
-    margin-bottom: 4px;
+    box-shadow: 0 2px 0 var(--gray-300);
 }
 
 thead {
-    background: var(--gray-700);
+    background: var(--blue-500);
     color: white;
+}
 
+th:last-child,
+td:last-child {
+    white-space: nowrap;
+    width: 1%;
+}
+
+.acciones {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
 }
 
 thead th {
-    padding: 10px 16px;
+    padding: 16px 16px;
     text-align: left;
     font-size: var(--font-12);
-    letter-spacing: 0.5px;
-}
-
-tbody tr {
-    background: #ffffff;
-    transition: 0.2s;
-}
-
-tbody tr td:last-child {
-    display: inline-flex;
-    gap: 10px;
-}
-
-tbody tr:nth-child(even) {
-    background: #f9fafb;
-}
-
-tbody tr:hover {
-    background: #eef2ff;
-
 }
 
 tbody td {
@@ -154,6 +130,13 @@ tbody td {
     border-bottom: 1px solid #e5e7eb;
 }
 
+tbody tr {
+    background-color: white;
+}
+
+tbody tr:hover {
+    background: var(--blue-50);
+}
 
 
 
@@ -164,16 +147,30 @@ svg {
     color: var(--color-font);
 }
 
-
 [class^="icono-"] {
     width: calc(var(--spacing) * var(--i));
     height: calc(var(--spacing) * var(--i));
 }
-.icono-0 {--i: 4;}
-.icono-1 {--i: 5;}
-.icono-2 {--i: 6;}
-.icono-3 {--i: 7;}
-.icono-4 {--i: 8;}
+
+.icono-0 {
+    --i: 4;
+}
+
+.icono-1 {
+    --i: 5;
+}
+
+.icono-2 {
+    --i: 6;
+}
+
+.icono-3 {
+    --i: 7;
+}
+
+.icono-4 {
+    --i: 8;
+}
 
 
 button {
@@ -226,7 +223,7 @@ a span {
     transition: transform ease 100ms;
     border-radius: var(--border-radius-default-1);
     background-color: var(--btn-bg);
-    
+
     z-index: 0;
 }
 
@@ -234,7 +231,8 @@ a span {
     color: var(--btn-text);
     font-weight: 600;
 }
-.btn svg {  
+
+.btn svg {
     color: var(--btn-text);
 }
 
@@ -264,12 +262,83 @@ a span {
     height: 100%;
 }
 
-.btn-primary {
+.btn-blue {
     --btn-bg: #1976d2;
     --btn-bg-accent: #3d9cea;
     --btn-bg-hover: #1e88e5;
     --btn-text: #d0eeff;
 }
+
+.btn-green {
+    --btn-bg: #2e7d32;
+    /* verde principal */
+    --btn-bg-accent: #66bb6a;
+    /* verde acento */
+    --btn-bg-hover: #388e3c;
+    /* verde hover */
+    --btn-text: #e8f5e9;
+    /* texto claro */
+}
+
+.btn-default-black {
+    background-color: rgb(54, 54, 54);
+    border-radius: 4px;
+    padding: 0.6rem 1rem;
+    height: 38.3638px;
+
+    span {
+        color: rgb(250, 250, 255);
+        font-weight: 300;
+        font-size: var(--font-14);
+    }
+
+    svg {
+        color: rgb(250, 250, 255);
+    }
+
+    &:hover {
+        background-color: rgb(84, 84, 84);
+    }
+}
+
+.btn-default-yellow {
+    background-color: #ffd633;
+    border-radius: 4px;
+    padding: 0.6rem 1rem;
+    height: 38.3638px;
+
+    span {
+        color: black;
+        font-weight: 500;
+        font-size: var(--font-14);
+    }
+
+    &:hover {
+        background-color: #f5cb32;
+    }
+}
+
+
+.btn-default-white {
+    background-color: rgb(255, 255, 255);
+    border-radius: 4px;
+    padding: 0.6rem 1rem;
+    height: 38.3638px;
+    border: 1px solid #dadce0;
+
+    span {
+        color: rgb(60, 64, 67);
+        font-weight: 200;
+        font-size: var(--font-14);
+    }
+
+    &:hover {
+        background-color: #f0f5fe;
+    }
+}
+
+
+
 .btn-danger {
     --btn-bg: #c62828;
     --btn-bg-accent: #e53935;
@@ -350,6 +419,13 @@ a span {
     gap: 10px;
 }
 
+.flex-start {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+
 .flex-center {
     display: flex;
     justify-content: center;
@@ -357,12 +433,19 @@ a span {
     gap: 10px;
 }
 
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 
 
 input {
     width: 100%;
     background-color: var(--gray-50);
-    border: 1px solid var(--gray-300);
+    border: 1px solid var(--gray-200);
+    color: black;
     height: auto;
     display: flex;
     align-items: center;
@@ -377,7 +460,7 @@ input {
 }
 
 input::placeholder {
-    color: var(--gray-500);
+    color: var(--gray-300);
 }
 
 input:focus {
@@ -385,8 +468,40 @@ input:focus {
 }
 
 
+label {
+    display: inline-flex;
+    align-items: center;
+}
+
+label svg {
+    color: rgb(34, 34, 34);
+}
+
+label span {
+    margin-left: 3px;
+    font-size: var(--font-12);
+    font-weight: 700;
+    color: var(--color-font);
+
+}
+
+label svg {
+    color: var(--color-font);
+}
+
+.text-danger {
+    font-size: var(--font-14);
+    color: red;
+    font-weight: 500;
+}
 
 
+form {
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
 
 
@@ -418,7 +533,7 @@ select option {
 
 .page-tittle {
     font-weight: 800;
-    color: var(--text-color);
+    color: var(--color-font);
 }
 
 .page-description {
@@ -426,13 +541,13 @@ select option {
     font-weight: 200;
     line-height: 1.4rem;
     letter-spacing: -.00875rem;
-    color: var(--text-color);
+    color: var(--color-font);
 }
 
 .page-subtittle {
     font-weight: 600;
     font-size: var(--font-16);
-    color: var(--text-color);
+    color: var(--color-font);
 }
 
 
