@@ -7,12 +7,9 @@ import { AppVacunaListComponent } from '../../components/app-components/Vacunas/
 export const AppRoutes: Routes = [
   {
     path: '', component: AppRouterComponent, canActivate: [AuthGuard],
-    
     children: [
      { path: '', component: AppMainComponent, canActivate: [AuthGuard]},
      { path: 'vacunas', component: AppVacunaListComponent, canActivate: [AuthGuard]},
-
-      
     ]
   }
 ];

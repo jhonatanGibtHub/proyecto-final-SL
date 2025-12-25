@@ -19,7 +19,6 @@ export class AuthRegisterComponent {
     private router: Router
   ) {
     this.registerForm = this.fb.group({
-
       nombre: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -33,14 +32,14 @@ export class AuthRegisterComponent {
       this.authService.registro(formData).subscribe({
         next: (response) => {
           if (response.success) {
-              this.authService.login(formData).subscribe(
-                {
-                  next: (response) => {
-                      this.router.navigate(['/auth/app']);
-                  }
+            this.authService.login(formData).subscribe(
+              {
+                next: (response) => {
+                  this.router.navigate(['/auth/app']);
                 }
-              );
-          } 
+              }
+            );
+          }
         }
       });
     }

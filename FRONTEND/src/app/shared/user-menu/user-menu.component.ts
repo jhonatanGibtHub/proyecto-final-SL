@@ -11,18 +11,16 @@ import { AuthService } from '../../core/services/auth/auth.service';
   styleUrls: ['./user-menu.component.css']
 })
 export class UserMenuComponent {
+
   isOpen = false;
   picture: string | null = localStorage.getItem('userPicture');
   username: string | null = localStorage.getItem('username');
 
   constructor(
     private authService: AuthService
-
   ) {
-
     this.username = this.authService.getUsername();
     this.picture = this.authService.getPicture();
-
   }
 
   toggleMenu(): void {
@@ -38,7 +36,6 @@ export class UserMenuComponent {
     this.isOpen = false;
   }
 
-  // Cierra el menú si se hace click fuera
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
     const target = event.target as HTMLElement;
@@ -46,4 +43,5 @@ export class UserMenuComponent {
       this.isOpen = false;
     }
   }
+  
 }

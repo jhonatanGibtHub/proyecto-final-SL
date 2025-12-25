@@ -26,7 +26,6 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {
-    // Cargar usuario del localStorage al iniciar
     this.loadUserFromStorage();
   }
 
@@ -82,7 +81,7 @@ export class AuthService {
   getUsername(): string | null {
     return this.getCurrentUser()?.nombre ?? null;
   }
-  
+
   getPicture(): string | null {
     return this.getCurrentUser()?.picture ?? null;
   }
@@ -123,4 +122,5 @@ export class AuthService {
     const usuario = this.getCurrentUser();
     return usuario?.rol === 'admin';
   }
+  
 }

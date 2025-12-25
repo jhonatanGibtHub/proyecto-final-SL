@@ -1,7 +1,5 @@
 <div class="flex-between">
-
     <h2 class="page-tittle">Lista de Vacunas</h2>
-
     <div class="flex-end">
         <button (click)="abrirModalNuevo()" class="btn btn-blue">
             <svg class="icono-1 " viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -16,15 +14,9 @@
                         fill="currentColor"></path>
                 </g>
             </svg>
-
             <span>Nueva Vacuna</span> </button>
     </div>
-
 </div>
-
-
-
-
 <table>
     <thead>
         <tr>
@@ -57,7 +49,6 @@
                     </svg>
 
                 </button>
-
                 <button (click)="eliminarVacuna(vacuna.id_vacuna!)" class="btn btn-danger">
                     <svg class="icono-0" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
                         fill="#000000">
@@ -74,7 +65,6 @@
                     </svg>
                 </button>   
                 </div>
-            
             </td>
         </tr>
         <tr *ngIf="vacunas.length === 0 && !error">
@@ -82,7 +72,6 @@
         </tr>
     </tbody>
 </table>
-
 <app-app-vacuna-form (vacunaGuardado)="cargarVacunas()"></app-app-vacuna-form>
 
 

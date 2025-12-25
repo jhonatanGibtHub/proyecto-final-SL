@@ -5,7 +5,6 @@ import { WebRouterComponent } from './web-router.component';
 export const WebRoutes: Routes = [
   {
     path: '', component: WebRouterComponent,
-  
     children: [
       { path: '', component: WebMainComponent},
     ]

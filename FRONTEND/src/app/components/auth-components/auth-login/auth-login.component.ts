@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { environment } from '../../../environment/environment';
 import { AuthService } from '../../../core/services/auth/auth.service';
-import { jwtDecode } from 'jwt-decode';
 
 declare const google: any;
 
@@ -17,7 +16,6 @@ declare const google: any;
 export class AuthLoginComponent implements OnInit {
 
   loginForm!: FormGroup;
-
   error: string = '';
 
   constructor(
@@ -26,7 +24,6 @@ export class AuthLoginComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute
   ) {
-
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -35,12 +32,10 @@ export class AuthLoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     google.accounts.id.initialize({
       client_id: environment.googleClientId,
       callback: (response: any) => this.onCredential(response),
     });
-
     google.accounts.id.renderButton(
       document.getElementById('google-button'),
       {
@@ -58,7 +53,6 @@ export class AuthLoginComponent implements OnInit {
       this.loginForm.markAllAsTouched();
       return;
     }
-
     this.authService.login(this.loginForm.value).subscribe({
       next: (response) => {
         this.router.navigate(['/app']);
@@ -74,5 +68,4 @@ export class AuthLoginComponent implements OnInit {
       }
     });
   }
-
 }

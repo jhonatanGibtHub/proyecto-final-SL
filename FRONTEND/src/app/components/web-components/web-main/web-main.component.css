@@ -1,7 +1,184 @@
-:host{
-   height: fit-content; 
+:host {
+    display: inline-block;
+    width: 100%;
 }
 
-section{
-    height: 100vh;
+.section-present {
+    height: 640px;
+    position: relative;
+
+    .text-present {
+        position: absolute;
+        left: 10%;
+        top: 30%;
+        width: 450px;
+    }
+
+    .text-present h1 {
+        color: var(--color-font);
+        font-size: var(--font-38);
+    }
+
+}
+
+.imgs-floating {
+    --width: 500px;
+    position: absolute;
+    width: var(--width);
+    height: var(--width);
+    right: 20%;
+    top: calc(50% - (var(--width) / 2));
+}
+
+.float-img {
+    position: absolute;
+    width: 320px;
+    overflow: hidden;
+    border-radius: 10px;
+    animation: float 8s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+
+.section-app {
+    background-color: rgb(7, 103, 159);
+    height: 350px;
+    position: relative;
+
+    .info {
+        position: absolute;
+        width: 40%;
+        top: 30%;
+        left: 20%;
+
+        h2 {
+            color: #ffd633;
+            font-size: var(--font-30);
+        }
+
+        p {
+            color: #ffd633;
+            margin-top: 20px;
+            font-size: var(--font-16);
+        }
+    }
+
+    .img {
+        --width: 200px;
+        position: absolute;
+        width: var(--width);
+        height: var(--width);
+        right: 20%;
+        top: calc(50% - (var(--width) / 2));
+        background-image: url('/gif_web_1.gif');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        filter: invert(85%) sepia(13%) saturate(400%) hue-rotate(180deg) brightness(1.05) contrast(1);
+    }
+
+}
+
+.section-enterprise {
+    height: fit-content;
+    padding: 50px 20px;
+}
+
+.cards-container {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 30px 15px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card img {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.card h3 {
+    margin: 10px 0 5px;
+    font-size: 1.2em;
+    color: var(--color-font);
+}
+
+.card p {
+    color: #666;
+    font-size: var(--font-12);
+}
+
+.section-suported {
+    height: 50px;
+    background-color: white;
+    .container-logo {
+        gap: 50px;
+    }
+    .logo span {
+        font-size: var(--font-12);
+        font-weight: 500;
+    }
+}
+
+.section-message-1 {
+    background-color: var(--blue-500);
+    height: 550px;
+    position: relative;
+    .info {
+        position: absolute;
+        width: 30%;
+        top: 40%;
+        left: 20%;
+        h2 {
+            color: #ffd633;
+            font-size: var(--font-34);
+        }
+        p {
+            color: #ffd633;
+            margin-top: 20px;
+            font-size: var(--font-18);
+        }
+    }
+    .img {
+        --width: 350px;
+        position: absolute;
+        width: var(--width);
+        height: var(--width);
+        right: 20%;
+        top: calc(50% - (var(--width) / 2));
+        background-image: url('https://izhospital.ir/wp-content/uploads/2023/12/healthcare.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        filter: invert(18%) sepia(100%) saturate(2000%) hue-rotate(45deg) brightness(1.5);
+    }
 }

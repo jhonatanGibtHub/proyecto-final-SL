@@ -17,6 +17,7 @@ import { UserMenuComponent } from '../../shared/user-menu/user-menu.component';
   styleUrl: './app-router.component.css'
 })
 export class AppRouterComponent {
+  
   sidebarCollapsed = false;
 
   ngOnInit() {

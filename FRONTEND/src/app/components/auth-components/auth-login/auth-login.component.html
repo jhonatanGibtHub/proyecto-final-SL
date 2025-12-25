@@ -1,15 +1,9 @@
 <form [formGroup]="loginForm" id="loginForm" autocomplete="off">
-
-
     <h1 class="page-tittle">Iniciar Sesión</h1>
-
     <p class="page-description">Accede a tu cuenta para gestionar las vacunas, ver tu historial de compras y continuar
         donde lo dejaste.</p>
-
     <input type="hidden" formControlName="is_google_account" />
-
     <div class="input-container" (click)="inputemail.focus()">
-
         <label for="email">
             <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -24,17 +18,12 @@
                 Correo electronico
             </span>
         </label>
-
-
         <div class="input">
-            <input #inputemail formControlName="email" placeholder="example@gmail.com" id="email" type="text" autocomplete="username"
-                name="email">
+            <input #inputemail formControlName="email" placeholder="example@gmail.com" id="email" type="text"
+                autocomplete="username" name="email">
         </div>
-
     </div>
-
     <div class="input-container" (click)="inputpassword.focus()">
-
         <label for="password">
             <svg class="icono-1" fill="currentColor" viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -61,25 +50,17 @@
         </label>
 
         <div class="input">
-            <input #inputpassword formControlName="password" placeholder="Ingrese su contraseña." id="password" autocomplete="current-password"
-                name="password" type="password">
+            <input #inputpassword formControlName="password" placeholder="Ingrese su contraseña." id="password"
+                autocomplete="current-password" name="password" type="password">
         </div>
     </div>
-
-
     <a class="recover-link">¿Olvidaste tu contraseña?</a>
-
-        
-
-
     <button class="btn btn-default-yellow" (click)="onSubmit()" type="submit">
         <span>Ingresar a la App</span>
     </button>
-
     <div class="separator-text">
         <span>o</span>
     </div>
-
     <div id="google-button"></div>
     <button class="btn btn-default-black" routerLink="/auth/register" style="width:100%;">
         <svg class="icono-1" fill="currentColor" width="64px" height="64px" viewBox="0 0 24 24"
@@ -92,9 +73,8 @@
                 </path>
             </g>
         </svg>
-
-        <span>Crear una
-            cuenta</span></button>
+        <span>Crear unacuenta</span>
+    </button>
 
 
 </form>

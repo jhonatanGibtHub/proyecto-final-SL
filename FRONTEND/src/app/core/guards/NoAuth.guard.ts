@@ -5,7 +5,6 @@ import { AuthService } from '../services/auth/auth.service';
 @Injectable({
   providedIn: 'root'
 })
-
 export class NoAuthGuard implements CanActivate {
 
   constructor(

@@ -1,5 +1,4 @@
 export interface Vacuna {
-
     id_vacuna?: number;
     nombre_comercial: string;
     fabricante: string;

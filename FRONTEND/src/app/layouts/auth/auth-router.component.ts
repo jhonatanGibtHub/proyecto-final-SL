@@ -13,6 +13,4 @@ import { HeaderAuthComponent } from "../../shared/header-auth/header-auth.compon
   templateUrl: './auth-router.component.html',
   styleUrl: './auth-router.component.css'
 })
-export class AuthRouterComponent {
-
-}
+export class AuthRouterComponent {}

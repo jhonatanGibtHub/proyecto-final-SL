@@ -3,8 +3,6 @@
     <div class="bg-color"></div>
 </div>
 <header>
-
-
     <button class="toggle-btn" (click)="toggleSidebar()">
         <svg class="icono-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <g id="SVGRepo_bgCarrier"></g>
@@ -15,11 +13,8 @@
             </g>
         </svg>
     </button>
-
     <div class="flex-end">
-
         <app-user-menu></app-user-menu>
-
         <button class="btn btn-blue" routerLink="/">
             <svg class="icono-1" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
                 transform="matrix(-1, 0, 0, 1, 0, 0)">
@@ -38,15 +33,8 @@
                 Web
             </span>
         </button>
-
-
-
     </div>
-
-
 </header>
-
-
 <main>
     <aside [class.collapsed]="sidebarCollapsed">
         <button class="btn-aside" routerLink="/app/vacunas" routerLinkActive="active-btn"
@@ -67,7 +55,6 @@
             </svg>
             <span>Vacunas</span>
         </button>
-
         <button class="btn-aside" routerLink="/app/asd" routerLinkActive="active-btn"
             [routerLinkActiveOptions]="{ exact: true }">
             <svg fill="currentColor" class="icono-3" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"
@@ -82,8 +69,6 @@
             </svg>
             <span>Transportistas</span>
         </button>
-
-
     </aside>
     <section>
         <div class="scroll-container">

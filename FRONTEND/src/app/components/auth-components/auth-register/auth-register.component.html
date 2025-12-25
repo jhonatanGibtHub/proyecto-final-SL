@@ -1,15 +1,10 @@
 <form id="registerForm" [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="on">
-
     <h1 class="page-tittle">Crear mi cuenta</h1>
-
     <p class="page-description">Completa tus
         datos personales para crear tu cuenta y comenzar a administrar.</p>
-
     <input type="hidden" formControlName="is_google_account" />
-    <input type="hidden" formControlName="picture"/>
-
+    <input type="hidden" formControlName="picture" />
     <div class="input-container" (click)="nombreUsuario.focus()">
-
         <label for="nombre">
             <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -20,21 +15,14 @@
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                 </g>
             </svg>
-            <span>
-                Nombre de usuario
-            </span>
+            <span>Nombre de usuario</span>
         </label>
-
         <div class="input">
-            <input #nombreUsuario formControlName="nombre" placeholder="username123" id="nombre" type="text" autocomplete="given-name"
-                name="nombre">
+            <input #nombreUsuario formControlName="nombre" placeholder="username123" id="nombre" type="text"
+                autocomplete="given-name" name="nombre">
         </div>
-        
-
     </div>
-
     <div class="input-container" (click)="inputemail.focus()">
-
         <label for="username">
             <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -49,17 +37,12 @@
                 Correo electronico
             </span>
         </label>
-
         <div class="input">
-            <input #inputemail formControlName="email" placeholder="example@gmail.com" id="email" type="email" autocomplete="username"
-                name="username" >
+            <input #inputemail formControlName="email" placeholder="example@gmail.com" id="email" type="email"
+                autocomplete="username" name="username">
         </div>
-       
-
     </div>
-
     <div class="input-container" (click)="inputpassword.focus()">
-
         <label for="password">
             <svg class="icono-1" fill="currentColor" viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -80,28 +63,17 @@
                         height="32"></rect>
                 </g>
             </svg>
-            <span>
-                Contraseña
-            </span>
+            <span>Contraseña</span>
         </label>
-
         <div class="input">
-            <input #inputpassword formControlName="password" placeholder="Ingrese su contraseña." id="password" autocomplete="new-password"
-                name="password" type="password">
+            <input #inputpassword formControlName="password" placeholder="Ingrese su contraseña." id="password"
+                autocomplete="new-password" name="password" type="password">
         </div>
-       
     </div>
-
     <button class="btn btn-default-yellow" type="submit">
-        <span >Registrarse</span>
-        
+        <span>Registrarse</span>
     </button>
-
-    <div class = "flex-center">
-        <a  routerLink="/auth/login" class="recover-link"> Ya tengo una cuenta</a>
+    <div class="flex-center">
+        <a routerLink="/auth/login" class="recover-link"> Ya tengo una cuenta</a>
     </div>
-    
-
-
-
 </form>

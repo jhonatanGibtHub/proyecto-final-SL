@@ -7,6 +7,4 @@ import { RouterLink } from '@angular/router';
   templateUrl: './header-auth.component.html',
   styleUrl: './header-auth.component.css'
 })
-export class HeaderAuthComponent {
-
-}
+export class HeaderAuthComponent {}

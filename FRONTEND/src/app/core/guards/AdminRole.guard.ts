@@ -5,7 +5,6 @@ import { AuthService } from '../services/auth/auth.service';
 @Injectable({
   providedIn: 'root'
 })
-
 export class AdminRoleGuard implements CanActivate {
 
   constructor(
@@ -20,5 +19,5 @@ export class AdminRoleGuard implements CanActivate {
     }
     return true;
   }
-  
+
 }

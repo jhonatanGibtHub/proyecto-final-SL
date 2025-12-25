@@ -13,14 +13,14 @@ export class HeaderWebComponent {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
+
   goToApp(): void {
     if (this.authService.isAuthenticated()) {
-      // Usuario logueado → app
       this.router.navigate(['/app']);
     } else {
-      // Usuario NO logueado → login
       this.router.navigate(['/auth/login']);
     }
   }
+  
 }

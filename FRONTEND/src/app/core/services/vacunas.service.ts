@@ -12,21 +12,24 @@ export class VacunasService {
   private apiUrl = `${environment.apiUrl}/vacunas`
   constructor(private http: HttpClient) { }
 
-  obtenerVacunas():Observable<VacunaResponse>{    
+  obtenerVacunas(): Observable<VacunaResponse> {
     return this.http.get<VacunaResponse>(this.apiUrl);
   }
- 
+
   obtenerVacunaPorId(id: number): Observable<VacunaResponse> {
     return this.http.get<VacunaResponse>(`${this.apiUrl}/${id}`);
   }
-  eliminarVacuna(id:number):Observable<VacunaResponse> {
+  
+  eliminarVacuna(id: number): Observable<VacunaResponse> {
     return this.http.delete<VacunaResponse>(`${this.apiUrl}/${id}`);
   }
-  crearVacuna(vacuna:Vacuna):Observable<VacunaResponse>{
-    return this.http.post<VacunaResponse>(this.apiUrl, vacuna); 
+
+  crearVacuna(vacuna: Vacuna): Observable<VacunaResponse> {
+    return this.http.post<VacunaResponse>(this.apiUrl, vacuna);
   }
-  actualizarVacuna(id:number, vacuna:Vacuna):Observable<VacunaResponse> {
-    return this.http.put<VacunaResponse>(`${this.apiUrl}/${id}`,vacuna);
+  
+  actualizarVacuna(id: number, vacuna: Vacuna): Observable<VacunaResponse> {
+    return this.http.put<VacunaResponse>(`${this.apiUrl}/${id}`, vacuna);
   }
 
 }

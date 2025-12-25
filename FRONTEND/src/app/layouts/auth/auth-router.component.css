@@ -16,7 +16,6 @@
     position: absolute;
     width: 100%;
     height: calc(1920px * 2);
-
     background-image: url('/imagen_fondo_transparente.png');
     background-repeat: repeat-y;
     background-size: auto 1920px;
