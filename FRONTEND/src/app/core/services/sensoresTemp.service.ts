@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class SensoresTempService {
 
-  private apiUrl = `${environment.apiUrl}/sensoresTemp`
+  private apiUrl = `${environment.apiUrl}/sensores`
   constructor(private http: HttpClient) { }
 
   obtenerSensores(): Observable<SensorTempResponse> {

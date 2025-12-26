@@ -17,9 +17,12 @@
             </svg>
             <span>Nombre de usuario</span>
         </label>
-        <div class="input">
+        <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('nombre')}">
             <input #nombreUsuario formControlName="nombre" placeholder="username123" id="nombre" type="text"
                 autocomplete="given-name" name="nombre">
+        </div>
+         <div class="text-error-message" *ngIf="isFieldInvalid('nombre')">
+            {{ getErrorMessage('nombre') }}
         </div>
     </div>
     <div class="input-container" (click)="inputemail.focus()">
@@ -37,9 +40,12 @@
                 Correo electronico
             </span>
         </label>
-        <div class="input">
+        <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('email')}">
             <input #inputemail formControlName="email" placeholder="example@gmail.com" id="email" type="email"
                 autocomplete="username" name="username">
+        </div>
+        <div class="text-error-message" *ngIf="isFieldInvalid('email')">
+            {{ getErrorMessage('email') }}
         </div>
     </div>
     <div class="input-container" (click)="inputpassword.focus()">
@@ -65,9 +71,12 @@
             </svg>
             <span>Contraseña</span>
         </label>
-        <div class="input">
+        <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('password')}">
             <input #inputpassword formControlName="password" placeholder="Ingrese su contraseña." id="password"
                 autocomplete="new-password" name="password" type="password">
+        </div>
+         <div class="text-error-message" *ngIf="isFieldInvalid('password')">
+            {{ getErrorMessage('password') }}
         </div>
     </div>
     <button class="btn btn-default-yellow" type="submit">

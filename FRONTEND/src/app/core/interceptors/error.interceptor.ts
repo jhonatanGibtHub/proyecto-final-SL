@@ -1,26 +1,46 @@
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { Injectable } from '@angular/core';
+import {
+  HttpEvent,
+  HttpInterceptor,
+  HttpHandler,
+  HttpRequest,
+  HttpErrorResponse
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth/auth.service';
 import { Router } from '@angular/router';
+import { NotificationService } from '../services/notificacion/notificacion-type.service';
 
-export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
+@Injectable()
+export class ErrorInterceptor implements HttpInterceptor {
 
-  return next(req).pipe(
-    catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        // Token inválido o expirado
-        authService.logout();
-      }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private notificacionService: NotificationService
+  ) { }
 
-      if (error.status === 403) {
-        // No tiene permisos
-        router.navigate(['']);
-      }
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
 
-      return throwError(() => error);
-    })
-  );
-};
+    return next.handle(req).pipe(
+      catchError((error: HttpErrorResponse) => {
+
+        if (error.status === 401) {
+          // Token inválido o expirado
+          this.authService.logout();
+        }
+
+        if (error.status === 403) {
+          // No tiene permisos
+          this.router.navigate(['']);
+        }
+        
+        return throwError(() => error);
+      })
+    );
+  }
+}

@@ -106,7 +106,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -199,9 +199,11 @@ svg {
 .icono-4 {
     --i: 8;
 }
+
 .icono-5 {
     --i: 9;
 }
+
 .icono-6 {
     --i: 10;
 }
@@ -508,10 +510,74 @@ label svg {
     color: var(--color-font);
 }
 
-.text-danger {
-    font-size: var(--font-14);
+
+.is-invalid input {
+    border-color: red;
+    background-color: rgb(255, 250, 250);
+
+}
+
+.is-invalid {
+    position: relative;
+    overflow: visible;
+}
+
+
+
+.ngx-slider span {
+    font-size: var(--font-12) !important;
+
+}
+
+.ngx-slider .ngx-slider-bubble:after {
+    content: " °C";
+}
+
+.ngx-slider .ngx-slider-pointer {
+    width: 20px !important;
+    height: 20px !important;
+    top: -8px !important;
+    background-color: var(--color-font) !important;
+}
+
+.ngx-slider .ngx-slider-pointer:hover {
+    transform: scale(1.2) !important;
+}
+
+.ngx-slider .ngx-slider-selection {
+    background: linear-gradient(to right, blue, orange) !important;
+}
+
+.ngx-slider .ngx-slider-pointer:after {
+    width: 0px !important;
+    height: 0px !important;
+    top: 6px !important;
+    left: 6px !important;
+}
+
+.ngx-slider .ngx-slider-bar {
+    height: 6px !important;
+}
+
+
+.is-invalid::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: -10px;
+    right: -10px;
+
+    background-image: url('/icon-error.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.text-error-message {
+    font-size: var(--font-12);
     color: red;
-    font-weight: 500;
+    padding: 3px 0;
+    font-weight: 300;
 }
 
 form {
@@ -588,19 +654,20 @@ select option {
     white-space: nowrap;
 }
 
+.mat-mdc-form-field {
+    display: flex !important;
+    width: 100% !important;
+    background-color: white !important;
+}
+
 .mat-mdc-form-field .mdc-notched-outline__leading,
 .mat-mdc-form-field .mdc-notched-outline__notch,
 .mat-mdc-form-field .mdc-notched-outline__trailing {
     border-width: 1px !important;
-    border-color: var(--gray-300) !important;
+    border-color: none !important;
     transition: border-color .1s ease-in-out;
 }
 
-.mat-mdc-form-field:hover .mdc-notched-outline__leading,
-.mat-mdc-form-field:hover .mdc-notched-outline__notch,
-.mat-mdc-form-field:hover .mdc-notched-outline__trailing {
-    border-color: rgb(15, 126, 237) !important;
-}
 
 .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
 .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
@@ -609,13 +676,10 @@ select option {
 }
 
 .mat-mdc-select-trigger {
-    padding: 0 14px !important;
+    padding: 0 !important;
     font-size: var(--font-14) !important;
 }
 
-.mat-mdc-form-field {
-    display: inline-flex;
-}
 
 .mdc-text-field--outlined .mat-mdc-form-field-infix,
 .mdc-text-field--no-label .mat-mdc-form-field-infix {
@@ -624,7 +688,7 @@ select option {
 }
 
 .mat-mdc-form-field-bottom-align {
-    display: none;
+    display: none !important    ;
 }
 
 .mat-mdc-text-field-wrapper .mdc-text-field .mdc-text-field--outlined .mdc-text-field--no-label .mdc-text-field--invalid {
@@ -637,7 +701,6 @@ select option {
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18) !important;
     margin-top: 5px;
     padding: 0px 0px !important;
-    animation: slideDown .15s ease-out;
 }
 
 @keyframes slideDown {
@@ -662,6 +725,51 @@ select option {
     background-color: var(--gray-100) !important;
 }
 
-.mat-mdc-option.mdc-list-item--selected {
-    background-color: rgba(15, 126, 237, 0.568) !important;
+
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-container {
+    width: 90%;
+    max-width: 500px;
+    background: rgba(250, 250, 255, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 50px;
+    animation: fadeInScale 0.3s ease;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }

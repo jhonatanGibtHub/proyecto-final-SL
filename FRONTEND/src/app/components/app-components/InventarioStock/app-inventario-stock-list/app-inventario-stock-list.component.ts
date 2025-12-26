@@ -35,7 +35,7 @@ export class AppInventarioStockListComponent implements OnInit {
       next: (response: InventarioStockResponse) => {
         if (response.success && Array.isArray(response.data)) {
           this.inventarioStocks = response.data;
-          console.log('InventarioStocks cargados:', this.inventarioStocks);
+          
         } else if (response.success && !response.data) {
           this.inventarioStocks = [];
         } else {

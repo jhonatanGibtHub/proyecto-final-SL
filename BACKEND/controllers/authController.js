@@ -94,7 +94,7 @@ const login = async (req, res) => {
     if (usuarios.length === 0) {
       return res.status(401).json({
         success: false,
-        mensaje: "Credenciales inválidas",
+        mensaje: "Credenciales inválidas"
       });
     }
 
@@ -151,7 +151,10 @@ const login = async (req, res) => {
   }
 };
 
-async function generateRandomPassword() {
+/**
+ * Generar contraseña para una cuenta google
+ */
+async function generarContraseña() {
   const length = 20;
   const charset =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
@@ -167,11 +170,11 @@ async function generateRandomPassword() {
 
   return passwordHash;
 }
+
 /**
  * Login con Google
  * POST /api/auth/google
  */
-
 const loginGoogle = async (req, res) => {
   try {
     const { idToken } = req.body;
@@ -183,7 +186,6 @@ const loginGoogle = async (req, res) => {
       });
     }
 
-    // ⚠️ OJO: decode NO valida el token (solo lee el payload)
     const decoded = jwt.decode(idToken);
 
     if (!decoded || !decoded.email) {
@@ -208,7 +210,7 @@ const loginGoogle = async (req, res) => {
 
     if (usuarios.length === 0) {
       // Crear usuario Google
-      const passwordHash = await generateRandomPassword();
+      const passwordHash = await generarContraseña();
       const [result] = await db.query(
         `INSERT INTO usuarios 
          (nombre, email, password, is_google_account, picture, activo)
@@ -310,9 +312,118 @@ const obtenerPerfil = async (req, res) => {
   }
 };
 
+/**
+ * Obtener todos los usuarios (solo admin)
+ * GET /api/auth/usuarios
+ */
+const obtenerUsuarios = async (req, res) => {
+  try {
+    const [usuarios] = await db.query(
+      "SELECT id, nombre, email, rol, activo, fecha_registro, ultima_conexion FROM usuarios ORDER BY fecha_registro DESC"
+    );
+
+    res.json({
+      success: true,
+      data: usuarios,
+    });
+  } catch (error) {
+    console.error("Error al obtener usuarios:", error);
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al obtener usuarios",
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * Deshabilitar/Habilitar usuario (solo admin)
+ * PUT /api/auth/usuarios/:id/toggle-activo
+ */
+const toggleActivoUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Obtener estado actual
+    const [usuarios] = await db.query("SELECT activo FROM usuarios WHERE id = ?", [id]);
+    if (usuarios.length === 0) {
+      return res.status(404).json({
+        success: false,
+        mensaje: "Usuario no encontrado",
+      });
+    }
+
+    const nuevoEstado = !usuarios[0].activo;
+
+    // Actualizar estado
+    await db.query("UPDATE usuarios SET activo = ? WHERE id = ?", [nuevoEstado, id]);
+
+    res.json({
+      success: true,
+      mensaje: `Usuario ${nuevoEstado ? 'habilitado' : 'deshabilitado'} exitosamente`,
+    });
+  } catch (error) {
+    console.error("Error al cambiar estado usuario:", error);
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al cambiar estado del usuario",
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * Cambiar rol de usuario (solo admin)
+ * PUT /api/auth/usuarios/:id/rol
+ */
+const cambiarRolUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rol } = req.body;
+
+    if (!['admin', 'usuario'].includes(rol)) {
+      return res.status(400).json({
+        success: false,
+        mensaje: "Rol inválido",
+      });
+    }
+
+    // Verificar que no sea el último admin
+    if (rol === 'usuario') {
+      const [admins] = await db.query("SELECT COUNT(*) as count FROM usuarios WHERE rol = 'admin' AND activo = 1");
+      if (admins[0].count <= 1) {
+        const [usuarioActual] = await db.query("SELECT rol FROM usuarios WHERE id = ?", [id]);
+        if (usuarioActual[0].rol === 'admin') {
+          return res.status(400).json({
+            success: false,
+            mensaje: "No se puede quitar el rol de admin al último administrador activo",
+          });
+        }
+      }
+    }
+
+    await db.query("UPDATE usuarios SET rol = ? WHERE id = ?", [rol, id]);
+
+    res.json({
+      success: true,
+      mensaje: "Rol actualizado exitosamente",
+    });
+  } catch (error) {
+    console.error("Error al cambiar rol:", error);
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al cambiar rol del usuario",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   registrarUsuario,
   login,
   loginGoogle,
   obtenerPerfil,
+  obtenerUsuarios,
+  toggleActivoUsuario,
+  cambiarRolUsuario,
 };

@@ -8,10 +8,14 @@ import { LotesService } from '../../../../core/services/lotes.service';
 import { UbicacionesService } from '../../../../core/services/ubicaciones.service';
 import { Lote } from '../../../../core/models/lote';
 import { Ubicacion } from '../../../../core/models/ubicacion';
+import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-app-inventario-stock-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,MatFormFieldModule,
+    MatSelectModule],
   templateUrl: './app-inventario-stock-form.component.html',
   styleUrl: './app-inventario-stock-form.component.css'
 })
@@ -46,17 +50,18 @@ export class AppInventarioStockFormComponent implements OnInit {
   }
 
   constructor(
-    private fb: FormBuilder,
-    private inventarioStockService: InventarioStockService,
-    private lotesService: LotesService,
-    private ubicacionesService: UbicacionesService,
-    private router: Router,
-    private route: ActivatedRoute
+    private readonly fb: FormBuilder,
+    private readonly inventarioStockService: InventarioStockService,
+    private readonly lotesService: LotesService,
+    private readonly ubicacionesService: UbicacionesService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly notificationService: NotificationService
   ) {
     this.inventarioStockForm = this.fb.group({
       id_lote: ['', [Validators.required]],
       id_ubicacion: ['', [Validators.required]],
-      cantidad_actual: ['', [Validators.required, Validators.min(0)]]
+      cantidad_actual: ['', [Validators.required, Validators.min(0.01)]]
     });
   }
 
@@ -126,7 +131,9 @@ export class AppInventarioStockFormComponent implements OnInit {
     this.error = '';
     this.successMessage = '';
     if (this.inventarioStockForm.invalid) {
+      this.inventarioStockForm.markAllAsTouched();
       this.error = 'Por favor, rellene todos los campos requeridos correctamente.';
+      this.notificationService.error(this.error);
       return;
     }
     const inventarioStockData: InventarioStock = this.inventarioStockForm.value;
@@ -134,33 +141,53 @@ export class AppInventarioStockFormComponent implements OnInit {
     if (this.isEditMode && this.inventarioStockId) {
       this.inventarioStockService.actualizarInventarioStock(this.inventarioStockId, inventarioStockData).subscribe({
         next: (response) => {
-          if (response.success) {
             this.successMessage = 'Inventario stock actualizado correctamente.';
+            this.notificationService.success(this.successMessage);
             this.inventarioStockGuardado.emit();
             this.cerrarModal();
-          } else {
-            this.error = response.mensaje || 'Error al actualizar el inventario stock.';
-          }
         },
-        error: () => {
+        error: (err) => {
           this.error = 'Error de conexión al actualizar el inventario stock.';
+          const mensajeError = err.error?.mensaje;
+          this.notificationService.error(mensajeError || this.error);
         }
       });
     } else {
       this.inventarioStockService.crearInventarioStock(inventarioStockData).subscribe({
         next: (response) => {
-          if (response.success) {
             this.successMessage = 'Inventario stock creado correctamente.';
+            this.notificationService.success(this.successMessage);
             this.inventarioStockGuardado.emit();
             this.cerrarModal();
-          } else {
-            this.error = response.mensaje || 'Error al crear el inventario stock.';
-          }
         },
-        error: () => {
+        error: (err) => {
           this.error = 'Error de conexión al crear el inventario stock.';
+          const mensajeError = err.error?.mensaje;
+          this.notificationService.error(mensajeError || this.error);
         }
       });
     }
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.inventarioStockForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const field = this.inventarioStockForm.get(fieldName);
+
+    if (!field) return '';
+
+    if (field.hasError('required')) {
+      return 'Este campo es obligatorio';
+    }
+
+    if (field.hasError('min')) {
+      const min = field.errors?.['min']?.min;
+      return `El valor mínimo permitido es ${min}`;
+    }
+
+    return '';
   }
 }

@@ -1,9 +1,14 @@
-<form [formGroup]="loginForm" id="loginForm" autocomplete="off">
+
+
+
+<form [formGroup]="loginForm" id="loginForm"  (ngSubmit)="onSubmit()" autocomplete="off">
     <h1 class="page-tittle">Iniciar Sesión</h1>
     <p class="page-description">Accede a tu cuenta para gestionar las vacunas, ver tu historial de compras y continuar
         donde lo dejaste.</p>
     <input type="hidden" formControlName="is_google_account" />
     <div class="input-container" (click)="inputemail.focus()">
+
+
         <label for="email">
             <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -18,10 +23,17 @@
                 Correo electronico
             </span>
         </label>
-        <div class="input">
+        <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('email')}">
             <input #inputemail formControlName="email" placeholder="example@gmail.com" id="email" type="text"
                 autocomplete="username" name="email">
         </div>
+
+        <div class="text-error-message" *ngIf="isFieldInvalid('email')">
+            {{ getErrorMessage('email') }}
+        </div>
+
+
+
     </div>
     <div class="input-container" (click)="inputpassword.focus()">
         <label for="password">
@@ -36,7 +48,7 @@
                             }
                         </style>
                     </defs>
-                    <path
+                    <path   
                         d="M21,2a8.9977,8.9977,0,0,0-8.6119,11.6118L2,24v6H8L18.3881,19.6118A9,9,0,1,0,21,2Zm0,16a7.0125,7.0125,0,0,1-2.0322-.3022L17.821,17.35l-.8472.8472-3.1811,3.1812L12.4141,20,11,21.4141l1.3787,1.3786-1.5859,1.586L9.4141,23,8,24.4141l1.3787,1.3786L7.1716,28H4V24.8284l9.8023-9.8023.8472-.8474-.3473-1.1467A7,7,0,1,1,21,18Z">
                     </path>
                     <circle cx="22" cy="10" r="2"></circle>
@@ -49,13 +61,17 @@
             </span>
         </label>
 
-        <div class="input">
+        <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('password')}">
             <input #inputpassword formControlName="password" placeholder="Ingrese su contraseña." id="password"
                 autocomplete="current-password" name="password" type="password">
         </div>
+
+         <div class="text-error-message" *ngIf="isFieldInvalid('password')">
+            {{ getErrorMessage('password') }}
+        </div>
     </div>
     <a class="recover-link">¿Olvidaste tu contraseña?</a>
-    <button class="btn btn-default-yellow" (click)="onSubmit()" type="submit">
+    <button class="btn btn-default-yellow" type="submit">
         <span>Ingresar a la App</span>
     </button>
     <div class="separator-text">
@@ -73,8 +89,9 @@
                 </path>
             </g>
         </svg>
-        <span>Crear unacuenta</span>
+        <span>Crear una cuenta</span>
     </button>
 
 
 </form>
+

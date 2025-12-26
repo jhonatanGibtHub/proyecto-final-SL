@@ -4,10 +4,18 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { UbicacionesService } from '../../../../core/services/ubicaciones.service';
 import { Ubicacion } from '../../../../core/models/ubicacion';
+import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-app-ubicacion-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule
+  ],
   templateUrl: './app-ubicacion-form.component.html',
   styleUrl: './app-ubicacion-form.component.css'
 })
@@ -36,21 +44,27 @@ export class AppUbicacionFormComponent implements OnInit {
     } else {
       this.isEditMode = false;
       this.ubicacionId = null;
-      this.ubicacionForm.reset();
+      this.ubicacionForm.reset({
+        nombre: '',
+        tipo: '',
+        distrito: '',
+        provincia: ''
+      });
     }
   }
 
   constructor(
-    private fb: FormBuilder,
-    private ubicacionService: UbicacionesService,
-    private router: Router,
-    private route: ActivatedRoute
+    private readonly fb: FormBuilder,
+    private readonly ubicacionService: UbicacionesService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly notificationService: NotificationService
   ) {
     this.ubicacionForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       tipo: ['', [Validators.required]],
       distrito: ['', [Validators.required]],
-      provincia: ['']
+      provincia: ['', [Validators.required]]
     });
   }
 
@@ -58,14 +72,16 @@ export class AppUbicacionFormComponent implements OnInit {
     this.ubicacionService.obtenerUbicacionPorId(id).subscribe({
       next: (response) => {
         if (response.success && response.data && !Array.isArray(response.data)) {
-          const ubicacion = response.data as Ubicacion;
+          const ubicacion = response.data;
           this.ubicacionForm.patchValue(ubicacion);
-        } else if (response.error) {
-          this.error = response.error;
-        }
+        } 
       },
-      error: () => {
+      error: (err) => {
         this.error = 'Error al cargar la ubicación: Fallo de conexión.';
+        const mensajeError = err.error?.mensaje;
+        this.notificationService.error(
+          mensajeError || this.error
+        );
       }
     });
   }
@@ -82,6 +98,8 @@ export class AppUbicacionFormComponent implements OnInit {
 
   cerrarModal(): void {
     this.showModal = false;
+
+
   }
 
   onCancel(): void {
@@ -91,42 +109,66 @@ export class AppUbicacionFormComponent implements OnInit {
   onSubmit() {
     this.error = '';
     this.successMessage = '';
+
     if (this.ubicacionForm.invalid) {
-      this.error = 'Por favor, rellene todos los campos requeridos correctamente.';
+      this.ubicacionForm.markAllAsTouched();
+      this.error = 'Por favor, seleccione y complete todos los campos requeridos correctamente.';
+      this.notificationService.error(this.error);
       return;
     }
+
     const ubicacionData: Ubicacion = this.ubicacionForm.value;
-    console.log('Datos enviados:', ubicacionData);
+
     if (this.isEditMode && this.ubicacionId) {
       this.ubicacionService.actualizarUbicacion(this.ubicacionId, ubicacionData).subscribe({
         next: (response) => {
-          if (response.success) {
-            this.successMessage = 'Ubicación actualizada correctamente.';
-            this.ubicacionGuardado.emit();
-            this.cerrarModal();
-          } else {
-            this.error = response.mensaje || 'Error al actualizar la ubicación.';
-          }
+          this.successMessage = 'Ubicación actualizada correctamente.';
+          this.notificationService.success(this.successMessage);
+          this.ubicacionGuardado.emit();
+          this.cerrarModal();
         },
-        error: () => {
+        error: (err) => {
           this.error = 'Error de conexión al actualizar la ubicación.';
+          const mensajeError = err.error?.mensaje;
+          this.notificationService.error(mensajeError || this.error);
         }
       });
     } else {
       this.ubicacionService.crearUbicacion(ubicacionData).subscribe({
         next: (response) => {
-          if (response.success) {
-            this.successMessage = 'Ubicación creada correctamente.';
-            this.ubicacionGuardado.emit();
-            this.cerrarModal();
-          } else {
-            this.error = response.mensaje || 'Error al crear la ubicación.';
-          }
+          this.successMessage = 'Ubicación creada correctamente.';
+          this.notificationService.success(this.successMessage);
+          this.ubicacionGuardado.emit();
+          this.cerrarModal();
         },
-        error: () => {
+        error: (err) => {
           this.error = 'Error de conexión al crear la ubicación.';
+          const mensajeError = err.error?.mensaje;
+          this.notificationService.error(mensajeError || this.error);
         }
       });
     }
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.ubicacionForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const field = this.ubicacionForm.get(fieldName);
+
+    if (!field) return '';
+
+    if (field.hasError('required')) {
+      return 'Este campo es obligatorio';
+    }
+
+    if (field.hasError('minlength')) {
+      const requiredLength = field.errors?.['minlength']?.requiredLength;
+      return `Mínimo ${requiredLength} caracteres`;
+    }
+
+    return '';
   }
 }

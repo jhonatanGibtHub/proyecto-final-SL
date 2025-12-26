@@ -1,6 +1,5 @@
 const db = require('../config/database');
 
-
 const obtenerVacunas = async (req, res) => {
     try {
         const [Vacunas] = await db.query('SELECT * FROM vacunas');
@@ -18,27 +17,9 @@ const obtenerVacunas = async (req, res) => {
     }
 };
 
-
 const crearVacunas = async (req, res) => {
     try {
         const { nombre_comercial, fabricante, temp_min_c, temp_max_c } = req.body;
-
-        if (!nombre_comercial || !fabricante) {
-            return res.status(400).json({
-                success: false,
-                mensaje: "Nombre comercial y fabricante son obligatorios"
-            });
-        }
-        
-       
-        if (isNaN(temp_min_c) || isNaN(temp_max_c) || temp_min_c >= temp_max_c) {
-            return res.status(400).json({
-                success: false,
-                mensaje: "Los rangos de temperatura (T_min y T_max) son inválidos o T_min no es menor que T_max."
-            });
-        }
-        
-        
         const [resultado] = await db.query(
             'INSERT INTO Vacunas(nombre_comercial, fabricante, temp_min_c, temp_max_c) VALUES (?,?,?,?)',
             [nombre_comercial, fabricante, temp_min_c, temp_max_c]

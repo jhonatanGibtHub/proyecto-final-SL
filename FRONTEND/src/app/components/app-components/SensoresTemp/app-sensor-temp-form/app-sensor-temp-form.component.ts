@@ -6,6 +6,7 @@ import { SensoresTempService } from '../../../../core/services/sensoresTemp.serv
 import { SensorTemp } from '../../../../core/models/sensorTemp';
 import { UbicacionesService } from '../../../../core/services/ubicaciones.service';
 import { Ubicacion } from '../../../../core/models/ubicacion';
+import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
 
 @Component({
   selector: 'app-app-sensor-temp-form',
@@ -43,11 +44,12 @@ export class AppSensorTempFormComponent implements OnInit {
   }
 
   constructor(
-    private fb: FormBuilder,
-    private sensoresTempService: SensoresTempService,
-    private ubicacionesService: UbicacionesService,
-    private router: Router,
-    private route: ActivatedRoute
+    private readonly fb: FormBuilder,
+    private readonly sensoresTempService: SensoresTempService,
+    private readonly ubicacionesService: UbicacionesService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly notificationService: NotificationService
   ) {
     this.sensorTempForm = this.fb.group({
       codigo_serie: ['', [Validators.required]],
@@ -108,7 +110,9 @@ export class AppSensorTempFormComponent implements OnInit {
     this.error = '';
     this.successMessage = '';
     if (this.sensorTempForm.invalid) {
+      this.sensorTempForm.markAllAsTouched();
       this.error = 'Por favor, rellene todos los campos requeridos correctamente.';
+      this.notificationService.error(this.error);
       return;
     }
     const sensorData: SensorTemp = this.sensorTempForm.value;
@@ -116,33 +120,48 @@ export class AppSensorTempFormComponent implements OnInit {
     if (this.isEditMode && this.sensorId) {
       this.sensoresTempService.actualizarSensor(this.sensorId, sensorData).subscribe({
         next: (response) => {
-          if (response.success) {
             this.successMessage = 'Sensor actualizado correctamente.';
+            this.notificationService.success(this.successMessage);
             this.sensorTempGuardado.emit();
             this.cerrarModal();
-          } else {
-            this.error = response.mensaje || 'Error al actualizar el sensor.';
-          }
         },
-        error: () => {
+        error: (err) => {
           this.error = 'Error de conexión al actualizar el sensor.';
+          const mensajeError = err.error?.mensaje;
+          this.notificationService.error(mensajeError || this.error);
         }
       });
     } else {
       this.sensoresTempService.crearSensor(sensorData).subscribe({
         next: (response) => {
-          if (response.success) {
             this.successMessage = 'Sensor creado correctamente.';
+            this.notificationService.success(this.successMessage);
             this.sensorTempGuardado.emit();
             this.cerrarModal();
-          } else {
-            this.error = response.mensaje || 'Error al crear el sensor.';
-          }
         },
-        error: () => {
+        error: (err) => {
           this.error = 'Error de conexión al crear el sensor.';
+          const mensajeError = err.error?.mensaje;
+          this.notificationService.error(mensajeError || this.error);
         }
       });
     }
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.sensorTempForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const field = this.sensorTempForm.get(fieldName);
+
+    if (!field) return '';
+
+    if (field.hasError('required')) {
+      return 'Este campo es obligatorio';
+    }
+
+    return '';
   }
 }

@@ -152,10 +152,40 @@ const eliminarTransportista = async (req, res) => {
         });
     }
 };
+const obtenerTransportistaPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const [transportistas] = await db.query(
+            'SELECT * FROM Transportistas WHERE id_transportista = ?',
+            [id]
+        );
+
+        if (transportistas.length === 0) {
+            return res.status(404).json({
+                success: false,
+                mensaje: "Transportista no encontrado."
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: transportistas[0]
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al obtener el Transportista",
+            error: error.message
+        });
+    }
+};
 
 module.exports = {
     obtenerTransportistas,
     crearTransportista,
     actualizarTransportista,
     eliminarTransportista,
+    obtenerTransportistaPorId
 };

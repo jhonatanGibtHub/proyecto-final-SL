@@ -1,0 +1,52 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1rem;
+    color: #666;
+}
+
+
+.acciones {
+    display: flex;
+    gap: 10px;
+}
+
+.acciones button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.acciones button:hover {
+    background-color: #e9ecef;
+}
+
+.icono-0 {
+    width: 20px;
+    height: 20px;
+    color: #6c757d;
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 1.1rem;
+}

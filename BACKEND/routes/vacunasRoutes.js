@@ -8,9 +8,7 @@ const {
     obtenerVacunaPorId
 } = require('../controllers/vacunasController');
 
-
 router.get('/', obtenerVacunas); 
-
 
 router.get('/:id', obtenerVacunaPorId);
 

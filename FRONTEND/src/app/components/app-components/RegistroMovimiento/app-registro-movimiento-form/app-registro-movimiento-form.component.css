@@ -1,0 +1,19 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.is-invalid {
+    border-color: red !important;
+}
+
+.text-error-message {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+.text-error-message small {
+    display: block;
+}

@@ -1,33 +1,29 @@
 :host {
     position: relative;
-    display: flex;
-    width: 100%;
-    height: 80vh;
-    padding: 3rem;
-    box-sizing: border-box;
+    display: inline-flex;
+    flex: 1;
     font-family: system-ui, sans-serif;
 }
 
 .welcome {
-    max-width: 45%;
+    max-width:35%;
+    margin-left: 5%;
     z-index: 2;
 }
 
 .welcome h1 {
     position: relative;
-    top: 25%;
+    top: 30%;
     font-size: 2.9rem;
-    margin-bottom: 0.5rem;
     color: var(--color-font);
 }
 
 .welcome p {
     position: relative;
-    top: 25%;
+    top: 30%;
     font-size: 1rem;
     opacity: 0.8;
     line-height: 1.5;
-    margin-bottom: 2rem;
     color: var(--color-font);
 }
 
@@ -95,7 +91,7 @@
     position: absolute;
     width: var(--width);
     height: var(--width);
-    right: 180px;
+    right: 10%;
     top: calc(50% - (var(--width) / 2));
     background-image: url('/fondo_app_1.png');
     background-size: cover;

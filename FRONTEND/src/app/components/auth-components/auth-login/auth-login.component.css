@@ -1,15 +1,15 @@
-:host{
-    height: calc(100vh - 70px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 50px;
+:host {
+  height: calc(100vh - 70px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
 }
 
-form{
-    width: 340px;
-    margin: auto;
-    height: fit-content;
+form {
+  width: 340px;
+  margin: auto;
+  height: fit-content;
 }
 
 .recover-link {
@@ -19,4 +19,3 @@ form{
   font-size: var(--font-12);
   cursor: pointer;
 }
-

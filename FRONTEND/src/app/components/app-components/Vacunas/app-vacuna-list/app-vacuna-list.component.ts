@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Vacuna, VacunaResponse } from '../../../../core/models/vacuna';
 import { VacunasService } from '../../../../core/services/vacunas.service';
 import { AppVacunaFormComponent } from '../app-vacuna-form/app-vacuna-form.component';
+import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
 
 @Component({
   selector: 'app-app-vacuna-list',
@@ -23,7 +24,7 @@ export class AppVacunaListComponent implements OnInit {
   abrirModalEditar(id: number): void {
     this.vacunaFormModal.abrirModal(id);
   }
-  constructor(private vacunaService: VacunasService) {}
+  constructor(private vacunaService: VacunasService, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.cargarVacunas();
@@ -34,17 +35,18 @@ export class AppVacunaListComponent implements OnInit {
       next: (response: VacunaResponse) => {
         if (response.success && Array.isArray(response.data)) {
           this.vacunas = response.data;
-          console.log('Vacunas cargadas:', this.vacunas);
         } else if (response.success && !response.data) {
           this.vacunas = [];
         } else {
-          this.error = response.mensaje || 'Error al obtener la lista de vacunas.';
+          this.error = 'Error al obtener la lista de vacunas.';
           this.vacunas = [];
         }
       },
       error: (err) => {
-        this.error = 'Error de conexión con el servidor.';
-        console.error('Error HTTP:', err);
+          this.error = "Se ha perdido la conexion con la base de datos.";
+          this.notificationService.error(
+            this.error
+          );
       }
     });
   }
@@ -54,16 +56,19 @@ export class AppVacunaListComponent implements OnInit {
       this.vacunaService.eliminarVacuna(id).subscribe({
         next: (response: VacunaResponse) => {
           if (response.success) {
-            alert('Vacuna eliminada exitosamente.');
+            this.notificationService.success("Vacuna eliminada exitosamente.");
             this.cargarVacunas();
           } else {
             this.error = response.mensaje || 'Error al eliminar la vacuna.';
-            alert(this.error);
+            this.notificationService.warning(this.error);
           }
         },
         error: (err) => {
           this.error = 'Error de servidor al intentar eliminar.';
-          console.error('Error HTTP:', err);
+          const mensajeError = err.error?.mensaje;
+          this.notificationService.error(
+            mensajeError || this.error
+          );
         }
       });
     }

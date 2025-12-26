@@ -37,7 +37,7 @@ const verificarToken = (req, res, next) => {
                 mensaje: 'Token inválido.'
             });
         }
-
+        
         return res.status(500).json({
             success: false,
             mensaje: 'Error al verificar token',

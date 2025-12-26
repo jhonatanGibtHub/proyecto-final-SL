@@ -20,14 +20,12 @@
                         Nombre
                     </span>
                 </label>
-                <div class="input">
+                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('nombre')}">
                     <input #inputNombre id="nombre" type="text" formControlName="nombre"
                         placeholder="Ingrese el nombre de la ubicación" name="nombre">
                 </div>
-                <div *ngIf="ubicacionForm.get('nombre')?.invalid && ubicacionForm.get('nombre')?.touched"
-                    class="text-danger">
-                    <small *ngIf="ubicacionForm.get('nombre')?.errors?.['required']">Nombre es requerido.</small>
-                    <small *ngIf="ubicacionForm.get('nombre')?.errors?.['minlength']">Debe tener al menos 3 caracteres.</small>
+                <div *ngIf="isFieldInvalid('nombre')" class="text-error-message">
+                    <small>{{ getErrorMessage('nombre') }}</small>
                 </div>
             </div>
             <div class="input-container">
@@ -48,15 +46,28 @@
                         Tipo
                     </span>
                 </label>
-                <div class="input">
-                    <select id="tipo" formControlName="tipo">
-                        <option value="">Seleccione un tipo</option>
-                        <option *ngFor="let tipo of tipos" [value]="tipo">{{ tipo }}</option>
-                    </select>
+
+
+                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('tipo')}">
+
+
+
+                    <mat-form-field appearance="outline">
+                        <mat-select id="tipo" formControlName="tipo">
+                            <mat-option value="">Seleccione un autor</mat-option>
+
+                            <mat-option *ngFor="let item of tipos" [value]="item">
+                                {{ item }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+
                 </div>
-                <div *ngIf="ubicacionForm.get('tipo')?.invalid && ubicacionForm.get('tipo')?.touched"
-                    class="text-danger">
-                    <small *ngIf="ubicacionForm.get('tipo')?.errors?.['required']">Tipo es requerido.</small>
+
+
+                <div *ngIf="isFieldInvalid('tipo')" class="text-error-message">
+                    <small>{{ getErrorMessage('tipo') }}</small>
                 </div>
             </div>
             <div class="input-container" (click)="inputDistrito.focus()">
@@ -77,13 +88,12 @@
                         Distrito
                     </span>
                 </label>
-                <div class="input">
+                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('distrito')}">
                     <input #inputDistrito id="distrito" type="text" formControlName="distrito"
                         placeholder="Ingrese el distrito" name="distrito">
                 </div>
-                <div *ngIf="ubicacionForm.get('distrito')?.invalid && ubicacionForm.get('distrito')?.touched"
-                    class="text-danger">
-                    <small *ngIf="ubicacionForm.get('distrito')?.errors?.['required']">Distrito es requerido.</small>
+                <div *ngIf="isFieldInvalid('distrito')" class="text-error-message">
+                    <small>{{ getErrorMessage('distrito') }}</small>
                 </div>
             </div>
             <div class="input-container" (click)="inputProvincia.focus()">
@@ -104,13 +114,16 @@
                         Provincia
                     </span>
                 </label>
-                <div class="input">
+                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('provincia')}">
                     <input #inputProvincia id="provincia" type="text" formControlName="provincia"
                         placeholder="Ingrese la provincia" name="provincia">
                 </div>
+                <div *ngIf="isFieldInvalid('provincia')" class="text-error-message">
+                    <small>{{ getErrorMessage('provincia') }}</small>
+                </div>
             </div>
             <div class="flex-end" style="margin-top: 30px;">
-                <button type="submit" class="btn btn-blue" [disabled]="ubicacionForm.invalid">
+                <button type="submit" class="btn btn-blue">
                     <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>

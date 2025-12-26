@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Transportista, TransportistaResponse } from '../../../../core/models/transportista';
 import { TransportistasService } from '../../../../core/services/transportistas.service';
 import { AppTransportistaFormComponent } from '../app-transportista-form/app-transportista-form.component';
+import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
 
 @Component({
   selector: 'app-app-transportista-list',
@@ -23,7 +24,7 @@ export class AppTransportistaListComponent implements OnInit {
   abrirModalEditar(id: number): void {
     this.transportistaFormModal.abrirModal(id);
   }
-  constructor(private transportistaService: TransportistasService) {}
+  constructor(private transportistaService: TransportistasService, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.cargarTransportistas();
@@ -54,16 +55,23 @@ export class AppTransportistaListComponent implements OnInit {
       this.transportistaService.eliminarTransportista(id).subscribe({
         next: (response: TransportistaResponse) => {
           if (response.success) {
-            alert('Transportista eliminado exitosamente.');
+            this.notificationService.success(
+            'Transportista eliminado exitosamente.'
+          );
             this.cargarTransportistas();
           } else {
             this.error = response.mensaje || 'Error al eliminar el transportista.';
-            alert(this.error);
+            this.notificationService.warning(
+            this.error
+          );
           }
         },
         error: (err) => {
           this.error = 'Error de servidor al intentar eliminar.';
-          console.error('Error HTTP:', err);
+          const mensajeError = err.error?.mensaje;
+          this.notificationService.error(
+            mensajeError || this.error
+          );
         }
       });
     }

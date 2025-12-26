@@ -7,6 +7,11 @@ import { AppUbicacionListComponent } from '../../components/app-components/Ubica
 import { AppTransportistaListComponent } from '../../components/app-components/Transportistas/app-transportista-list/app-transportista-list.component';
 import { AppInventarioStockListComponent } from '../../components/app-components/InventarioStock/app-inventario-stock-list/app-inventario-stock-list.component';
 import { AppSensorTempListComponent } from '../../components/app-components/SensoresTemp/app-sensor-temp-list/app-sensor-temp-list.component';
+import { AppLoteListComponent } from '../../components/app-components/Lotes/app-lote-list/app-lote-list.component';
+import { AppMedicionTempListComponent } from '../../components/app-components/MedicionesTemp/app-medicion-temp-list/app-medicion-temp-list.component';
+import { AppRegistroMovimientoListComponent } from '../../components/app-components/RegistroMovimiento/app-registro-movimiento-list/app-registro-movimiento-list.component';
+import { AppUsuariosListComponent } from '../../components/app-components/Usuarios/app-usuarios-list/app-usuarios-list.component';
+import { AdminGuard } from '../../core/guards/admin.guard';
 
 export const AppRoutes: Routes = [
   {
@@ -18,6 +23,10 @@ export const AppRoutes: Routes = [
      { path: 'transportistas', component: AppTransportistaListComponent, canActivate: [AuthGuard]},
      { path: 'inventario-stock', component: AppInventarioStockListComponent, canActivate: [AuthGuard]},
      { path: 'sensores-temp', component: AppSensorTempListComponent, canActivate: [AuthGuard]},
+     { path: 'lotes', component: AppLoteListComponent, canActivate: [AuthGuard]},
+     { path: 'mediciones-temp', component: AppMedicionTempListComponent, canActivate: [AuthGuard]},
+     { path: 'registro-movimiento', component: AppRegistroMovimientoListComponent, canActivate: [AuthGuard]},
+     { path: 'usuarios', component: AppUsuariosListComponent, canActivate: [AdminGuard]},
     ]
   }
 ];

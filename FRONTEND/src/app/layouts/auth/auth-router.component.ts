@@ -8,7 +8,7 @@ import { HeaderAuthComponent } from "../../shared/header-auth/header-auth.compon
   imports: [
     RouterOutlet,
     CommonModule,
-    HeaderAuthComponent
+    HeaderAuthComponent,
 ],
   templateUrl: './auth-router.component.html',
   styleUrl: './auth-router.component.css'

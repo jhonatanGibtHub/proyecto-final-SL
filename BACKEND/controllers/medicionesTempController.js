@@ -101,7 +101,108 @@ const crearMedicion = async (req, res) => {
 };
 
 
+const obtenerMedicionPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [mediciones] = await db.query(`
+            SELECT 
+                MT.id_medicion, 
+                MT.id_sensor,
+                MT.id_lote,
+                MT.temperatura_c, 
+                MT.timestamp_medicion
+            FROM Mediciones_Temp MT
+            WHERE MT.id_medicion = ?
+        `, [id]);
+        
+        if (mediciones.length === 0) {
+            return res.status(404).json({
+                success: false,
+                mensaje: "Medición no encontrada"
+            });
+        }
+
+        res.json({
+            success: true,
+            data: mediciones[0]
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al obtener la medición",
+            error: error.message
+        });
+    }
+};
+
+const actualizarMedicion = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { id_sensor, id_lote, temperatura_c } = req.body;
+
+        if (!id_sensor || !id_lote || temperatura_c === undefined || isNaN(temperatura_c)) {
+            return res.status(400).json({
+                success: false,
+                mensaje: "ID de sensor, ID de lote y temperatura son obligatorios."
+            });
+        }
+
+        const [resultado] = await db.query(
+            'UPDATE Mediciones_Temp SET id_sensor = ?, id_lote = ?, temperatura_c = ? WHERE id_medicion = ?',
+            [id_sensor, id_lote, temperatura_c, id]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                mensaje: "Medición no encontrada"
+            });
+        }
+
+        res.json({
+            success: true,
+            mensaje: "Medición actualizada exitosamente",
+            data: { id, id_sensor, id_lote, temperatura_c }
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al actualizar la medición",
+            error: error.message
+        });
+    }
+};
+
+const eliminarMedicion = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [resultado] = await db.query('DELETE FROM Mediciones_Temp WHERE id_medicion = ?', [id]);
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                mensaje: "Medición no encontrada"
+            });
+        }
+
+        res.json({
+            success: true,
+            mensaje: "Medición eliminada exitosamente"
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al eliminar la medición",
+            error: error.message
+        });
+    }
+};
+
+
 module.exports = {
     obtenerMediciones,
+    obtenerMedicionPorId,
     crearMedicion,
+    actualizarMedicion,
+    eliminarMedicion,
 };

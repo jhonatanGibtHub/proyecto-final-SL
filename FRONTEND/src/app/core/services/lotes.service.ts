@@ -28,4 +28,7 @@ export class LotesService {
     return this.http.put<LoteResponse>(`${this.apiUrl}/${id}`, lote);
   }
 
+  eliminarLote(id: number): Observable<LoteResponse> {
+    return this.http.delete<LoteResponse>(`${this.apiUrl}/${id}`);
+  }
 }

@@ -153,9 +153,41 @@ const eliminarUbicacion = async (req, res) => {
     }
 };
 
+
+const obtenerUbicacionPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const [ubicaciones] = await db.query(
+            'SELECT * FROM Ubicaciones WHERE id_ubicacion = ?',
+            [id]
+        );
+
+        if (ubicaciones.length === 0) {
+            return res.status(404).json({
+                success: false,
+                mensaje: "Ubicación no encontrada."
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: ubicaciones[0]
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al obtener la Ubicación",
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     obtenerUbicaciones,
     crearUbicacion,
     actualizarUbicacion,
     eliminarUbicacion,
+    obtenerUbicacionPorId
 };

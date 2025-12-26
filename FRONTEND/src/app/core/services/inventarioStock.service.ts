@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class InventarioStockService {
 
-  private apiUrl = `${environment.apiUrl}/inventarioStock`
+  private apiUrl = `${environment.apiUrl}/stock`
   constructor(private http: HttpClient) { }
 
   obtenerInventarioStock(): Observable<InventarioStockResponse> {

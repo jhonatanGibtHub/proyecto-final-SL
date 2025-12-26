@@ -5,12 +5,15 @@ const {
     crearTransportista,
     actualizarTransportista,
     eliminarTransportista,
+    obtenerTransportistaPorId
 } = require('../controllers/transportistasController');
 
 
 router.get('/', obtenerTransportistas);
 
 router.post('/', crearTransportista);
+
+router.get('/:id', obtenerTransportistaPorId);
 
 router.put('/:id', actualizarTransportista);
 

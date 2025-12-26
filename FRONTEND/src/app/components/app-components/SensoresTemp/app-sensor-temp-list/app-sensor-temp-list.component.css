@@ -1,5 +1,5 @@
 :host{
     display: flex;
     flex-direction: column;
-    padding: 20px 15%;
+    margin: 0 auto;
 }

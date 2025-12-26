@@ -12,4 +12,5 @@ export interface VacunaResponse {
     count?: number;
     mensaje?: string;
     error?: string;
+    errores?: []
 }

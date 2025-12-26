@@ -120,15 +120,110 @@ const registrarRecepcion = async (req, res) => {
 };
 
 
-const eliminarMovimiento = (req, res) => {
-    return res.status(405).json({ 
-        success: false,
-        mensaje: "Operación DELETE PROHIBIDA. La eliminación de registros de movimiento compromete la trazabilidad logística de la cadena de frío."
-    });
+const eliminarMovimiento = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [resultado] = await db.query('DELETE FROM Registro_Movimiento WHERE id_movimiento = ?', [id]);
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                mensaje: "Movimiento no encontrado"
+            });
+        }
+
+        res.json({
+            success: true,
+            mensaje: "Movimiento eliminado exitosamente"
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al eliminar el movimiento",
+            error: error.message
+        });
+    }
+};
+
+const obtenerMovimientoPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [movimientos] = await db.query(`
+            SELECT 
+                RM.id_movimiento, 
+                RM.id_lote, 
+                RM.ubicacion_origen,
+                RM.ubicacion_destino,
+                RM.id_transportista,
+                RM.fecha_envio, 
+                RM.fecha_recepcion
+            FROM Registro_Movimiento RM
+            WHERE RM.id_movimiento = ?
+        `, [id]);
+        
+        if (movimientos.length === 0) {
+            return res.status(404).json({
+                success: false,
+                mensaje: "Movimiento no encontrado"
+            });
+        }
+
+        res.json({
+            success: true,
+            data: movimientos[0]
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al obtener el movimiento",
+            error: error.message
+        });
+    }
+};
+
+const actualizarMovimiento = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { id_lote, ubicacion_origen, ubicacion_destino, id_transportista, fecha_envio, fecha_recepcion } = req.body;
+
+        if (!id_lote || !ubicacion_origen || !ubicacion_destino || !id_transportista || !fecha_envio || !fecha_recepcion) {
+            return res.status(400).json({
+                success: false,
+                mensaje: "Todos los campos son obligatorios."
+            });
+        }
+
+        const [resultado] = await db.query(
+            'UPDATE Registro_Movimiento SET id_lote = ?, ubicacion_origen = ?, ubicacion_destino = ?, id_transportista = ?, fecha_envio = ?, fecha_recepcion = ? WHERE id_movimiento = ?',
+            [id_lote, ubicacion_origen, ubicacion_destino, id_transportista, fecha_envio, fecha_recepcion, id]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                mensaje: "Movimiento no encontrado"
+            });
+        }
+
+        res.json({
+            success: true,
+            mensaje: "Movimiento actualizado exitosamente",
+            data: { id, id_lote, ubicacion_origen, ubicacion_destino, id_transportista, fecha_envio, fecha_recepcion }
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al actualizar el movimiento",
+            error: error.message
+        });
+    }
 };
 
 module.exports = {
     obtenerMovimientos,
+    obtenerMovimientoPorId,
     crearMovimiento,
-    registrarRecepcion, 
+    actualizarMovimiento,
+    registrarRecepcion,
+    eliminarMovimiento
 };

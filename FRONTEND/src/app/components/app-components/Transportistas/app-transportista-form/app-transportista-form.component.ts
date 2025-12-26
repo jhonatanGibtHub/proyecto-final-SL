@@ -4,10 +4,15 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransportistasService } from '../../../../core/services/transportistas.service';
 import { Transportista } from '../../../../core/models/transportista';
+import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-app-transportista-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule],
   templateUrl: './app-transportista-form.component.html',
   styleUrl: './app-transportista-form.component.css'
 })
@@ -36,20 +41,26 @@ export class AppTransportistaFormComponent implements OnInit {
     } else {
       this.isEditMode = false;
       this.transportistaId = null;
-      this.transportistaForm.reset();
+      this.transportistaForm.reset({
+        nombre: '',
+        licencia: '',
+        telefono: '',
+        tipo_vehiculo: ''
+      });
     }
   }
 
   constructor(
-    private fb: FormBuilder,
-    private transportistaService: TransportistasService,
-    private router: Router,
-    private route: ActivatedRoute
+    private readonly fb: FormBuilder,
+    private readonly transportistaService: TransportistasService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly notificationService: NotificationService
   ) {
     this.transportistaForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       licencia: ['', [Validators.required]],
-      telefono: [''],
+      telefono: ['', [Validators.required,  Validators.minLength(9), Validators.maxLength(9)]],
       tipo_vehiculo: ['', [Validators.required]]
     });
   }
@@ -92,7 +103,9 @@ export class AppTransportistaFormComponent implements OnInit {
     this.error = '';
     this.successMessage = '';
     if (this.transportistaForm.invalid) {
+      this.transportistaForm.markAllAsTouched();
       this.error = 'Por favor, rellene todos los campos requeridos correctamente.';
+      this.notificationService.error(this.error);
       return;
     }
     const transportistaData: Transportista = this.transportistaForm.value;
@@ -100,33 +113,53 @@ export class AppTransportistaFormComponent implements OnInit {
     if (this.isEditMode && this.transportistaId) {
       this.transportistaService.actualizarTransportista(this.transportistaId, transportistaData).subscribe({
         next: (response) => {
-          if (response.success) {
             this.successMessage = 'Transportista actualizado correctamente.';
+            this.notificationService.success(this.successMessage);
             this.transportistaGuardado.emit();
             this.cerrarModal();
-          } else {
-            this.error = response.mensaje || 'Error al actualizar el transportista.';
-          }
         },
-        error: () => {
+        error: (err) => {
           this.error = 'Error de conexión al actualizar el transportista.';
+          const mensajeError = err.error?.mensaje;
+          this.notificationService.error(mensajeError || this.error);
         }
       });
     } else {
       this.transportistaService.crearTransportista(transportistaData).subscribe({
         next: (response) => {
-          if (response.success) {
             this.successMessage = 'Transportista creado correctamente.';
+            this.notificationService.success(this.successMessage);
             this.transportistaGuardado.emit();
             this.cerrarModal();
-          } else {
-            this.error = response.mensaje || 'Error al crear el transportista.';
-          }
         },
-        error: () => {
+        error: (err) => {
           this.error = 'Error de conexión al crear el transportista.';
+          const mensajeError = err.error?.mensaje;
+          this.notificationService.error(mensajeError || this.error);
         }
       });
     }
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.transportistaForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const field = this.transportistaForm.get(fieldName);
+
+    if (!field) return '';
+
+    if (field.hasError('required')) {
+      return 'Este campo es obligatorio';
+    }
+
+    if (field.hasError('minlength')) {
+      const requiredLength = field.errors?.['minlength']?.requiredLength;
+      return `Mínimo ${requiredLength} caracteres`;
+    }
+
+    return '';
   }
 }

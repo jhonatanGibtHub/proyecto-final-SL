@@ -13,11 +13,11 @@
                     </svg>
                     <span>Código Serie</span>
                 </label>
-                <div class="input">
+                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('codigo_serie')}">
                     <input type="text" id="codigo_serie" formControlName="codigo_serie" placeholder="Ingrese el código serie">
                 </div>
-                <div *ngIf="sensorTempForm.get('codigo_serie')?.invalid && sensorTempForm.get('codigo_serie')?.touched" class="text-danger">
-                    <small>Código serie es requerido.</small>
+                <div class="text-error-message" *ngIf="isFieldInvalid('codigo_serie')">
+                    {{ getErrorMessage('codigo_serie') }}
                 </div>
             </div>
             <div class="input-container">
@@ -31,14 +31,14 @@
                     </svg>
                     <span>Ubicación Actual</span>
                 </label>
-                <div class="input">
+                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('id_ubicacion_actual')}">
                     <select id="id_ubicacion_actual" formControlName="id_ubicacion_actual">
                         <option value="">Seleccione una ubicación</option>
                         <option *ngFor="let ubicacion of ubicaciones" [value]="ubicacion.id_ubicacion">{{ ubicacion.nombre }} - {{ ubicacion.tipo }}</option>
                     </select>
                 </div>
-                <div *ngIf="sensorTempForm.get('id_ubicacion_actual')?.invalid && sensorTempForm.get('id_ubicacion_actual')?.touched" class="text-danger">
-                    <small>Ubicación es requerida.</small>
+                <div class="text-error-message" *ngIf="isFieldInvalid('id_ubicacion_actual')">
+                    {{ getErrorMessage('id_ubicacion_actual') }}
                 </div>
             </div>
             <div class="input-container">
@@ -52,15 +52,13 @@
                     </svg>
                     <span>Última Calibración</span>
                 </label>
-                <div class="input">
+                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('ultima_calibracion')}">
                     <input type="date" id="ultima_calibracion" formControlName="ultima_calibracion">
                 </div>
-                <div *ngIf="sensorTempForm.get('ultima_calibracion')?.invalid && sensorTempForm.get('ultima_calibracion')?.touched" class="text-danger">
-                    <small>Última calibración es requerida.</small>
+                <div class="text-error-message" *ngIf="isFieldInvalid('ultima_calibracion')">
+                    {{ getErrorMessage('ultima_calibracion') }}
                 </div>
             </div>
-            <div *ngIf="error" class="text-danger">{{ error }}</div>
-            <div *ngIf="successMessage" class="text-success">{{ successMessage }}</div>
             <div class="modal-actions">
                 <button type="button" (click)="onCancel()" class="btn btn-secondary">Cancelar</button>
                 <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Actualizar' : 'Crear' }}</button>

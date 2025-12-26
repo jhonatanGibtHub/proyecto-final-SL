@@ -3,6 +3,7 @@ export interface Usuario {
   nombre: string;
   email: string;
   rol: 'admin' | 'usuario';
+  activo: boolean;
   is_google_account?: boolean;
   picture?: string;
   fecha_registro?: Date;
@@ -36,4 +37,5 @@ export interface AuthResponse {
   mensaje?: string;
   data?: any;
   error?: string;
+  errores?: [];
 }

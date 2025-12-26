@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Ubicacion, UbicacionResponse } from '../../../../core/models/ubicacion';
 import { UbicacionesService } from '../../../../core/services/ubicaciones.service';
 import { AppUbicacionFormComponent } from '../app-ubicacion-form/app-ubicacion-form.component';
+import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
 @Component({
   selector: 'app-app-ubicacion-list',
   imports: [CommonModule, AppUbicacionFormComponent],
@@ -22,7 +23,7 @@ export class AppUbicacionListComponent implements OnInit {
   abrirModalEditar(id: number): void {
     this.ubicacionFormModal.abrirModal(id);
   }
-  constructor(private ubicacionService: UbicacionesService) {}
+  constructor(private ubicacionService: UbicacionesService, private notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.cargarUbicaciones();
@@ -53,16 +54,23 @@ export class AppUbicacionListComponent implements OnInit {
       this.ubicacionService.eliminarUbicacion(id).subscribe({
         next: (response: UbicacionResponse) => {
           if (response.success) {
-            alert('Ubicación eliminada exitosamente.');
+            this.notificationService.success(
+              'Ubicación eliminada exitosamente.'
+            );
             this.cargarUbicaciones();
           } else {
             this.error = response.mensaje || 'Error al eliminar la ubicación.';
-            alert(this.error);
+            this.notificationService.warning(
+              this.error
+            );
           }
         },
         error: (err) => {
           this.error = 'Error de servidor al intentar eliminar.';
-          console.error('Error HTTP:', err);
+          const mensajeError = err.error?.mensaje;
+          this.notificationService.error(
+            mensajeError || this.error
+          );
         }
       });
     }

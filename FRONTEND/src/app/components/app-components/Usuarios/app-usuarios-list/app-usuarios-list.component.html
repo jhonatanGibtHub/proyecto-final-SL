@@ -1,0 +1,63 @@
+<div class="flex-between">
+    <h2 class="page-tittle">Gestión de Usuarios</h2>
+</div>
+
+<div class="error-message" *ngIf="error">{{ error }}</div>
+
+<div class="loading" *ngIf="loading">Cargando usuarios...</div>
+
+<table *ngIf="!loading && usuarios.length > 0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Fecha Registro</th>
+            <th>Última Conexión</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let usuario of usuarios">
+            <td>{{ usuario.id }}</td>
+            <td>{{ usuario.nombre }}</td>
+            <td>{{ usuario.email }}</td>
+            <td>
+                <mat-slide-toggle
+                    [checked]="usuario.rol === 'admin'"
+                    (change)="cambiarRolUsuario(usuario)"
+                    color="primary">
+                    {{ usuario.rol === 'admin' ? 'Admin' : 'Usuario' }}
+                </mat-slide-toggle>
+            </td>
+            <td>
+                <span [class]="usuario.activo ? 'estado-activo' : 'estado-inactivo'">
+                    {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+            </td>
+            <td>{{ usuario.fecha_registro | date:'short' }}</td>
+            <td>{{ usuario.ultima_conexion | date:'short' }}</td>
+            <td>
+                <div class="acciones">
+                    <button (click)="toggleActivoUsuario(usuario)" [title]="usuario.activo ? 'Deshabilitar usuario' : 'Habilitar usuario'">
+                        <svg class="icono-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M12 2C13.1046 2 14 2.89543 14 4V20C14 21.1046 13.1046 22 12 22C10.8954 22 10 21.1046 10 20V4C10 2.89543 10.8954 2 12 2Z" fill="currentColor"/>
+                                <path d="M4 12C2.89543 12 2 12.8954 2 14V20C2 21.1046 2.89543 22 4 22C5.10457 22 6 21.1046 6 20V14C6 12.8954 5.10457 12 4 12Z" fill="currentColor"/>
+                                <path d="M20 12C18.8954 12 18 12.8954 18 14V20C18 21.1046 18.8954 22 20 22C21.1046 22 22 21.1046 22 20V14C22 12.8954 21.1046 12 20 12Z" fill="currentColor"/>
+                            </g>
+                        </svg>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="no-data" *ngIf="!loading && usuarios.length === 0 && !error">
+    No hay usuarios registrados.
+</div>
