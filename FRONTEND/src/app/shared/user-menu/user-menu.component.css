@@ -45,10 +45,10 @@
     position: absolute;
     right: 0;
     top: 46px;
-    background: var(--blue-300);
+    background: var(--blue-100);
     border-radius: 8px;
     width: fit-content;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     z-index: 1000;
 }
@@ -69,7 +69,7 @@
 }
 
 .dropdown button:hover {
-    background-color: var(--blue-300);
+    background-color: var(--blue-200);
 }
 
 .logout {

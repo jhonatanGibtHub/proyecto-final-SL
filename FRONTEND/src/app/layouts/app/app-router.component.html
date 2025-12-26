@@ -3,16 +3,36 @@
     <div class="bg-color"></div>
 </div>
 <header>
-    <button class="toggle-btn" (click)="toggleSidebar()">
-        <svg class="icono-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <g id="SVGRepo_bgCarrier"></g>
-            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-            <g id="SVGRepo_iconCarrier">
-                <path d="M4 6H20M4 12H14M4 18H9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round"></path>
-            </g>
-        </svg>
-    </button>
+
+    <div class="flex-center">
+        <button class="toggle-btn" (click)="toggleSidebar()">
+            <svg class = "icono-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path
+                        d="M1 12C1 11.4477 1.44772 11 2 11H22C22.5523 11 23 11.4477 23 12C23 12.5523 22.5523 13 22 13H2C1.44772 13 1 12.5523 1 12Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M1 4C1 3.44772 1.44772 3 2 3H22C22.5523 3 23 3.44772 23 4C23 4.55228 22.5523 5 22 5H2C1.44772 5 1 4.55228 1 4Z"
+                        fill="currentColor"></path>
+                    <path
+                        d="M1 20C1 19.4477 1.44772 19 2 19H22C22.5523 19 23 19.4477 23 20C23 20.5523 22.5523 21 22 21H2C1.44772 21 1 20.5523 1 20Z"
+                        fill="currentColor"></path>
+                </g>
+            </svg>
+        </button>
+
+        <a class="logo">
+            <span>
+                VACTRA | App
+            </span>
+        </a>
+    </div>
+
+
+
+
     <div class="flex-end">
         <app-user-menu></app-user-menu>
         <button class="btn btn-blue" routerLink="/">
@@ -53,9 +73,22 @@
                     </g>
                 </g>
             </svg>
-            <span>Vacunas</span>
+            <span>VACUNAS</span>
         </button>
-        <button class="btn-aside" routerLink="/app/asd" routerLinkActive="active-btn"
+        <button class="btn-aside" routerLink="/app/ubicaciones" routerLinkActive="active-btn"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <svg class="icono-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path
+                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                        fill="currentColor"></path>
+                </g>
+            </svg>
+            <span>UBICACIONES</span>
+        </button>
+        <button class="btn-aside" routerLink="/app/transportistas" routerLinkActive="active-btn"
             [routerLinkActiveOptions]="{ exact: true }">
             <svg fill="currentColor" class="icono-3" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -67,7 +100,150 @@
                     </path>
                 </g>
             </svg>
-            <span>Transportistas</span>
+            <span>TRANSPORTISTAS</span>
+        </button>
+
+        <button class="btn-aside" routerLink="/app/inventario-stock" routerLinkActive="active-btn"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <svg class="icono-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path
+                        d="M21.9844 10C21.9473 8.68893 21.8226 7.85305 21.4026 7.13974C20.8052 6.12523 19.7294 5.56066 17.5777 4.43152L15.5777 3.38197C13.8221 2.46066 12.9443 2 12 2C11.0557 2 10.1779 2.46066 8.42229 3.38197L6.42229 4.43152C4.27063 5.56066 3.19479 6.12523 2.5974 7.13974C2 8.15425 2 9.41667 2 11.9415V12.0585C2 14.5833 2 15.8458 2.5974 16.8603C3.19479 17.8748 4.27063 18.4393 6.42229 19.5685L8.42229 20.618C10.1779 21.5393 11.0557 22 12 22C12.9443 22 13.8221 21.5393 15.5777 20.618L17.5777 19.5685C19.7294 18.4393 20.8052 17.8748 21.4026 16.8603C21.8226 16.1469 21.9473 15.3111 21.9844 14"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                    <path
+                        d="M21 7.5L17 9.5M12 12L3 7.5M12 12V21.5M12 12C12 12 14.7426 10.6287 16.5 9.75C16.6953 9.65237 17 9.5 17 9.5M17 9.5V13M17 9.5L7.5 4.5"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                </g>
+            </svg>
+            <span>INVENTARIO</span>
+        </button>
+
+        <button class="btn-aside" routerLink="/app/sensores-temp" routerLinkActive="active-btn"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <svg class="icono-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path d="M12 2C10.8954 2 10 2.89543 10 4V12.5351C8.86667 13.0766 8 14.1766 8 15.5C8 17.433 9.567 19 11.5 19C13.433 19 15 17.433 15 15.5C15 14.1766 14.1333 13.0766 13 12.5351V4C13 2.89543 12.1046 2 11 2H12Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M12 6H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M12 9H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="11.5" cy="15.5" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+                </g>
+            </svg>
+            <span>SENSORES TEMP</span>
+        </button>
+
+        <button class="btn-aside" routerLink="/app/lotes" routerLinkActive="active-btn"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <svg fill="currentColor" class="icono-3" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <g>
+                        <g>
+                            <path
+                                d="M373.615,20.112c-32.558,0-59.047,26.488-59.047,59.047c0,15.56,3.756,30.495,9.504,44.25l1.447,3.237 c13.288,29.725,35.493,53.603,48.092,65.637c11.952-11.426,32.577-33.545,46.014-61.181c0.162-0.334,0.325-0.666,0.484-1.002 c0.199-0.417,0.395-0.833,0.592-1.253c0.235-0.505,0.467-1.011,0.697-1.519c6.732-14.838,11.266-31.147,11.266-48.169 C432.663,46.601,406.175,20.112,373.615,20.112z M373.615,108.477c-16.164,0-29.314-13.151-29.314-29.314 s13.151-29.314,29.314-29.314s29.314,13.151,29.314,29.314C402.929,95.326,389.778,108.477,373.615,108.477z">
+                            </path>
+                        </g>
+                    </g>
+                    <g>
+                        <g>
+                            <polygon points="335.941,271.754 240.57,367.124 365.334,491.888 512,491.888 512,447.813 ">
+                            </polygon>
+                        </g>
+                    </g>
+                    <g>
+                        <g>
+                            <path
+                                d="M0,327.774v26.86c72.375,7.147,130.107,64.879,137.255,137.254h26.86C156.805,404.751,87.138,335.082,0,327.774z">
+                            </path>
+                        </g>
+                    </g>
+                    <g>
+                        <g>
+                            <path d="M0,169.455v127.889c103.876,7.44,187.103,90.669,194.544,194.544h127.889L0,169.455z">
+                            </path>
+                        </g>
+                    </g>
+                    <g>
+                        <g>
+                            <polygon points="375.906,231.789 357.391,250.303 512,404.913 512,367.883 "></polygon>
+                        </g>
+                    </g>
+                    <g>
+                        <g>
+                            <path d="M0,385.156v106.732h106.732C99.851,436.257,55.631,392.037,0,385.156z"></path>
+                        </g>
+                    </g>
+                    <g>
+                        <g>
+                            <path
+                                d="M302.128,148.004H175.122L98.286,224.84L219.12,345.674l132.45-132.45C338.248,200.39,317.153,177.37,302.128,148.004z">
+                            </path>
+                        </g>
+                    </g>
+                    <g>
+                        <g>
+                            <polygon points="21.45,148.004 76.835,203.389 132.221,148.004 "></polygon>
+                        </g>
+                    </g>
+                    <g>
+                        <g>
+                            <path
+                                d="M445.102,148.004c-14.182,27.717-33.767,49.773-47.123,62.955L512,324.981V148.004H445.102z">
+                            </path>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+            <span>LOTES</span>
+        </button>
+
+        <button class="btn-aside" routerLink="/app/registro-movimiento" routerLinkActive="active-btn"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <svg class="icono-3" version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" width="64px" height="64px" viewBox="0 0 64 64"
+                enable-background="new 0 0 64 64" xml:space="preserve" fill="currentColor">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path fill="currentColor"
+                        d="M32,0C18.746,0,8,10.746,8,24c0,5.219,1.711,10.008,4.555,13.93c0.051,0.094,0.059,0.199,0.117,0.289l16,24 C29.414,63.332,30.664,64,32,64s2.586-0.668,3.328-1.781l16-24c0.059-0.09,0.066-0.195,0.117-0.289C54.289,34.008,56,29.219,56,24 C56,10.746,45.254,0,32,0z M32,32c-4.418,0-8-3.582-8-8s3.582-8,8-8s8,3.582,8,8S36.418,32,32,32z">
+                    </path>
+                </g>
+            </svg>
+            <span>REGISTRO MOVIMIENTO</span>
+        </button>
+
+        <button class="btn-aside" routerLink="/app/mediciones-temp" routerLinkActive="active-btn"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                class="icono-3" viewBox="0 0 512 512" xml:space="preserve" fill="currentColor">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <style type="text/css">
+                        .st0 {
+                            fill: currentColor;
+                        }
+                    </style>
+                    <g>
+                        <path class="st0"
+                            d="M358.359,23.406C358.359,10.484,347.875,0,334.953,0H177.047c-12.922,0-23.406,10.484-23.406,23.406v50.234 h204.719V23.406z">
+                        </path>
+                        <path class="st0"
+                            d="M371.188,162.453c-20.766-10.391-27.703-34.641-27.703-55.422c0-1.344,0-3.328,0-5.875 c0-0.938,0-1.813,0-2.938H168.516c0,1.125,0,2,0,2.938c0,0.313,0,1.969,0,5.875c0,20.781-6.938,45.031-27.703,55.422 c-24.813,12.391-35.219,30.859-35.219,74.969c0,15.734,0,162.766,0,187.969c0,42.516,29.922,86.609,89.781,86.609h121.25 c59.859,0,89.781-44.094,89.781-86.609c0-25.203,0-172.234,0-187.969C406.406,193.313,396,174.844,371.188,162.453z M357.156,406.719H154.844V241.547h202.313V406.719z">
+                        </path>
+                        <polygon class="st0"
+                            points="238.688,386.922 273.297,386.922 273.297,345.828 314.375,345.828 314.375,311.25 273.297,311.25 273.297,270.156 238.688,270.156 238.688,311.25 197.625,311.25 197.625,345.828 238.688,345.828 ">
+                        </polygon>
+                    </g>
+                </g>
+            </svg>
+            <span>MEDICIONES TEMP</span>
         </button>
     </aside>
     <section>

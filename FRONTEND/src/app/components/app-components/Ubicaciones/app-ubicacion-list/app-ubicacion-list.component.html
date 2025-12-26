@@ -1,5 +1,5 @@
 <div class="flex-between">
-    <h2 class="page-tittle">Vacunas</h2>
+    <h2 class="page-tittle">Ubicaciones</h2>
     <div class="flex-end">
         <button (click)="abrirModalNuevo()" class="btn btn-yellow">
             <svg class="icono-1 " viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,30 +14,30 @@
                         fill="currentColor"></path>
                 </g>
             </svg>
-            <span>Nueva Vacuna</span> </button>
+            <span>Nueva Ubicación</span> </button>
     </div>
 </div>
 <table>
     <thead>
         <tr>
             <th>ID</th>
-            <th>Nombre Comercial</th>
-            <th>Fabricante</th>
-            <th>Temp Mínima (°C)</th>
-            <th>Temp Máxima (°C)</th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Distrito</th>
+            <th>Provincia</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let vacuna of vacunas">
-            <td> {{ vacuna.id_vacuna }} </td>
-            <td> {{ vacuna.nombre_comercial }} </td>
-            <td> {{ vacuna.fabricante }} </td>
-            <td> {{ vacuna.temp_min_c }} </td>
-            <td> {{ vacuna.temp_max_c }} </td>
+        <tr *ngFor="let ubicacion of ubicaciones">
+            <td> {{ ubicacion.id_ubicacion }} </td>
+            <td> {{ ubicacion.nombre }} </td>
+            <td> {{ ubicacion.tipo }} </td>
+            <td> {{ ubicacion.distrito }} </td>
+            <td> {{ ubicacion.provincia }} </td>
             <td>
                 <div class = "acciones">
-                    <button (click)="abrirModalEditar(vacuna.id_vacuna!)">
+                    <button (click)="abrirModalEditar(ubicacion.id_ubicacion!)">
                     <svg class = "icono-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -47,9 +47,8 @@
                                 fill="currentColor"></path>
                         </g>
                     </svg>
-
                 </button>
-                <button (click)="eliminarVacuna(vacuna.id_vacuna!)">
+                <button (click)="eliminarUbicacion(ubicacion.id_ubicacion!)">
                     <svg class="icono-0" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
                         fill="red">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -63,15 +62,13 @@
                                 fill="red"></path>
                         </g>
                     </svg>
-                </button>   
+                </button>
                 </div>
             </td>
         </tr>
-        <tr *ngIf="vacunas.length === 0 && !error">
-            <td colspan="6" style="text-align: center;">No hay vacunas registradas en el sistema.</td>
+        <tr *ngIf="ubicaciones.length === 0 && !error">
+            <td colspan="6" style="text-align: center;">No hay ubicaciones registradas en el sistema.</td>
         </tr>
     </tbody>
 </table>
-<app-app-vacuna-form (vacunaGuardado)="cargarVacunas()"></app-app-vacuna-form>
-
-
+<app-app-ubicacion-form (ubicacionGuardado)="cargarUbicaciones()"></app-app-ubicacion-form>

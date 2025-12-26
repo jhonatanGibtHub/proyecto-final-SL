@@ -1,0 +1,74 @@
+<div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-container">
+        <form [formGroup]="inventarioStockForm" (ngSubmit)="onSubmit()">
+            <h1 class="page-tittle">{{ isEditMode ? 'Editar Inventario Stock' : 'Registrar Inventario Stock' }}</h1>
+            <div class="input-container">
+                <label for="id_lote">
+                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </g>
+                    </svg>
+                    <span>Lote</span>
+                </label>
+                <div class="input">
+                    <select id="id_lote" formControlName="id_lote">
+                        <option value="">Seleccione un lote</option>
+                        <option *ngFor="let lote of lotes" [value]="lote.id_lote">{{ lote.vacuna }} - {{ lote.fecha_fabricacion }}</option>
+                    </select>
+                </div>
+                <div *ngIf="inventarioStockForm.get('id_lote')?.invalid && inventarioStockForm.get('id_lote')?.touched" class="text-danger">
+                    <small>Lote es requerido.</small>
+                </div>
+            </div>
+            <div class="input-container">
+                <label for="id_ubicacion">
+                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </g>
+                    </svg>
+                    <span>Ubicación</span>
+                </label>
+                <div class="input">
+                    <select id="id_ubicacion" formControlName="id_ubicacion">
+                        <option value="">Seleccione una ubicación</option>
+                        <option *ngFor="let ubicacion of ubicaciones" [value]="ubicacion.id_ubicacion">{{ ubicacion.nombre }} - {{ ubicacion.tipo }}</option>
+                    </select>
+                </div>
+                <div *ngIf="inventarioStockForm.get('id_ubicacion')?.invalid && inventarioStockForm.get('id_ubicacion')?.touched" class="text-danger">
+                    <small>Ubicación es requerida.</small>
+                </div>
+            </div>
+            <div class="input-container">
+                <label for="cantidad_actual">
+                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path d="M7 20V4C7 3.44772 7.44772 3 8 3H16C16.5523 3 17 3.44772 17 4V20M7 20H5C4.44772 20 4 19.5523 4 19V7C4 6.44772 4.44772 6 5 6H7M7 20H17M17 20H19C19.5523 20 20 19.5523 20 19V7C20 6.44772 19.5523 6 19 6H17M9 6H15M9 10H15M9 14H15" stroke="currentColor" stroke-width="2"/>
+                        </g>
+                    </svg>
+                    <span>Cantidad Actual</span>
+                </label>
+                <div class="input">
+                    <input type="number" id="cantidad_actual" formControlName="cantidad_actual" placeholder="Ingrese la cantidad actual">
+                </div>
+                <div *ngIf="inventarioStockForm.get('cantidad_actual')?.invalid && inventarioStockForm.get('cantidad_actual')?.touched" class="text-danger">
+                    <small *ngIf="inventarioStockForm.get('cantidad_actual')?.errors?.['required']">Cantidad actual es requerida.</small>
+                    <small *ngIf="inventarioStockForm.get('cantidad_actual')?.errors?.['min']">Debe ser mayor o igual a 0.</small>
+                </div>
+            </div>
+            <div *ngIf="error" class="text-danger">{{ error }}</div>
+            <div *ngIf="successMessage" class="text-success">{{ successMessage }}</div>
+            <div class="modal-actions">
+                <button type="button" (click)="onCancel()" class="btn btn-secondary">Cancelar</button>
+                <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Actualizar' : 'Crear' }}</button>
+            </div>
+        </form>
+    </div>
+</div>

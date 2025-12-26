@@ -43,11 +43,17 @@ body {
     --font-38: 2.375rem;
     --font-40: 2.5rem;
 
+    --gray-950: oklch(10% 0.003 300);
     --gray-900: oklch(18% 0.004 300);
+    --gray-800: oklch(25% 0.007 302);
     --gray-700: oklch(30% 0.010 305);
+    --gray-600: oklch(40% 0.015 305);
     --gray-500: oklch(55% 0.020 305);
+    --gray-400: oklch(65% 0.015 305);
     --gray-300: oklch(80% 0.010 305);
+    --gray-250: oklch(86% 0.008 302);
     --gray-200: oklch(92% 0.004 300);
+    --gray-150: oklch(94% 0.003 300);
     --gray-100: oklch(96% 0.002 300);
     --gray-50: oklch(99% 0 0);
 
@@ -63,6 +69,27 @@ body {
     --blue-100: oklch(95% 0.03 250);
     --blue-50: oklch(97% 0.02 250);
 
+
+    --yellow-950: oklch(30% 0.050 100);
+    --yellow-900: oklch(45% 0.090 100);
+    --yellow-850: oklch(55% 0.105 100);
+    --yellow-800: oklch(60% 0.110 100);
+    --yellow-750: oklch(68% 0.115 100);
+    --yellow-700: oklch(75% 0.120 100);
+    --yellow-650: oklch(83% 0.123 100);
+    --yellow-600: oklch(85% 0.125 100);
+    --yellow-550: oklch(88% 0.125 100);
+    --yellow-500: oklch(91% 0.125 100);
+    --yellow-450: oklch(92% 0.115 100);
+    --yellow-400: oklch(94% 0.110 100);
+    --yellow-350: oklch(95% 0.100 100);
+    --yellow-300: oklch(96% 0.090 100);
+    --yellow-250: oklch(97% 0.070 100);
+    --yellow-200: oklch(98% 0.050 100);
+    --yellow-150: oklch(98.5% 0.035 100);
+    --yellow-100: oklch(99% 0.020 100);
+
+
     --green-900: oklch(20% 0.05 145);
     --green-700: oklch(35% 0.08 145);
     --green-500: oklch(55% 0.12 145);
@@ -71,8 +98,8 @@ body {
     --green-50: oklch(99% 0.01 145);
 
     /* Scroll */
-    --scroll-thumb-bg-color: var(--blue-300);
-    --scroll-thumb-bg-color-hv: var(--blue-400);
+    --scroll-thumb-bg-color: var(--blue-400);
+    --scroll-thumb-bg-color-hv: var(--blue-500);
 
     /* Light */
     --color-font: #04009a;
@@ -105,8 +132,8 @@ table {
 }
 
 thead {
-    background: var(--blue-500);
-    color: white;
+    background: var(--blue-300);
+    color: var(--color-font);
 }
 
 th:last-child,
@@ -122,15 +149,16 @@ td:last-child {
 }
 
 thead th {
-    padding: 16px 16px;
+    padding: 12px 20px;
     text-align: left;
     font-size: var(--font-12);
 }
 
 tbody td {
-    padding: 10px 16px;
-    font-size: var(--font-12);
-    color: #374151;
+    padding: 10px 20px;
+    font-size: var(--font-10);
+    color: var(--gray-500);
+    font-weight: 600;
     border-bottom: 1px solid #e5e7eb;
 }
 
@@ -170,6 +198,12 @@ svg {
 
 .icono-4 {
     --i: 8;
+}
+.icono-5 {
+    --i: 9;
+}
+.icono-6 {
+    --i: 10;
 }
 
 button {
@@ -278,14 +312,17 @@ a span {
     border-radius: 4px;
     padding: 0.6rem 1rem;
     height: 38.3638px;
+
     span {
         color: rgb(250, 250, 255);
         font-weight: 300;
         font-size: var(--font-14);
     }
+
     svg {
         color: rgb(250, 250, 255);
     }
+
     &:hover {
         background-color: rgb(84, 84, 84);
     }
@@ -296,11 +333,13 @@ a span {
     border-radius: 4px;
     padding: 0.6rem 1rem;
     height: 38.3638px;
+
     span {
         color: black;
         font-weight: 500;
         font-size: var(--font-14);
     }
+
     &:hover {
         background-color: #f5cb32;
     }
@@ -312,11 +351,13 @@ a span {
     padding: 0.6rem 1rem;
     height: 38.3638px;
     border: 1px solid #dadce0;
+
     span {
         color: rgb(60, 64, 67);
         font-weight: 200;
         font-size: var(--font-14);
     }
+
     &:hover {
         background-color: #f0f5fe;
     }
@@ -432,6 +473,7 @@ input {
     font-size: var(--font-14);
     padding: 10px 14px;
     transition: 0.2s ease-in-out;
+
     &:focus-within {
         border: 1px solid rgb(15, 126, 237);
 

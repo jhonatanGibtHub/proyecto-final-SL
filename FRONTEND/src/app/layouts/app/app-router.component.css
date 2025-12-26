@@ -9,12 +9,18 @@
     --header-width: 100vw;
 }
 
+.logo span {
+    margin-left: 20px;
+    font-weight: 800;
+}
+
 .btn-aside {
     display: inline-flex;
     justify-content: end;
-    padding: 10px 25px;
+    padding: 15px 25px;
+    gap: 20px;  
     span {
-        font-size: var(--font-20);
+        font-size: var(--font-14);
         color: var(--color-font);
     }
     svg {
@@ -23,23 +29,32 @@
 }
 
 .btn-aside:hover {
-    border-top: 3px solid var(--blue-900);
+    
+    border-bottom: 2px solid var(--color-font);
     svg {
-        color: var(--blue-900);
+        color: var(--color-font);
     }
     span {
-        color: var(--blue-900);
+        transition: transform 0.1s ease-in;
+        color: var(--color-font);
+        transform: scale(1.1) translateX(5px);
     }
 }
 
 .active-btn {
-    border-top: 3px solid var(--blue-900);
+    border-bottom: 2px solid ;
+    border-right: 2px solid ;
+
+    border-image: linear-gradient(to top left, var(--color-font) 40%, transparent 50%) 3;
+
     span {
-        color: var(--blue-900);
-        font-weight: 800;
+        font-size: var(--font-22);
+        transform: none !important;
+        color: var(--color-font);
+        font-weight: 1000;
     }
     svg{
-        color: var(--blue-900);
+        color: var(--color-font);
     }
 }
 
@@ -63,20 +78,27 @@ main {
     display: flex;
     overflow: hidden;
 }
+.toggle-btn{
+    transition: transform 0.1s ease-in  ;
+}
+.toggle-btn:hover{
+    
+    transform: scale(1.1);
+}
 
 aside {
     display: flex;
     flex-direction: column;
     padding-top: 50px;
-    width: 230px;
+    width: 310px;
     height: 100%;
     overflow-x: hidden;
     white-space: nowrap;
-    gap: 20px;
+    gap: 10px;
 }
 
 aside.collapsed {
-    width: 76.7912px;
+    width: 86.7912px;
     button {
 
         width: fit-content;
