@@ -1,28 +1,32 @@
-:host {
-    display: inline-block;
-    width: 100%;
-}
+
 
 .section-present {
-    height: 640px;
+    height: 88vh;
     position: relative;
 
     .text-present {
         position: absolute;
+        display: flex;
+        flex-direction: column;
         left: 10%;
         top: 30%;
-        width: 450px;
+        width: 510px;
+        gap: 20px;
     }
 
     .text-present h1 {
         color: var(--color-font);
         font-size: var(--font-38);
     }
+    .text-present p {
+        color: var(--blue-800);
+        font-size: var(--font-18);
+    }
 
 }
 
 .imgs-floating {
-    --width: 500px;
+    --width: 450px;
     position: absolute;
     width: var(--width);
     height: var(--width);
@@ -32,25 +36,12 @@
 
 .float-img {
     position: absolute;
-    width: 320px;
     overflow: hidden;
-    border-radius: 10px;
-    animation: float 8s ease-in-out infinite;
+    border-radius: 5px;
 }
 
-@keyframes float {
-    0% {
-        transform: translateY(0px);
-    }
 
-    50% {
-        transform: translateY(-20px);
-    }
 
-    100% {
-        transform: translateY(0px);
-    }
-}
 
 
 .section-app {
