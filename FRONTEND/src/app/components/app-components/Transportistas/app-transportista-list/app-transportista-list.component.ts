@@ -4,6 +4,7 @@ import { Transportista, TransportistaResponse } from '../../../../core/models/tr
 import { TransportistasService } from '../../../../core/services/transportistas.service';
 import { AppTransportistaFormComponent } from '../app-transportista-form/app-transportista-form.component';
 import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-app-transportista-list',
@@ -24,7 +25,14 @@ export class AppTransportistaListComponent implements OnInit {
   abrirModalEditar(id: number): void {
     this.transportistaFormModal.abrirModal(id);
   }
-  constructor(private transportistaService: TransportistasService, private notificationService: NotificationService) {}
+  constructor(private transportistaService: TransportistasService, 
+    private notificationService: NotificationService, 
+        private authService: AuthService
+            ) { }
+          
+             get isAdmin(): boolean {
+              return this.authService.isAdmin();
+            }
 
   ngOnInit(): void {
     this.cargarTransportistas();

@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { AlertaCadenaFrio, AlertaCadenaFrioResponse } from '../../../../core/models/alertaCadenaFrio';
 import { AlertasCadenaFrioService } from '../../../../core/services/alertasCadenaFrio.service';
 import { AppAlertaCadenaFrioFormComponent } from '../app-alerta-cadena-frio-form/app-alerta-cadena-frio-form.component';
 import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-app-alerta-cadena-frio-list',
@@ -22,11 +23,20 @@ export class AppAlertaCadenaFrioListComponent implements OnInit {
     this.alertaFormModal.abrirModal();
   }
 
+  
   abrirModalEditar(id: number): void {
     this.alertaFormModal.abrirModal(id);
   }
 
-  constructor(private alertasCadenaFrioService: AlertasCadenaFrioService, private notificationService: NotificationService) { }
+  constructor(
+    private alertasCadenaFrioService: AlertasCadenaFrioService, 
+    private notificationService: NotificationService,
+    private authService: AuthService
+) { }
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
 
   ngOnInit(): void {
     this.cargarAlertas();

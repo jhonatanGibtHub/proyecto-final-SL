@@ -4,6 +4,7 @@ import { Vacuna, VacunaResponse } from '../../../../core/models/vacuna';
 import { VacunasService } from '../../../../core/services/vacunas.service';
 import { AppVacunaFormComponent } from '../app-vacuna-form/app-vacuna-form.component';
 import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-app-vacuna-list',
@@ -24,7 +25,13 @@ export class AppVacunaListComponent implements OnInit {
   abrirModalEditar(id: number): void {
     this.vacunaFormModal.abrirModal(id);
   }
-  constructor(private vacunaService: VacunasService, private notificationService: NotificationService) {}
+  constructor(private vacunaService: VacunasService, private notificationService: NotificationService, 
+          private authService: AuthService
+              ) { }
+            
+               get isAdmin(): boolean {
+                return this.authService.isAdmin();
+              }
 
   ngOnInit(): void {
     this.cargarVacunas();

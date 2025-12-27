@@ -13,19 +13,22 @@ import { AuthService } from '../../core/services/auth/auth.service';
     RouterLink,
     RouterLinkWithHref,
     RouterLinkActive
-],
+  ],
   templateUrl: './app-router.component.html',
   styleUrl: './app-router.component.css'
 })
 export class AppRouterComponent {
 
   sidebarCollapsed = false;
+  rol?: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
     const saved = localStorage.getItem('sidebarCollapsed');
     this.sidebarCollapsed = saved === 'true';
+    const currentUser = this.authService.getCurrentUser();
+    this.rol = currentUser?.rol === 'admin' ? 'Administrador' : 'Usuario';
   }
 
   disableInitialTransition = true;

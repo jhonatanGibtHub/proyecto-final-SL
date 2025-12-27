@@ -93,7 +93,10 @@ main {
     
     transform: scale(1.1);
 }
-
+.user-role{
+    color: var(--color-font);
+    font-size: var(--font-12);
+}
 aside {
     display: flex;
     flex-direction: column;

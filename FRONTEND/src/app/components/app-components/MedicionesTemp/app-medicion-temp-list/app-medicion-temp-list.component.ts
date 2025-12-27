@@ -4,6 +4,7 @@ import { MedicionTemp, MedicionTempResponse } from '../../../../core/models/medi
 import { MedicionesTempService } from '../../../../core/services/medicionesTemp.service';
 import { AppMedicionTempFormComponent } from '../app-medicion-temp-form/app-medicion-temp-form.component';
 import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-app-medicion-temp-list',
@@ -25,8 +26,13 @@ export class AppMedicionTempListComponent implements OnInit {
     this.medicionFormModal.abrirModal(id);
   }
 
-  constructor(private medicionService: MedicionesTempService, private notificationService: NotificationService) { }
+  constructor(private medicionService: MedicionesTempService, private notificationService: NotificationService,
+    private authService: AuthService
+  ) { }
 
+   get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
   ngOnInit(): void {
     this.cargarMediciones();
   }

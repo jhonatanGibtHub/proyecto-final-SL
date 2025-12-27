@@ -5,6 +5,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Usuario } from '../../../../core/models/usuario.interface';
 import { UsuariosService } from '../../../../core/services/usuarios.service';
 import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-app-usuarios-list',
@@ -20,7 +21,8 @@ export class AppUsuariosListComponent implements OnInit {
 
   constructor(
     private usuariosService: UsuariosService,
-    private notificacionService: NotificationService
+    private notificacionService: NotificationService,
+    private authService : AuthService
   ) {}
 
   ngOnInit(): void {
@@ -29,10 +31,13 @@ export class AppUsuariosListComponent implements OnInit {
 
   cargarUsuarios(): void {
     this.loading = true;
+    const currentUser = this.authService.getCurrentUser();
+
     this.usuariosService.obtenerUsuarios().subscribe({
       next: (response) => {
         if (response.success) {
           this.usuarios = response.data;
+          this.usuarios = response.data.filter(u => u.id !== currentUser?.id);
         } else {
           this.notificacionService.error('Error al cargar usuarios');
         }

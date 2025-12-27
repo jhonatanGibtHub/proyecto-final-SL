@@ -4,6 +4,7 @@ import { SensorTemp, SensorTempResponse } from '../../../../core/models/sensorTe
 import { SensoresTempService } from '../../../../core/services/sensoresTemp.service';
 import { AppSensorTempFormComponent } from '../app-sensor-temp-form/app-sensor-temp-form.component';
 import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-app-sensor-temp-list',
@@ -25,7 +26,14 @@ export class AppSensorTempListComponent implements OnInit {
     this.sensorTempFormModal.abrirModal(id);
   }
 
-  constructor(private sensoresTempService: SensoresTempService, private notificationService: NotificationService) {}
+  constructor(private sensoresTempService: SensoresTempService, 
+    private notificationService: NotificationService, 
+    private authService: AuthService
+        ) { }
+      
+         get isAdmin(): boolean {
+          return this.authService.isAdmin();
+        }
 
   ngOnInit(): void {
     this.cargarSensores();

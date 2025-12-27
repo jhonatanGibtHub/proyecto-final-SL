@@ -4,6 +4,7 @@ import { RegistroMovimiento, RegistroMovimientoResponse } from '../../../../core
 import { RegistroMovimientoService } from '../../../../core/services/registroMovimiento.service';
 import { AppRegistroMovimientoFormComponent } from '../app-registro-movimiento-form/app-registro-movimiento-form.component';
 import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-app-registro-movimiento-list',
@@ -29,8 +30,12 @@ export class AppRegistroMovimientoListComponent implements OnInit {
 
   constructor(
     private readonly movimientoService: RegistroMovimientoService,
-    private readonly notificationService: NotificationService
-  ) {}
+    private readonly notificationService: NotificationService, private authService: AuthService
+      ) { }
+    
+       get isAdmin(): boolean {
+        return this.authService.isAdmin();
+      }
 
   ngOnInit(): void {
     this.cargarMovimientos();

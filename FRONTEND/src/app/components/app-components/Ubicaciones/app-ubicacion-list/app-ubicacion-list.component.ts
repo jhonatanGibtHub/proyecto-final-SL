@@ -4,6 +4,7 @@ import { Ubicacion, UbicacionResponse } from '../../../../core/models/ubicacion'
 import { UbicacionesService } from '../../../../core/services/ubicaciones.service';
 import { AppUbicacionFormComponent } from '../app-ubicacion-form/app-ubicacion-form.component';
 import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 @Component({
   selector: 'app-app-ubicacion-list',
   imports: [CommonModule, AppUbicacionFormComponent],
@@ -23,7 +24,14 @@ export class AppUbicacionListComponent implements OnInit {
   abrirModalEditar(id: number): void {
     this.ubicacionFormModal.abrirModal(id);
   }
-  constructor(private ubicacionService: UbicacionesService, private notificationService: NotificationService) { }
+  constructor(private ubicacionService: UbicacionesService, 
+    private notificationService: NotificationService, 
+        private authService: AuthService
+            ) { }
+          
+             get isAdmin(): boolean {
+              return this.authService.isAdmin();
+            }
 
   ngOnInit(): void {
     this.cargarUbicaciones();
