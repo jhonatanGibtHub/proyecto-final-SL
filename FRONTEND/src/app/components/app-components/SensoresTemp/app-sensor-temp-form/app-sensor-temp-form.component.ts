@@ -7,10 +7,19 @@ import { SensorTemp } from '../../../../core/models/sensorTemp';
 import { UbicacionesService } from '../../../../core/services/ubicaciones.service';
 import { Ubicacion } from '../../../../core/models/ubicacion';
 import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-app-sensor-temp-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule],
   templateUrl: './app-sensor-temp-form.component.html',
   styleUrl: './app-sensor-temp-form.component.css'
 })
@@ -39,7 +48,12 @@ export class AppSensorTempFormComponent implements OnInit {
     } else {
       this.isEditMode = false;
       this.sensorId = null;
-      this.sensorTempForm.reset();
+
+      this.sensorTempForm.reset({
+        codigo_serie: '',
+        id_ubicacion_actual: '',
+        ultima_calibracion: ''
+      });
     }
   }
 
@@ -86,7 +100,7 @@ export class AppSensorTempFormComponent implements OnInit {
     this.sensoresTempService.obtenerSensorPorId(id).subscribe({
       next: (response) => {
         if (response.success && response.data && !Array.isArray(response.data)) {
-          const sensor = response.data as SensorTemp;
+          const sensor = response.data;
           this.sensorTempForm.patchValue(sensor);
         } else if (response.error) {
           this.error = response.error;
@@ -116,14 +130,14 @@ export class AppSensorTempFormComponent implements OnInit {
       return;
     }
     const sensorData: SensorTemp = this.sensorTempForm.value;
-    console.log('Datos enviados:', sensorData);
+
     if (this.isEditMode && this.sensorId) {
       this.sensoresTempService.actualizarSensor(this.sensorId, sensorData).subscribe({
         next: (response) => {
-            this.successMessage = 'Sensor actualizado correctamente.';
-            this.notificationService.success(this.successMessage);
-            this.sensorTempGuardado.emit();
-            this.cerrarModal();
+          this.successMessage = 'Sensor actualizado correctamente.';
+          this.notificationService.success(this.successMessage);
+          this.sensorTempGuardado.emit();
+          this.cerrarModal();
         },
         error: (err) => {
           this.error = 'Error de conexión al actualizar el sensor.';
@@ -134,10 +148,10 @@ export class AppSensorTempFormComponent implements OnInit {
     } else {
       this.sensoresTempService.crearSensor(sensorData).subscribe({
         next: (response) => {
-            this.successMessage = 'Sensor creado correctamente.';
-            this.notificationService.success(this.successMessage);
-            this.sensorTempGuardado.emit();
-            this.cerrarModal();
+          this.successMessage = 'Sensor creado correctamente.';
+          this.notificationService.success(this.successMessage);
+          this.sensorTempGuardado.emit();
+          this.cerrarModal();
         },
         error: (err) => {
           this.error = 'Error de conexión al crear el sensor.';
@@ -154,14 +168,34 @@ export class AppSensorTempFormComponent implements OnInit {
   }
 
   getErrorMessage(fieldName: string): string {
-    const field = this.sensorTempForm.get(fieldName);
+  const field = this.sensorTempForm.get(fieldName);
 
-    if (!field) return '';
-
-    if (field.hasError('required')) {
-      return 'Este campo es obligatorio';
-    }
-
+  if (!field) {
     return '';
   }
+
+  switch (fieldName) {
+
+    case 'codigo_serie':
+      if (field.hasError('required')) {
+        return 'El código de serie es obligatorio';
+      }
+      break;
+
+    case 'id_ubicacion_actual':
+      if (field.hasError('required')) {
+        return 'Debe seleccionar una ubicación';
+      }
+      break;
+
+    case 'ultima_calibracion':
+      if (field.hasError('required')) {
+        return 'La fecha de última calibración es obligatoria';
+      }
+      break;
+  }
+
+  return '';
+}
+
 }

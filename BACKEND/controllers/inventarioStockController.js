@@ -7,7 +7,7 @@ const obtenerInventarioStock = async (req, res) => {
     SELECT 
         I.id_inventario, 
         V.nombre_comercial AS vacuna,
-        I.id_lote, 
+        I.id_lote,
         U.nombre AS ubicacion,
         I.cantidad_actual, 
         I.fecha_ultima_actualizacion
@@ -153,11 +153,87 @@ const actualizarInventarioStock = async (req, res) => {
   }
 };
 
-// El DELETE está prohibido
-// La cantidad debe llegar a cero mediante UPDATE.
+const obtenerInventarioStockPorId = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validación básica del parámetro
+    if (!id || isNaN(id)) {
+      return res.status(400).json({
+        success: false,
+        mensaje: "El ID del inventario es inválido.",
+      });
+    }
+
+    const [inventario] = await db.query(
+      `
+      SELECT 
+        I.id_inventario, 
+        V.nombre_comercial AS vacuna,
+        I.id_lote,
+        U.nombre AS ubicacion,
+        I.cantidad_actual, 
+        I.fecha_ultima_actualizacion
+      FROM Inventario_Stock I
+      JOIN Lotes L ON I.id_lote = L.id_lote
+      JOIN Vacunas V ON L.id_vacuna = V.id_vacuna
+      JOIN Ubicaciones U ON I.id_ubicacion = U.id_ubicacion
+      WHERE I.id_inventario = ?
+      `,
+      [id]
+    );
+
+    if (inventario.length === 0) {
+      return res.status(404).json({
+        success: false,
+        mensaje: "Registro de inventario no encontrado.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: inventario[0],
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al obtener el inventario por ID",
+      error: error.message,
+    });
+  }
+};
+
+const eliminarInventarioStock = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [resultado] = await db.query('DELETE FROM Inventario_Stock WHERE id_inventario = ?', [id]);
+
+    if (resultado.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        mensaje: "Registro de inventario no encontrado."
+      });
+    }
+
+    res.json({
+      success: true,
+      mensaje: "Registro de inventario eliminado exitosamente"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al eliminar el registro de inventario",
+      error: error.message
+    });
+  }
+};
+
 
 module.exports = {
   obtenerInventarioStock,
   crearInventarioStock,
   actualizarInventarioStock,
+  obtenerInventarioStockPorId,
+  eliminarInventarioStock
 };

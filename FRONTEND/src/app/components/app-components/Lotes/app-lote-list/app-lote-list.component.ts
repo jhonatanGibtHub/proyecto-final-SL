@@ -50,8 +50,4 @@ export class AppLoteListComponent implements OnInit {
       }
     });
   }
-
-  onLoteGuardado(): void {
-    this.cargarLotes();
-  }
 }

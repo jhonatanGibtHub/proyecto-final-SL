@@ -246,6 +246,18 @@
             <span>MEDICIONES TEMP</span>
         </button>
 
+        <button class="btn-aside" routerLink="/app/alertas-cadena-frio" routerLinkActive="active-btn"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <svg class="icono-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path d="M12 9V11M12 15H12.01M5.07183 19H18.9282C20.4678 19 21.4301 17.3333 20.6603 15.952L13.7321 4.04798C12.9623 2.66667 11.0378 2.66667 10.268 4.04798L3.33978 15.952C2.56998 17.3333 3.53222 19 5.07183 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+            </svg>
+            <span>ALERTAS CADENA FRÍO</span>
+        </button>
+
         <button *ngIf="isAdmin" class="btn-aside" routerLink="/app/usuarios" routerLinkActive="active-btn"
             [routerLinkActiveOptions]="{ exact: true }">
             <svg class="icono-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

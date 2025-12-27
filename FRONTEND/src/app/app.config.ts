@@ -9,6 +9,19 @@ import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
+import { MAT_DATE_FORMATS } from '@angular/material/core';
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'YYYY-MM-DD',
+  },
+  display: {
+    dateInput: 'YYYY-MM-DD',
+    monthYearLabel: 'YYYY MMMM',
+    dateA11yLabel: 'YYYY-MM-DD',
+    monthYearA11yLabel: 'YYYY MMMM',
+  },
+};
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }), 
@@ -40,7 +53,10 @@ export const appConfig: ApplicationConfig = {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
       multi: true
-    }
+    },
+     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ]
 };
+
+
 

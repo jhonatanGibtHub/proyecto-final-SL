@@ -418,6 +418,63 @@ const cambiarRolUsuario = async (req, res) => {
   }
 };
 
+const obtenerUsuarioPorId = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [usuarios] = await db.query(
+      "SELECT id, nombre, email, rol, activo, fecha_creacion FROM usuarios WHERE id = ?",
+      [id]
+    );
+
+    if (usuarios.length === 0) {
+      return res.status(404).json({
+        success: false,
+        mensaje: "Usuario no encontrado",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: usuarios[0],
+    });
+  } catch (error) {
+    console.error("Error al obtener usuario por ID:", error);
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al obtener el usuario",
+      error: error.message,
+    });
+  }
+};
+
+const eliminarUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [resultado] = await db.query("DELETE FROM usuarios WHERE id = ?", [id]);
+
+    if (resultado.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        mensaje: "Usuario no encontrado.",
+      });
+    }
+
+    res.json({
+      success: true,
+      mensaje: "Usuario eliminado exitosamente",
+    });
+  } catch (error) {
+    console.error("Error al eliminar usuario:", error);
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al eliminar el usuario",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   registrarUsuario,
   login,
@@ -426,4 +483,6 @@ module.exports = {
   obtenerUsuarios,
   toggleActivoUsuario,
   cambiarRolUsuario,
+  obtenerUsuarioPorId,
+  eliminarUsuario,
 };

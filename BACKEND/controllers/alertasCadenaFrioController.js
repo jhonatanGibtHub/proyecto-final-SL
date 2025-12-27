@@ -13,7 +13,6 @@ const crearAlertaInterna = async ({ id_medicion, id_lote, tipo_alerta }) => {
             'INSERT INTO Alertas_Cadena_Frio (id_medicion, id_lote, tipo_alerta, estado) VALUES (?, ?, ?, ?)',
             [id_medicion, id_lote, tipo_alerta, 'Activa']
         );
-        console.log(`[ALERTA AUTOMÁTICA] registrada para Lote ${id_lote}: ${tipo_alerta}`);
         
     } catch (error) {
         console.error("Error al crear la Alerta de forma interna:", error.message);
@@ -97,12 +96,78 @@ const cambiarEstadoAlerta = async (req, res) => {
     }
 };
 
+const obtenerAlertaPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const [alertas] = await db.query(`
+            SELECT 
+                A.id_alerta, 
+                A.id_medicion, 
+                V.nombre_comercial AS vacuna,
+                MT.temperatura_c AS temp_violada,
+                A.tipo_alerta,
+                A.fecha_alerta, 
+                A.estado
+            FROM Alertas_Cadena_Frio A
+            JOIN Mediciones_Temp MT ON A.id_medicion = MT.id_medicion
+            JOIN Lotes L ON A.id_lote = L.id_lote
+            JOIN Vacunas V ON L.id_vacuna = V.id_vacuna
+            WHERE A.id_alerta = ?
+        `, [id]);
+        
+        if (alertas.length === 0) {
+            return res.status(404).json({
+                success: false,
+                mensaje: "Alerta no encontrada"
+            });
+        }
+        
+        res.json({
+            success: true,
+            data: alertas[0]
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al obtener la alerta",
+            error: error.message
+        });
+    }
+};
 
+const eliminarAlerta = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const [resultado] = await db.query('DELETE FROM Alertas_Cadena_Frio WHERE id_alerta = ?', [id]);
+        
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                mensaje: "Alerta no encontrada."
+            });
+        }
+        
+        res.json({
+            success: true,
+            mensaje: "Alerta eliminada exitosamente"
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al eliminar la alerta",
+            error: error.message
+        });
+    }
+};
 
 
 module.exports = {
     crearAlertaInterna, 
     obtenerAlertas,
     cambiarEstadoAlerta,
-    crearAlerta
+    crearAlerta,
+    obtenerAlertaPorId,
+    eliminarAlerta
 };

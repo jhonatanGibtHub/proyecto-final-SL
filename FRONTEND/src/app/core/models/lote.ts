@@ -4,7 +4,7 @@ export interface Lote {
     fecha_fabricacion: string;
     fecha_caducidad: string;
     cantidad_inicial_unidades: number;
-    vacuna?: string; // for display
+    vacuna?: string; 
 }
 
 export interface LoteResponse {

@@ -28,24 +28,62 @@ const obtenerSensores = async (req, res) => {
     }
 };
 
+const obtenerSensorPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const [sensores] = await db.query(`
+            SELECT 
+                ST.id_sensor, 
+                ST.codigo_serie, 
+                ST.id_ubicacion_actual,
+                U.nombre AS ubicacion_actual,
+                ST.ultima_calibracion
+            FROM Sensores_Temp ST
+            LEFT JOIN Ubicaciones U ON ST.id_ubicacion_actual = U.id_ubicacion
+            WHERE ST.id_sensor = ?
+        `, [id]);
+        
+        if (sensores.length === 0) {
+            return res.status(404).json({
+                success: false,
+                mensaje: "Sensor no encontrado"
+            });
+        }
+        
+        res.json({
+            success: true,
+            data: sensores[0]
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al obtener el sensor",
+            error: error.message
+        });
+    }
+};
+
 
 const crearSensor = async (req, res) => {
     try {
         const { codigo_serie, id_ubicacion_actual, ultima_calibracion } = req.body;
 
-        // Validación básica
-        if (!codigo_serie) {
-            return res.status(400).json({
-                success: false,
-                mensaje: "El código de serie es obligatorio para registrar un sensor."
-            });
+        // Formatear la fecha si es necesaria
+        let fechaCalibracion = ultima_calibracion;
+        if (ultima_calibracion && typeof ultima_calibracion === 'string') {
+            // Si viene como string, intentar parsear
+            const date = new Date(ultima_calibracion);
+            if (!isNaN(date.getTime())) {
+                fechaCalibracion = date.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+            }
+        } else if (ultima_calibracion instanceof Date) {
+            fechaCalibracion = ultima_calibracion.toISOString().split('T')[0];
         }
-        
-        
 
         const [resultado] = await db.query(
             'INSERT INTO Sensores_Temp (codigo_serie, id_ubicacion_actual, ultima_calibracion) VALUES (?, ?, ?)',
-            [codigo_serie, id_ubicacion_actual, ultima_calibracion]
+            [codigo_serie, id_ubicacion_actual, fechaCalibracion]
         );
 
         res.status(201).json({
@@ -55,7 +93,7 @@ const crearSensor = async (req, res) => {
                 id: resultado.insertId,
                 codigo_serie,
                 id_ubicacion_actual,
-                ultima_calibracion
+                ultima_calibracion: fechaCalibracion
             }
         });
 
@@ -81,6 +119,18 @@ const actualizarSensor = async (req, res) => {
         const { id } = req.params; 
         const { id_ubicacion_actual, ultima_calibracion } = req.body;
 
+        // Formatear la fecha si es necesaria
+        let fechaCalibracion = ultima_calibracion;
+        if (ultima_calibracion && typeof ultima_calibracion === 'string') {
+            // Si viene como string, intentar parsear
+            const date = new Date(ultima_calibracion);
+            if (!isNaN(date.getTime())) {
+                fechaCalibracion = date.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+            }
+        } else if (ultima_calibracion instanceof Date) {
+            fechaCalibracion = ultima_calibracion.toISOString().split('T')[0];
+        }
+
         // 1. Verificar existencia
         const [sensorExistente] = await db.query('SELECT * FROM Sensores_Temp WHERE id_sensor = ?', [id]);
         if (sensorExistente.length === 0) {
@@ -93,7 +143,7 @@ const actualizarSensor = async (req, res) => {
        
         const [resultado] = await db.query(
             'UPDATE Sensores_Temp SET id_ubicacion_actual=?, ultima_calibracion=? WHERE id_sensor=?',
-            [id_ubicacion_actual, ultima_calibracion, id]
+            [id_ubicacion_actual, fechaCalibracion, id]
         );
         
         if (resultado.affectedRows === 0) {
@@ -106,7 +156,7 @@ const actualizarSensor = async (req, res) => {
         res.status(200).json({
             success: true,
             mensaje: "Sensor actualizado (ubicación/calibración) exitosamente.",
-            data: { id, id_ubicacion_actual, ultima_calibracion }
+            data: { id, id_ubicacion_actual, ultima_calibracion: fechaCalibracion }
         });
 
     } catch (error) {
@@ -119,13 +169,37 @@ const actualizarSensor = async (req, res) => {
 };
 
 
-// El DELETE está prohibido.
-// El historial de mediciones (Mediciones_Temp) depende de este activo.
+const eliminarSensor = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const [resultado] = await db.query('DELETE FROM Sensores_Temp WHERE id_sensor = ?', [id]);
+        
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                mensaje: "Sensor no encontrado."
+            });
+        }
+        
+        res.json({
+            success: true,
+            mensaje: "Sensor eliminado exitosamente"
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al eliminar el sensor",
+            error: error.message
+        });
+    }
+};
 
 
 module.exports = {
     obtenerSensores,
+    obtenerSensorPorId,
     crearSensor,
     actualizarSensor,
-
+    eliminarSensor
 };

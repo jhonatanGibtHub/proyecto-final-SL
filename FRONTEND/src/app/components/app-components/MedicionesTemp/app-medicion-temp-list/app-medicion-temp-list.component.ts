@@ -51,7 +51,25 @@ export class AppMedicionTempListComponent implements OnInit {
     });
   }
 
-  onMedicionGuardada(): void {
-    this.cargarMediciones();
+  eliminarMedicionTemp(id: number) {
+    if (confirm('¿Está seguro de que desea eliminar esta Medicion?')) {
+      this.medicionService.eliminarMedicion(id).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.notificationService.success('Medicion eliminado correctamente.');
+            this.cargarMediciones();
+          } else if (response.error) {
+            this.error = response.error;
+            this.notificationService.error(this.error);
+          }
+        },
+        error: (err) => {
+          this.error = 'Error al eliminar la Medicion: Fallo de conexión.';
+          const mensajeError = err.error?.mensaje;
+          this.notificationService.error(mensajeError || this.error);
+        }
+      });
+    }
   }
+
 }

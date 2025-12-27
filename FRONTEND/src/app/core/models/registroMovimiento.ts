@@ -10,6 +10,9 @@ export interface RegistroMovimiento {
     ubicacion_origen_nombre?: string; // for display
     ubicacion_destino_nombre?: string; // for display
     transportista?: string; // for display
+
+    origen?:string,
+    destino?:string,
 }
 
 export interface RegistroMovimientoResponse {

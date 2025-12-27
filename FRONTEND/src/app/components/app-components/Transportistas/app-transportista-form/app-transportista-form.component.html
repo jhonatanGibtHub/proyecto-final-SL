@@ -22,7 +22,7 @@
                 </label>
                 <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('nombre')}">
                     <input #inputNombre id="nombre" type="text" formControlName="nombre"
-                        placeholder="Ingrese el nombre del transportista" name="nombre">
+                        placeholder="Ingrese el nombres" name="nombre">
                 </div>
                 <div class="text-error-message" *ngIf="isFieldInvalid('nombre')">
                     {{ getErrorMessage('nombre') }}
@@ -47,7 +47,7 @@
                     </span>
                 </label>
                 <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('licencia')}">
-                    <input id="licencia" type="text" formControlName="licencia" placeholder="Ingrese la licencia"
+                    <input id="licencia" type="text" formControlName="licencia" placeholder="T-12345    "
                         name="licencia">
                 </div>
                 <div class="text-error-message" *ngIf="isFieldInvalid('licencia')">
@@ -73,8 +73,8 @@
                     </span>
                 </label>
                 <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('telefono')}">
-                    <input id="telefono" type="text" formControlName="telefono" placeholder="Ingrese el teléfono"
-                        name="telefono">
+                    <input id="telefono" type="text" formControlName="telefono" placeholder="123456789"
+                        name="telefono" maxlength="9">
                 </div>
                  <div class="text-error-message" *ngIf="isFieldInvalid('telefono')">
                     {{ getErrorMessage('telefono') }}

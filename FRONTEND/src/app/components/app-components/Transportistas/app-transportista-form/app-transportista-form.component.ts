@@ -58,9 +58,9 @@ export class AppTransportistaFormComponent implements OnInit {
     private readonly notificationService: NotificationService
   ) {
     this.transportistaForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
       licencia: ['', [Validators.required]],
-      telefono: ['', [Validators.required,  Validators.minLength(9), Validators.maxLength(9)]],
+      telefono: ['', [Validators.required,  Validators.minLength(9), Validators.maxLength(9), Validators.pattern('^[0-9]+$')]],
       tipo_vehiculo: ['', [Validators.required]]
     });
   }
@@ -147,19 +147,54 @@ export class AppTransportistaFormComponent implements OnInit {
   }
 
   getErrorMessage(fieldName: string): string {
-    const field = this.transportistaForm.get(fieldName);
+  const field = this.transportistaForm.get(fieldName);
 
-    if (!field) return '';
-
-    if (field.hasError('required')) {
-      return 'Este campo es obligatorio';
-    }
-
-    if (field.hasError('minlength')) {
-      const requiredLength = field.errors?.['minlength']?.requiredLength;
-      return `Mínimo ${requiredLength} caracteres`;
-    }
-
+  if (!field) {
     return '';
   }
+
+  switch (fieldName) {
+
+    case 'nombre':
+      if (field.hasError('required')) {
+        return 'El nombre es obligatorio';
+      }
+      if (field.hasError('minlength')) {
+        return 'El nombre debe tener al menos 3 caracteres';
+      }
+      if (field.hasError('pattern')) {
+        return 'El nombre solo puede contener letras';
+      }
+      break;
+
+    case 'licencia':
+      if (field.hasError('required')) {
+        return 'La licencia es obligatoria';
+      }
+      break;
+
+    case 'telefono':
+      if (field.hasError('required')) {
+        return 'El teléfono es obligatorio';
+      }
+      
+      if (field.hasError('pattern')) {
+        return 'El teléfono solo puede contener números';
+      }
+      if (field.hasError('minlength') || field.hasError('maxlength')) {
+        return 'El teléfono debe tener exactamente 9 dígitos';
+      }
+      break;
+
+    case 'tipo_vehiculo':
+      if (field.hasError('required')) {
+        return 'Debe seleccionar un tipo de vehículo';
+      }
+      break;
+  }
+
+  return '';
+}
+
+
 }

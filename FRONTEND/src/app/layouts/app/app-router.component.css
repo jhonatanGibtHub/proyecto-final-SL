@@ -97,12 +97,12 @@ main {
 aside {
     display: flex;
     flex-direction: column;
-    padding-top: 20px;
-    width: 310px;
+    padding-top: 10px;
+    width: 300px;
     height: 100%;
     overflow-x: hidden;
     white-space: nowrap;
-    gap: 10px;
+    gap: 5px;
 }
 
 aside.collapsed {

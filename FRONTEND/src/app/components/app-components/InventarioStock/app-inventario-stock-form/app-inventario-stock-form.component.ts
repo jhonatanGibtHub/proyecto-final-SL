@@ -45,7 +45,11 @@ export class AppInventarioStockFormComponent implements OnInit {
     } else {
       this.isEditMode = false;
       this.inventarioStockId = null;
-      this.inventarioStockForm.reset();
+      this.inventarioStockForm.reset({
+        id_lote: '',
+        id_ubicacion: '',
+        cantidad_actual: ''
+      });
     }
   }
 
@@ -61,7 +65,7 @@ export class AppInventarioStockFormComponent implements OnInit {
     this.inventarioStockForm = this.fb.group({
       id_lote: ['', [Validators.required]],
       id_ubicacion: ['', [Validators.required]],
-      cantidad_actual: ['', [Validators.required, Validators.min(0.01)]]
+      cantidad_actual: ['', [Validators.required, Validators.min(0), Validators.maxLength(6), Validators.pattern('^[0-9]+$')]]
     });
   }
 
@@ -174,20 +178,44 @@ export class AppInventarioStockFormComponent implements OnInit {
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
-  getErrorMessage(fieldName: string): string {
-    const field = this.inventarioStockForm.get(fieldName);
+ getErrorMessage(fieldName: string): string {
+  const field = this.inventarioStockForm.get(fieldName);
 
-    if (!field) return '';
-
-    if (field.hasError('required')) {
-      return 'Este campo es obligatorio';
-    }
-
-    if (field.hasError('min')) {
-      const min = field.errors?.['min']?.min;
-      return `El valor mínimo permitido es ${min}`;
-    }
-
+  if (!field) {
     return '';
   }
+
+  switch (fieldName) {
+
+    case 'id_lote':
+      if (field.hasError('required')) {
+        return 'Debe seleccionar un lote';
+      }
+      break;
+
+    case 'id_ubicacion':
+      if (field.hasError('required')) {
+        return 'Debe seleccionar una ubicación';
+      }
+      break;
+
+    case 'cantidad_actual':
+      if (field.hasError('required')) {
+        return 'La cantidad es obligatoria';
+      }
+      if (field.hasError('min')) {
+        return 'La cantidad no puede ser negativa';
+      }
+      if (field.hasError('maxlength')) {
+        return 'La cantidad no puede tener más de 6 dígitos';
+      }
+      if (field.hasError('pattern')) {
+        return 'La cantidad solo puede contener números';
+      }
+      break;
+  }
+
+  return '';
+}
+
 }

@@ -1,7 +1,38 @@
-<div class="modal-overlay" *ngIf="showModal">
-    <div class="modal-container">
-        <form [formGroup]="inventarioStockForm" (ngSubmit)="onSubmit()">
-            <h1 class="page-tittle">{{ isEditMode ? 'Editar Inventario Stock' : 'Registrar Inventario Stock' }}</h1>
+<div class="modal-overlay" *ngIf="showModal" >
+    <div class="modal-container" (click)="$event.stopPropagation()">
+        <form [formGroup]="alertaForm" (ngSubmit)="onSubmit()">
+            <h1 class="page-tittle">{{ isEditMode ? 'Editar Alerta de Cadena de Frío' : 'Crear Alerta de Cadena de Frío' }}</h1>
+            <div class="input-container">
+                <label for="id_medicion">
+                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </g>
+                    </svg>
+                    <span>Medición</span>
+                </label>
+                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('id_medicion')}">
+                    
+                    <mat-form-field appearance="outline">
+                        <mat-select id="id_medicion" formControlName="id_medicion">
+                            <mat-option value="">Seleccione una medición</mat-option>
+                            <mat-option *ngFor="let medicion of mediciones" [value]="medicion.id_medicion">
+                                {{ medicion.id_medicion }} - {{ medicion.temperatura_c }}°C
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+
+
+                    
+
+                </div>
+                <div *ngIf="isFieldInvalid('id_medicion')" class="text-error-message">
+                    <small>{{ getErrorMessage('id_medicion') }}</small>
+                </div>
+            </div>
             <div class="input-container">
                 <label for="id_lote">
                     <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,72 +45,44 @@
                     <span>Lote</span>
                 </label>
                 <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('id_lote')}">
-                    
                     <mat-form-field appearance="outline">
                         <mat-select id="id_lote" formControlName="id_lote">
-                            <mat-option value="">Seleccione un Lote</mat-option>
-
-                            <mat-option *ngFor="let item of lotes" [value]="item.id_lote">
-                                {{ item.vacuna }} - {{ item.fecha_fabricacion }}
+                            <mat-option value="">Seleccione un lote</mat-option>
+                            <mat-option *ngFor="let lote of lotes" [value]="lote.id_lote">
+                                Lote {{ lote.id_lote }} - {{ lote.vacuna }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-
-
                 </div>
-                <div class="text-error-message" *ngIf="isFieldInvalid('id_lote')">
-                    {{ getErrorMessage('id_lote') }}
+                <div *ngIf="isFieldInvalid('id_lote')" class="text-error-message">
+                    <small>{{ getErrorMessage('id_lote') }}</small>
                 </div>
             </div>
             <div class="input-container">
-                <label for="id_ubicacion">
+                <label for="tipo_alerta">
                     <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                         <g id="SVGRepo_iconCarrier">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            <path d="M12 9V11M12 15H12.01M5.07183 19H18.9282C20.4678 19 21.4301 17.3333 20.6603 15.952L13.7321 4.04798C12.9623 2.66667 11.0378 2.66667 10.268 4.04798L3.33978 15.952C2.56998 17.3333 3.53222 19 5.07183 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </g>
                     </svg>
-                    <span>Ubicación</span>
+                    <span>Tipo de Alerta</span>
                 </label>
-                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('id_ubicacion')}">
-
+                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('tipo_alerta')}">
                     <mat-form-field appearance="outline">
-                        <mat-select id="id_ubicacion" formControlName="id_ubicacion">
-                            <mat-option value="">Seleccione una ubicacion</mat-option>
-
-                            <mat-option *ngFor="let item of ubicaciones" [value]="item.id_ubicacion">
-                                {{ item.nombre }} - {{ item.tipo }}
-                            </mat-option>
+                        <mat-select id="tipo_alerta" formControlName="tipo_alerta">
+                            <mat-option value="">Seleccione un tipo de alerta</mat-option>
+                            <mat-option value="Máx. Excedida">Máx. Excedida</mat-option>
+                            <mat-option value="Mín. Violada">Mín. Violada</mat-option>
                         </mat-select>
                     </mat-form-field>
-
-
                 </div>
-                <div class="text-error-message" *ngIf="isFieldInvalid('id_ubicacion')">
-                    {{ getErrorMessage('id_ubicacion') }}
+                <div *ngIf="isFieldInvalid('tipo_alerta')" class="text-error-message">
+                    <small>{{ getErrorMessage('tipo_alerta') }}</small>
                 </div>
             </div>
-            <div class="input-container">
-                <label for="cantidad_actual">
-                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path d="M7 20V4C7 3.44772 7.44772 3 8 3H16C16.5523 3 17 3.44772 17 4V20M7 20H5C4.44772 20 4 19.5523 4 19V7C4 6.44772 4.44772 6 5 6H7M7 20H17M17 20H19C19.5523 20 20 19.5523 20 19V7C20 6.44772 19.5523 6 19 6H17M9 6H15M9 10H15M9 14H15" stroke="currentColor" stroke-width="2"/>
-                        </g>
-                    </svg>
-                    <span>Cantidad Actual</span>
-                </label>
-                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('cantidad_actual')}">
-                    <input type="text" maxlength="6" id="cantidad_actual" formControlName="cantidad_actual" placeholder="Ingrese la cantidad actual">
-                </div>
-                <div class="text-error-message" *ngIf="isFieldInvalid('cantidad_actual')">
-                    {{ getErrorMessage('cantidad_actual') }}
-                </div>
-            </div>
-            
-           <div class="flex-end" style="margin-top: 30px;">
+              <div class="flex-end" style="margin-top: 30px;">
                 <button type="submit" class="btn btn-blue">
                     <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -90,7 +93,7 @@
                                 fill="currentColor"></path>
                         </g>
                     </svg>
-                    <span>{{ isEditMode ? 'Actualizar Inventario' : 'Guardar Inventario' }}</span>
+                    <span>{{ isEditMode ? 'Actualizar Alerta' : 'Guardar Alerta' }}</span>
                 </button>
                 <button type="button" class="btn btn-secondary" (click)="onCancel()">
                     <svg class="icono-1" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg"

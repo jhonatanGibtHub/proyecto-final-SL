@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UbicacionesService } from '../../../../core/services/ubicaciones.service';
 import { Ubicacion } from '../../../../core/models/ubicacion';
 import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { UbigeoService } from '../../../../core/services/ubigeo.service';
 
 @Component({
   selector: 'app-app-ubicacion-form',
@@ -85,6 +86,7 @@ export class AppUbicacionFormComponent implements OnInit {
       }
     });
   }
+
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {

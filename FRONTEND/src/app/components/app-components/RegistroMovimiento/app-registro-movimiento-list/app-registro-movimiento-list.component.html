@@ -39,9 +39,9 @@
         <tr *ngFor="let movimiento of movimientos">
             <td>{{ movimiento.id_movimiento }}</td>
             <td>{{ movimiento.id_lote }}</td>
-            <td>{{ movimiento.ubicacion_origen }}</td>
-            <td>{{ movimiento.ubicacion_destino }}</td>
-            <td>{{ movimiento.id_transportista }}</td>
+            <td>{{ movimiento.origen }}</td>
+            <td>{{ movimiento.destino }}</td>
+            <td>{{ movimiento.transportista }}</td>
             <td>{{ movimiento.fecha_envio | date:'short' }}</td>
             <td>{{ movimiento.fecha_recepcion | date:'short' }}</td>
             <td>

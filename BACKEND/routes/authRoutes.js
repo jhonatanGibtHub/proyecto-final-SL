@@ -8,7 +8,9 @@ const {
     obtenerPerfil,
     obtenerUsuarios,
     toggleActivoUsuario,
-    cambiarRolUsuario
+    cambiarRolUsuario,
+    obtenerUsuarioPorId,
+    eliminarUsuario
 } = require('../controllers/authController');
 
 const { verificarToken, verificarAdmin } = require('../middleware/auth.middleware');
@@ -23,7 +25,9 @@ router.get('/perfil', verificarToken, obtenerPerfil);
 
 // Rutas de admin
 router.get('/usuarios', verificarToken, verificarAdmin, obtenerUsuarios);
+router.get('/usuarios/:id', verificarToken, verificarAdmin, obtenerUsuarioPorId);
 router.put('/usuarios/:id/toggle-activo', verificarToken, verificarAdmin, toggleActivoUsuario);
 router.put('/usuarios/:id/rol', verificarToken, verificarAdmin, cambiarRolUsuario);
+router.delete('/usuarios/:id', verificarToken, verificarAdmin, eliminarUsuario);
 
 module.exports = router;

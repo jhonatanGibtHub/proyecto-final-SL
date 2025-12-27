@@ -32,8 +32,8 @@
         <tr *ngFor="let lote of lotes">
             <td> {{ lote.id_lote }} </td>
             <td> {{ lote.vacuna }} </td>
-            <td> {{ lote.fecha_fabricacion }} </td>
-            <td> {{ lote.fecha_caducidad }} </td>
+            <td> {{ lote.fecha_fabricacion | date:'short' }} </td>
+            <td> {{ lote.fecha_caducidad | date:'short' }} </td>
             <td> {{ lote.cantidad_inicial_unidades }} </td>
             <td>
                 <div class = "acciones">
@@ -56,4 +56,4 @@
         </tr>
     </tbody>
 </table>
-<app-app-lote-form (loteGuardado)="onLoteGuardado()"></app-app-lote-form>
+<app-app-lote-form (loteGuardado)="cargarLotes()"></app-app-lote-form>

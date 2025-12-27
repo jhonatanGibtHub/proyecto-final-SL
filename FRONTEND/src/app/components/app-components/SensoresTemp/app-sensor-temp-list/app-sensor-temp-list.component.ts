@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SensorTemp, SensorTempResponse } from '../../../../core/models/sensorTemp';
 import { SensoresTempService } from '../../../../core/services/sensoresTemp.service';
 import { AppSensorTempFormComponent } from '../app-sensor-temp-form/app-sensor-temp-form.component';
+import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
 
 @Component({
   selector: 'app-app-sensor-temp-list',
@@ -24,7 +25,7 @@ export class AppSensorTempListComponent implements OnInit {
     this.sensorTempFormModal.abrirModal(id);
   }
 
-  constructor(private sensoresTempService: SensoresTempService) {}
+  constructor(private sensoresTempService: SensoresTempService, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.cargarSensores();
@@ -50,7 +51,31 @@ export class AppSensorTempListComponent implements OnInit {
     });
   }
 
-  onSensorTempGuardado() {
-    this.cargarSensores();
-  }
+  eliminarSensorTemperatura(id: number | undefined) {
+      if (!id) return;
+      if (confirm('ADVERTENCIA: ¿Estás seguro de eliminar este sensor? Si existen registros asociados, la operación fallará.')) {
+        this.sensoresTempService.eliminarSensor(id).subscribe({
+          next: (response: SensorTempResponse) => {
+            if (response.success) {
+              this.notificationService.success(
+                'Sensor eliminado exitosamente.'
+              );
+              this.cargarSensores();
+            } else {
+              this.error = response.mensaje || 'Error al eliminar el sensor.';
+              this.notificationService.warning(
+                this.error
+              );
+            }
+          },
+          error: (err) => {
+            this.error = 'Error de servidor al intentar eliminar.';
+            const mensajeError = err.error?.mensaje;
+            this.notificationService.error(
+              mensajeError || this.error
+            );
+          }
+        });
+      }
+    }
 }

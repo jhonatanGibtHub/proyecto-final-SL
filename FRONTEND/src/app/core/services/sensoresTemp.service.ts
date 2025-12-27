@@ -28,4 +28,8 @@ export class SensoresTempService {
     return this.http.put<SensorTempResponse>(`${this.apiUrl}/${id}`, sensor);
   }
 
+  eliminarSensor(id: number): Observable<SensorTempResponse> {
+    return this.http.delete<SensorTempResponse>(`${this.apiUrl}/${id}`);
+  }
+
 }

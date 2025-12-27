@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MedicionesTempService } from '../../../../core/services/medicionesTemp.service';
@@ -9,10 +9,13 @@ import { LotesService } from '../../../../core/services/lotes.service';
 import { SensorTemp } from '../../../../core/models/sensorTemp';
 import { Lote } from '../../../../core/models/lote';
 import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-app-medicion-temp-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatInputModule],
   templateUrl: './app-medicion-temp-form.component.html',
   styleUrl: './app-medicion-temp-form.component.css'
 })
@@ -42,8 +45,14 @@ export class AppMedicionTempFormComponent implements OnInit {
     } else {
       this.isEditMode = false;
       this.medicionId = null;
-      this.medicionForm.reset();
+
+      this.medicionForm.reset({
+        id_sensor:'',
+      id_lote: '',
+      temperatura_c: ''
+      });
     }
+    this.cdr.detectChanges();
   }
 
   constructor(
@@ -53,12 +62,13 @@ export class AppMedicionTempFormComponent implements OnInit {
     private readonly lotesService: LotesService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
+    private readonly cdr: ChangeDetectorRef
   ) {
     this.medicionForm = this.fb.group({
       id_sensor: ['', [Validators.required]],
       id_lote: ['', [Validators.required]],
-      temperatura: ['', [Validators.required, Validators.min(-100), Validators.max(100)]]
+      temperatura_c: ['', [Validators.required, Validators.min(-100), Validators.max(100)]]
     });
   }
 
@@ -97,8 +107,9 @@ export class AppMedicionTempFormComponent implements OnInit {
     this.medicionService.obtenerMedicionPorId(id).subscribe({
       next: (response) => {
         if (response.success && response.data && !Array.isArray(response.data)) {
-          const medicion = response.data as MedicionTemp;
+          const medicion = response.data;
           this.medicionForm.patchValue(medicion);
+          this.cdr.detectChanges();
         } else if (response.error) {
           this.error = response.error;
           this.notificationService.error(this.error);
@@ -167,24 +178,37 @@ export class AppMedicionTempFormComponent implements OnInit {
   }
 
   getErrorMessage(fieldName: string): string {
-    const field = this.medicionForm.get(fieldName);
+  const field = this.medicionForm.get(fieldName);
 
-    if (!field) return '';
-
-    if (field.hasError('required')) {
-      return 'Este campo es obligatorio';
-    }
-
-    if (field.hasError('min')) {
-      const min = field.errors?.['min']?.min;
-      return `El valor mínimo permitido es ${min}°C`;
-    }
-
-    if (field.hasError('max')) {
-      const max = field.errors?.['max']?.max;
-      return `El valor máximo permitido es ${max}°C`;
-    }
-
+  if (!field) {
     return '';
   }
+
+  switch (fieldName) {
+
+    case 'id_sensor':
+      if (field.hasError('required')) {
+        return 'Debe seleccionar un sensor';
+      }
+      break;
+
+    case 'id_lote':
+      if (field.hasError('required')) {
+        return 'Debe seleccionar un lote';
+      }
+      break;
+
+    case 'temperatura_c':
+      if (field.hasError('required')) {
+        return 'La temperatura es obligatoria';
+      }
+      if (field.hasError('min') || field.hasError('max')) {
+        return 'La temperatura debe estar entre -100 y 100 °C';
+      }
+      break;
+  }
+
+  return '';
+}
+
 }

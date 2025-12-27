@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Usuario } from '../../../../core/models/usuario.interface';
 import { UsuariosService } from '../../../../core/services/usuarios.service';
 import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
@@ -8,7 +9,7 @@ import { NotificationService } from '../../../../core/services/notificacion/noti
 @Component({
   selector: 'app-app-usuarios-list',
   standalone: true,
-  imports: [CommonModule, MatSlideToggleModule],
+  imports: [CommonModule, MatSlideToggleModule, MatButtonToggleModule],
   templateUrl: './app-usuarios-list.component.html',
   styleUrls: ['./app-usuarios-list.component.css']
 })
@@ -20,7 +21,7 @@ export class AppUsuariosListComponent implements OnInit {
   constructor(
     private usuariosService: UsuariosService,
     private notificacionService: NotificationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.cargarUsuarios();
@@ -37,44 +38,46 @@ export class AppUsuariosListComponent implements OnInit {
         }
         this.loading = false;
       },
-      error: (error) => {
-        console.error('Error al cargar usuarios:', error);
+      error: () => {
         this.notificacionService.error('Error al cargar usuarios');
         this.loading = false;
       }
     });
   }
 
-  toggleActivoUsuario(usuario: Usuario): void {
-    this.usuariosService.toggleActivoUsuario(usuario.id).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.notificacionService.success(response.mensaje);
-          this.cargarUsuarios(); // Recargar lista
-        } else {
-          this.notificacionService.error('Error al cambiar estado del usuario');
-        }
-      },
-      error: (error) => {
-        console.error('Error al cambiar estado:', error);
+  cambiarEstadoUsuario(usuario: Usuario, nuevoEstado: 'activo' | 'inactivo'): void {
+  const estadoBooleano = nuevoEstado === 'activo';
+  if (usuario.activo === estadoBooleano) return; // no hacer nada si no cambia
+
+  this.usuariosService.toggleActivoUsuario(usuario.id).subscribe({
+    next: (response) => {
+      if (response.success) {
+        this.notificacionService.success(response.mensaje);
+        this.cargarUsuarios();
+      } else {
         this.notificacionService.error('Error al cambiar estado del usuario');
       }
-    });
-  }
+    },
+    error: () => {
+      this.notificacionService.error('Error al cambiar estado del usuario');
+    }
+  });
+}
 
-  cambiarRolUsuario(usuario: Usuario): void {
-    const nuevoRol = usuario.rol === 'admin' ? 'usuario' : 'admin';
-    this.usuariosService.cambiarRolUsuario(usuario.id, nuevoRol).subscribe({
+
+  cambiarRolUsuario(usuario: Usuario, rolSeleccionado: 'admin' | 'usuario'): void {
+    if (usuario.rol === rolSeleccionado) return; // No hacer nada si no cambia
+
+    this.usuariosService.cambiarRolUsuario(usuario.id, rolSeleccionado).subscribe({
       next: (response) => {
         if (response.success) {
           this.notificacionService.success(response.mensaje);
-          this.cargarUsuarios(); // Recargar lista
+          this.cargarUsuarios();
         } else {
           this.notificacionService.error('Error al cambiar rol del usuario');
         }
       },
-      error: (error) => {
-        console.error('Error al cambiar rol:', error);
+      error: () => {
         this.notificacionService.error('Error al cambiar rol del usuario');
       }
     });

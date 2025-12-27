@@ -11,10 +11,21 @@ import { Lote } from '../../../../core/models/lote';
 import { Ubicacion } from '../../../../core/models/ubicacion';
 import { Transportista } from '../../../../core/models/transportista';
 import { NotificationService } from '../../../../core/services/notificacion/notificacion-type.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-app-registro-movimiento-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule, ReactiveFormsModule, MatFormFieldModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule
+  ],
   templateUrl: './app-registro-movimiento-form.component.html',
   styleUrl: './app-registro-movimiento-form.component.css'
 })
@@ -45,7 +56,14 @@ export class AppRegistroMovimientoFormComponent implements OnInit {
     } else {
       this.isEditMode = false;
       this.movimientoId = null;
-      this.movimientoForm.reset();
+       this.movimientoForm.reset({
+        id_lote:'',
+      ubicacion_origen: '',
+      ubicacion_destino: '', 
+      id_transportista: '', 
+      fecha_envio: '', 
+      fecha_recepcion: ''
+      });
     }
   }
 

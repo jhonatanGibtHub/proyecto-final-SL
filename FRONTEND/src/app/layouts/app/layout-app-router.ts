@@ -10,8 +10,8 @@ import { AppSensorTempListComponent } from '../../components/app-components/Sens
 import { AppLoteListComponent } from '../../components/app-components/Lotes/app-lote-list/app-lote-list.component';
 import { AppMedicionTempListComponent } from '../../components/app-components/MedicionesTemp/app-medicion-temp-list/app-medicion-temp-list.component';
 import { AppRegistroMovimientoListComponent } from '../../components/app-components/RegistroMovimiento/app-registro-movimiento-list/app-registro-movimiento-list.component';
+import { AppAlertaCadenaFrioListComponent } from '../../components/app-components/AlertasCadenaFrio/app-alerta-cadena-frio-list/app-alerta-cadena-frio-list.component';
 import { AppUsuariosListComponent } from '../../components/app-components/Usuarios/app-usuarios-list/app-usuarios-list.component';
-import { AdminGuard } from '../../core/guards/admin.guard';
 
 export const AppRoutes: Routes = [
   {
@@ -26,7 +26,8 @@ export const AppRoutes: Routes = [
      { path: 'lotes', component: AppLoteListComponent, canActivate: [AuthGuard]},
      { path: 'mediciones-temp', component: AppMedicionTempListComponent, canActivate: [AuthGuard]},
      { path: 'registro-movimiento', component: AppRegistroMovimientoListComponent, canActivate: [AuthGuard]},
-     { path: 'usuarios', component: AppUsuariosListComponent, canActivate: [AdminGuard]},
+     { path: 'usuarios', component: AppUsuariosListComponent, canActivate: [AuthGuard]},
+     { path: 'alertas-cadena-frio', component: AppAlertaCadenaFrioListComponent, canActivate: [AuthGuard]},
     ]
   }
 ];

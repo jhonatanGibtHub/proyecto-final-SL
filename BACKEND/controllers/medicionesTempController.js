@@ -190,6 +190,7 @@ const eliminarMedicion = async (req, res) => {
             mensaje: "Medición eliminada exitosamente"
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             success: false,
             mensaje: "Error al eliminar la medición",
