@@ -1,7 +1,26 @@
+:host {
+    display: block;
+}
 
+.sections-wrapper {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.scroll-section {
+    position: absolute;
+    inset: 0;
+    height: 90vh;
+    width: 100%;
+}
+
+.scroll-section:first-child {
+    opacity: 1;
+}
 
 .section-present {
-    height: 88vh;
+
     position: relative;
 
     .text-present {
@@ -18,62 +37,58 @@
         color: var(--color-font);
         font-size: var(--font-38);
     }
+
     .text-present p {
         color: var(--blue-800);
         font-size: var(--font-18);
     }
 
-}
-
-.imgs-floating {
-    --width: 450px;
-    position: absolute;
-    width: var(--width);
-    height: var(--width);
-    right: 20%;
-    top: calc(50% - (var(--width) / 2));
-}
-
-.float-img {
-    position: absolute;
-    overflow: hidden;
-    border-radius: 5px;
-}
-
-
-
-
-
-.section-app {
-    background-color: rgb(7, 103, 159);
-    height: 350px;
-    position: relative;
-
-    .info {
-        position: absolute;
-        width: 40%;
-        top: 30%;
-        left: 20%;
-
-        h2 {
-            color: #ffd633;
-            font-size: var(--font-30);
-        }
-
-        p {
-            color: #ffd633;
-            margin-top: 20px;
-            font-size: var(--font-16);
-        }
-    }
-
-    .img {
-        --width: 200px;
+    .imgs-floating {
+        --width: 450px;
         position: absolute;
         width: var(--width);
         height: var(--width);
         right: 20%;
         top: calc(50% - (var(--width) / 2));
+    }
+
+    .float-img {
+        position: absolute;
+        overflow: hidden;
+        border-radius: 5px;
+    }
+
+}
+
+.section-app {
+    .info {
+        position: absolute;
+        width: 40%;
+        top: 35%;
+        left: 10%;
+
+        h2 {
+            color: var(--color-font);
+            font-size: var(--font-38);
+        }
+
+        p {
+            color: var(--blue-800);
+            margin-top: 20px;
+            font-size: var(--font-18);
+        }
+    }
+
+    .img {
+        --height: 400px;
+        position: absolute;
+        width: 700px;
+        height: var(--height);
+        overflow: hidden;
+        border-radius: 5px;
+        right: -20px;
+        top: calc(50% - (var(--height) / 2));
+
         background-image: url('/gif_web_1.gif');
         background-size: cover;
         background-repeat: no-repeat;
@@ -83,82 +98,26 @@
 
 }
 
-.section-enterprise {
-    height: fit-content;
-    padding: 50px 20px;
-}
+.section-message {
 
-.cards-container {
-    display: flex;
-    gap: 30px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.card {
-    background-color: #fff;
-    border-radius: 12px;
-    padding: 30px 15px;
-    width: 250px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.card img {
-    width: 220px;
-    height: 220px;
-    object-fit: cover;
-    margin-bottom: 15px;
-}
-
-.card h3 {
-    margin: 10px 0 5px;
-    font-size: 1.2em;
-    color: var(--color-font);
-}
-
-.card p {
-    color: #666;
-    font-size: var(--font-12);
-}
-
-.section-suported {
-    height: 50px;
-    background-color: white;
-    .container-logo {
-        gap: 50px;
-    }
-    .logo span {
-        font-size: var(--font-12);
-        font-weight: 500;
-    }
-}
-
-.section-message-1 {
-    background-color: var(--blue-500);
-    height: 550px;
-    position: relative;
     .info {
         position: absolute;
         width: 30%;
-        top: 40%;
+        top: 30%;
         left: 20%;
+
         h2 {
-            color: #ffd633;
-            font-size: var(--font-34);
+            color: var(--color-font);
+            font-size: var(--font-38);
         }
+
         p {
-            color: #ffd633;
+            color: var(--blue-800);
             margin-top: 20px;
             font-size: var(--font-18);
         }
     }
+
     .img {
         --width: 350px;
         position: absolute;
@@ -170,6 +129,92 @@
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
-        filter: invert(18%) sepia(100%) saturate(2000%) hue-rotate(45deg) brightness(1.5);
+        /*filter: invert(18%) sepia(100%) saturate(2000%) hue-rotate(45deg) brightness(1.5);*/
     }
+}
+
+
+.section-supported .titulo-suported {
+    position: absolute;
+    top: 10%;
+    width: 500px;
+    background-color: rgb(255, 214, 51);
+    padding: 20px;
+    text-align: end;
+    font-size: var(--font-38);
+    margin-bottom: 50px;
+    font-weight: 600;
+    color: var(--color-font);
+}
+
+.supported-logos {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    right: 5%;
+    top:25%;
+    gap: 20px;
+    height: 100%;
+}
+
+.logo-card {
+    position: relative;
+    width: 800px;
+    height: 120px;
+    justify-content: start;
+    align-items: center;
+    display: flex;
+    
+    border-radius: 7px;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+
+
+}
+
+
+.logo-card span {
+    bottom: -150px;
+    width: 100%;
+    margin-left: 170px;
+    font-size: var(--font-24);
+    font-weight: 500;
+    opacity: 0.9;
+    color: var(--color-font);
+}
+
+
+/* Logos */
+.logo-unu {
+    margin-left: 400px;
+    background-color: #61d20c;
+    width: fit-content;
+    padding-right: 100px;
+    background-image: url('/logo-unu.png');
+    background-size: 100px;
+    background-repeat: no-repeat;
+    background-position: left 7% center;
+     span{
+        font-size: var(--font-20);
+        font-weight: 800;
+        color: rgb(20, 81, 25);
+    }
+}
+
+
+.logo-sistemas {
+    
+    background-color: #c0dcff;
+    width: fit-content;
+    padding-right: 100px;
+    background-image: url('/logo-sis.png');
+    background-size: 80px;
+    background-repeat: no-repeat;
+    background-position: left 7% center;
+
+    span{
+        font-size: var(--font-20);
+        font-weight: 800;   
+    }
+
 }
