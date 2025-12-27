@@ -18,11 +18,8 @@
     </div>
 </div>
 
-<div class="error-message" *ngIf="error">{{ error }}</div>
 
-<div class="loading" *ngIf="loading">Cargando movimientos...</div>
-
-<table *ngIf="!loading && movimientos.length > 0">
+<table>
     <thead>
         <tr>
             <th>ID</th>
@@ -83,11 +80,12 @@
                 </div>
             </td>
         </tr>
+
+        <tr *ngIf="movimientos.length === 0">
+            <td colspan="8" style="text-align: center;">No hay registros en el sistema.</td>
+        </tr>
     </tbody>
 </table>
 
-<div class="no-data" *ngIf="!loading && movimientos.length === 0 && !error">
-    No hay movimientos registrados.
-</div>
 
 <app-app-registro-movimiento-form (movimientoGuardado)="onMovimientoGuardado()"></app-app-registro-movimiento-form>

@@ -74,6 +74,10 @@
                 </div>
             </td>
         </tr>
+
+        <tr *ngIf="sensores.length === 0">
+            <td colspan="4" style="text-align: center;">No hay registros en el sistema.</td>
+        </tr>
     </tbody>
 </table>
 

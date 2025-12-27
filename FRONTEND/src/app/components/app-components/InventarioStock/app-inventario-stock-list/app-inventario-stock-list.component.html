@@ -51,6 +51,10 @@
                 </div>
             </td>
         </tr>
+
+        <tr *ngIf="inventarioStocks.length === 0">
+            <td colspan="6" style="text-align: center;">No hay registros en el sistema.</td>
+        </tr>
     </tbody>
 </table>
 <app-app-inventario-stock-form (inventarioStockGuardado)="onInventarioStockGuardado()"></app-app-inventario-stock-form>

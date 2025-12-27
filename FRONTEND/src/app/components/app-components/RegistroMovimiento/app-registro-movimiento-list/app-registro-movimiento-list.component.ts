@@ -15,7 +15,6 @@ import { AuthService } from '../../../../core/services/auth/auth.service';
 export class AppRegistroMovimientoListComponent implements OnInit {
 
   movimientos: RegistroMovimiento[] = [];
-  loading: boolean = false;
   error: string = '';
 
   @ViewChild(AppRegistroMovimientoFormComponent) movimientoFormModal!: AppRegistroMovimientoFormComponent;
@@ -42,11 +41,10 @@ export class AppRegistroMovimientoListComponent implements OnInit {
   }
 
   cargarMovimientos() {
-    this.loading = true;
     this.error = '';
     this.movimientoService.obtenerMovimientos().subscribe({
       next: (response) => {
-        this.loading = false;
+        
         if (response.success && Array.isArray(response.data)) {
           this.movimientos = response.data;
         } else if (response.error) {
@@ -55,7 +53,6 @@ export class AppRegistroMovimientoListComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.loading = false;
         this.error = 'Error al cargar los movimientos: Fallo de conexión.';
         const mensajeError = err.error?.mensaje;
         this.notificationService.error(mensajeError || this.error);

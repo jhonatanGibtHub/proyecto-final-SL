@@ -1,12 +1,9 @@
-<div class="flex-between">
+<div class="flex-start">
     <h2 class="page-tittle">Gestión de Usuarios</h2>
 </div>
 
-<div class="error-message" *ngIf="error">{{ error }}</div>
 
-<div class="loading" *ngIf="loading">Cargando usuarios...</div>
-
-<table *ngIf="!loading && usuarios.length > 0">
+<table>
     <thead>
         <tr>
             <th>ID</th>
@@ -48,9 +45,8 @@
                 
             </td>
         </tr>
+        <tr *ngIf="usuarios.length === 0">
+            <td colspan="7" style="text-align: center;">No hay registros en el sistema.</td>
+        </tr>
     </tbody>
 </table>
-
-<div class="no-data" *ngIf="!loading && usuarios.length === 0 && !error">
-    No hay usuarios registrados.
-</div>
