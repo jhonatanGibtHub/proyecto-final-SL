@@ -1,0 +1,20 @@
+<p>mapa-monitoreo works!</p>
+
+<div class="monitor-wrapper">
+  <div class="search-panel">
+    <h3>📦 Monitoreo de Vacunas</h3>
+    <div class="input-group">
+      <label>Punto de Partida:</label>
+      <input #origenInput type="text" placeholder="Ej: Jirón de la Unión 300, Lima">
+    </div>
+    <div class="input-group">
+      <label>Destino Final:</label>
+      <input #destinoInput type="text" placeholder="Ej: Plaza de Armas, Pucallpa">
+    </div>
+    <button (click)="iniciarSimulacion(origenInput.value, destinoInput.value)">
+      Trazar Ruta y Enviar
+    </button>
+  </div>
+
+  <div id="map"></div>
+</div>

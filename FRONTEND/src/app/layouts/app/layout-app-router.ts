@@ -12,7 +12,7 @@ import { AppMedicionTempListComponent } from '../../components/app-components/Me
 import { AppRegistroMovimientoListComponent } from '../../components/app-components/RegistroMovimiento/app-registro-movimiento-list/app-registro-movimiento-list.component';
 import { AppAlertaCadenaFrioListComponent } from '../../components/app-components/AlertasCadenaFrio/app-alerta-cadena-frio-list/app-alerta-cadena-frio-list.component';
 import { AppUsuariosListComponent } from '../../components/app-components/Usuarios/app-usuarios-list/app-usuarios-list.component';
-
+import { MapaMonitoreoComponent } from '../../components/app-components/MapaMonitoreo/mapa-monitoreo/mapa-monitoreo.component';
 export const AppRoutes: Routes = [
   {
     path: '', component: AppRouterComponent, canActivate: [AuthGuard],
@@ -28,6 +28,9 @@ export const AppRoutes: Routes = [
      { path: 'registro-movimiento', component: AppRegistroMovimientoListComponent, canActivate: [AuthGuard]},
      { path: 'usuarios', component: AppUsuariosListComponent, canActivate: [AuthGuard]},
      { path: 'alertas-cadena-frio', component: AppAlertaCadenaFrioListComponent, canActivate: [AuthGuard]},
+
+     //
+     { path: 'monitoreo', component: MapaMonitoreoComponent, canActivate: [AuthGuard]},
     ]
   }
 ];

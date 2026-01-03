@@ -1,3 +1,9 @@
+
+
+@import "leaflet/dist/leaflet.css";
+@import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+@import "leaflet-control-geocoder/dist/Control.Geocoder.css";
+
 *,
 *::before,
 *::after {
@@ -806,4 +812,40 @@ select option {
 }
 .mat-button-toggle-checked .mat-button-toggle-button:has(.mat-button-toggle-checkbox-wrapper) {
     padding-left: 23px !important;
+}
+
+
+
+
+/* ESTO ES LO NUEVO: Añade esto también al final de styles.css */
+app-mapa-monitoreo {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+
+/* --- ESTILOS PERSONALIZADOS PARA EL MAPA --- */
+.leaflet-container {
+    font-family: 'Inter', sans-serif !important;
+}
+
+/* Los controles de Zoom (+ / -) con tu azul */
+.leaflet-bar a {
+    background-color: white !important;
+    color: var(--color-font) !important; 
+    border-bottom: 1px solid var(--gray-200) !important;
+}
+
+.leaflet-bar a:hover {
+    background-color: var(--gray-100) !important;
+}
+
+/* El cuadro con las instrucciones de la ruta */
+.leaflet-routing-container {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--gray-200) !important;
+    border-radius: var(--border-radius-default-1) !important;
+    color: var(--gray-900) !important;
 }
