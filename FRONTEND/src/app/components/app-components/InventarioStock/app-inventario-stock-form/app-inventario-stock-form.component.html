@@ -20,7 +20,7 @@
                             <mat-option value="">Seleccione un Lote</mat-option>
 
                             <mat-option *ngFor="let item of lotes" [value]="item.id_lote">
-                                {{ item.vacuna }} - {{ item.fecha_fabricacion }}
+                                {{ item.vacuna }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -49,7 +49,7 @@
                             <mat-option value="">Seleccione una ubicacion</mat-option>
 
                             <mat-option *ngFor="let item of ubicaciones" [value]="item.id_ubicacion">
-                                {{ item.nombre }} - {{ item.tipo }}
+                                {{ item.nombre }} - {{ item.direccion }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>

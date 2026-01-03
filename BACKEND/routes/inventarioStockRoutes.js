@@ -5,7 +5,8 @@ const {
     crearInventarioStock,
     actualizarInventarioStock,
     obtenerInventarioStockPorId,
-    eliminarInventarioStock
+    eliminarInventarioStock,
+    actualizarCantidadInventario
 } = require('../controllers/inventarioStockController');
 
 
@@ -16,6 +17,8 @@ router.get('/:id', obtenerInventarioStockPorId);
 router.post('/', crearInventarioStock);
 
 router.put('/:id', actualizarInventarioStock);
+
+router.put('/actualizarcantidad/:id', actualizarCantidadInventario);
 
 router.delete('/:id', eliminarInventarioStock);
 

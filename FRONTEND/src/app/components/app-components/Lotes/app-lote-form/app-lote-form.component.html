@@ -19,7 +19,7 @@
 
                      <mat-form-field appearance="outline">
                         <mat-select id="id_vacuna" formControlName="id_vacuna">
-                            <mat-option value="">Seleccione una ubicacion</mat-option>
+                            <mat-option value="">Seleccione una vacuna</mat-option>
 
                             <mat-option *ngFor="let item of vacunas" [value]="item.id_vacuna">
                                 {{ item.nombre_comercial }}

@@ -25,7 +25,12 @@
                             <mat-option value="">Seleccione un lote</mat-option>
 
                             <mat-option *ngFor="let item of lotes" [value]="item.id_lote">
-                                {{ item.vacuna }} - {{ item.fecha_fabricacion }}
+                                
+                                    <strong>
+                                        {{ item.vacuna }}  
+                                    </strong>
+                                
+                                {{item.cantidad_inicial_unidades}} u
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -56,7 +61,7 @@
                             <mat-option value="">Seleccione ubicación de origen</mat-option>
 
                             <mat-option *ngFor="let item of ubicaciones" [value]="item.id_ubicacion">
-                                {{ item.nombre }}
+                                {{ item.nombre }} -  {{ item.direccion }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -88,7 +93,7 @@
                             <mat-option value="">Seleccione ubicación destino</mat-option>
 
                             <mat-option *ngFor="let item of ubicaciones" [value]="item.id_ubicacion">
-                                {{ item.nombre }}
+                                {{ item.nombre }} -  {{ item.direccion }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -170,7 +175,7 @@
                     <small>{{ getErrorMessage('fecha_envio') }}</small>
                 </div>
             </div>
-
+<!--
             <div class="input-container">
                 <label for="fecha_recepcion">
                     <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -203,6 +208,8 @@
                     <small>{{ getErrorMessage('fecha_recepcion') }}</small>
                 </div>
             </div>
+
+        -->
 
              <div class="flex-end" style="margin-top: 30px;">
                 <button type="submit" class="btn btn-blue">

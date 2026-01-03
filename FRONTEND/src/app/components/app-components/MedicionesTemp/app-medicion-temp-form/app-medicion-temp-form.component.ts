@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MedicionesTempService } from '../../../../core/services/medicionesTemp.service';
@@ -19,7 +19,7 @@ import { MatInputModule } from '@angular/material/input';
   templateUrl: './app-medicion-temp-form.component.html',
   styleUrl: './app-medicion-temp-form.component.css'
 })
-export class AppMedicionTempFormComponent implements OnInit {
+export class AppMedicionTempFormComponent implements OnInit, OnDestroy {
 
   medicionForm: FormGroup;
   isEditMode: boolean = false;
@@ -71,6 +71,9 @@ export class AppMedicionTempFormComponent implements OnInit {
       temperatura_c: ['', [Validators.required, Validators.min(-100), Validators.max(100)]]
     });
   }
+  ngOnDestroy(): void {
+     this.cargarLotes();
+  }
 
   ngOnInit(): void {
     this.cargarSensores();
@@ -91,7 +94,7 @@ export class AppMedicionTempFormComponent implements OnInit {
   }
 
   cargarLotes() {
-    this.lotesService.obtenerLotes().subscribe({
+    this.lotesService.obtenerLotes_Medicion().subscribe({
       next: (response) => {
         if (response.success && Array.isArray(response.data)) {
           this.lotes = response.data;

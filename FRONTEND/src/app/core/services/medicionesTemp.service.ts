@@ -31,4 +31,16 @@ export class MedicionesTempService {
   eliminarMedicion(id: number): Observable<MedicionTempResponse> {
     return this.http.delete<MedicionTempResponse>(`${this.apiUrl}/${id}`);
   }
+
+  actualizarTemperatura(
+    id: number,
+    temperatura: number
+  ): Observable<MedicionTempResponse> {
+
+    return this.http.put<MedicionTempResponse>(
+      `${this.apiUrl}/actualizartemp/${id}`,
+      { temperatura_c: temperatura }
+    );
+  }
+
 }

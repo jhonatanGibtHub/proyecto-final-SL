@@ -22,7 +22,8 @@
         <tr>
             <th>ID Lote</th>
             <th>Vacuna</th>
-            <th>Ubicación</th>
+            <th>Lugar</th>
+            <th>Direccion</th>
             <th>Cantidad Actual</th>
             <th>Fecha Última Actualización</th>
             <th></th>
@@ -33,8 +34,9 @@
             <td> {{ inventarioStock.id_lote }} </td>
             <td> {{ inventarioStock.vacuna }} </td>
             <td> {{ inventarioStock.ubicacion }} </td>
+            <td> {{ inventarioStock.direccion }} </td>
             <td> {{ inventarioStock.cantidad_actual }} </td>
-            <td> {{ inventarioStock.fecha_ultima_actualizacion }} </td>
+            <td> {{ inventarioStock.fecha_ultima_actualizacion | date:'short'   }} </td>
             <td>
                 <div class = "acciones">
                     <button (click)="abrirModalEditar(inventarioStock.id_inventario!)">

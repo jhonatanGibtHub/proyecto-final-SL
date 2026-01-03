@@ -56,13 +56,12 @@ export class AppRegistroMovimientoFormComponent implements OnInit {
     } else {
       this.isEditMode = false;
       this.movimientoId = null;
-       this.movimientoForm.reset({
-        id_lote:'',
-      ubicacion_origen: '',
-      ubicacion_destino: '', 
-      id_transportista: '', 
-      fecha_envio: '', 
-      fecha_recepcion: ''
+      this.movimientoForm.reset({
+        id_lote: '',
+        ubicacion_origen: '',
+        ubicacion_destino: '',
+        id_transportista: '',
+        fecha_envio: ''
       });
     }
   }
@@ -82,8 +81,7 @@ export class AppRegistroMovimientoFormComponent implements OnInit {
       ubicacion_origen: ['', [Validators.required]],
       ubicacion_destino: ['', [Validators.required]],
       id_transportista: ['', [Validators.required]],
-      fecha_envio: ['', [Validators.required]],
-      fecha_recepcion: ['', [Validators.required]]
+      fecha_envio: ['', [Validators.required]]
     });
   }
 
@@ -137,11 +135,12 @@ export class AppRegistroMovimientoFormComponent implements OnInit {
       next: (response) => {
         if (response.success && response.data && !Array.isArray(response.data)) {
           const movimiento = response.data as RegistroMovimiento;
-          // Convertir fechas a formato YYYY-MM-DD para inputs date
           const movimientoData = {
             ...movimiento,
-            fecha_envio: movimiento.fecha_envio ? new Date(movimiento.fecha_envio).toISOString().split('T')[0] : '',
-            fecha_recepcion: movimiento.fecha_recepcion ? new Date(movimiento.fecha_recepcion).toISOString().split('T')[0] : ''
+            fecha_envio: movimiento.fecha_envio
+              ? new Date(movimiento.fecha_envio)
+              : null,
+            
           };
           this.movimientoForm.patchValue(movimientoData);
         } else if (response.error) {
@@ -165,6 +164,29 @@ export class AppRegistroMovimientoFormComponent implements OnInit {
     this.cerrarModal();
   }
 
+  private toMySQLDateTime(date: Date): string {
+  const fecha = new Date(date);   // fecha seleccionada
+  const ahora = new Date();       // hora real del sistema
+
+  fecha.setHours(
+    ahora.getHours(),
+    ahora.getMinutes(),
+    ahora.getSeconds(),
+    0
+  );
+
+  const yyyy = fecha.getFullYear();
+  const mm = String(fecha.getMonth() + 1).padStart(2, '0');
+  const dd = String(fecha.getDate()).padStart(2, '0');
+
+  const hh = String(fecha.getHours()).padStart(2, '0');
+  const mi = String(fecha.getMinutes()).padStart(2, '0');
+  const ss = String(fecha.getSeconds()).padStart(2, '0');
+
+  return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+}
+
+
   onSubmit() {
     this.error = '';
     this.successMessage = '';
@@ -174,7 +196,13 @@ export class AppRegistroMovimientoFormComponent implements OnInit {
       this.notificationService.error(this.error);
       return;
     }
-    const movimientoData: RegistroMovimiento = this.movimientoForm.value;
+
+    const formValue = this.movimientoForm.value;
+
+    const movimientoData: RegistroMovimiento = {
+      ...formValue,
+      fecha_envio: this.toMySQLDateTime(formValue.fecha_envio)
+    };
     if (this.isEditMode && this.movimientoId) {
       this.movimientoService.actualizarMovimiento(this.movimientoId, movimientoData).subscribe({
         next: (response) => {
@@ -192,10 +220,10 @@ export class AppRegistroMovimientoFormComponent implements OnInit {
     } else {
       this.movimientoService.crearMovimiento(movimientoData).subscribe({
         next: (response) => {
-            this.successMessage = 'Movimiento creado correctamente.';
-            this.notificationService.success(this.successMessage);
-            this.movimientoGuardado.emit();
-            this.cerrarModal();
+          this.successMessage = 'Movimiento creado correctamente.';
+          this.notificationService.success(this.successMessage);
+          this.movimientoGuardado.emit();
+          this.cerrarModal();
         },
         error: (err) => {
           this.error = 'Error de conexión al crear el movimiento.';

@@ -49,7 +49,7 @@ export class AppLoteFormComponent implements OnInit {
         } else {
             this.isEditMode = false;
             this.loteId = null;
-            
+
             this.loteForm.reset({
                 id_vacuna: '',
                 fecha_fabricacion: '',
@@ -57,6 +57,16 @@ export class AppLoteFormComponent implements OnInit {
                 cantidad_inicial_unidades: ''
             });
         }
+    }
+    private formatDateForMySQL(date: Date): string {
+        const d = new Date(date);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        const hh = String(d.getHours()).padStart(2, '0');
+        const mi = String(d.getMinutes()).padStart(2, '0');
+        const ss = String(d.getSeconds()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
     }
 
     constructor(
@@ -135,7 +145,16 @@ export class AppLoteFormComponent implements OnInit {
             this.notificationService.error(this.error);
             return;
         }
-        const loteData: Lote = this.loteForm.value;
+
+        // const loteData: Lote = this.loteForm.value;
+        const formValue = this.loteForm.value;
+const loteData: Lote = {
+  ...formValue,
+  fecha_fabricacion: this.formatDateForMySQL(formValue.fecha_fabricacion),
+  fecha_caducidad: this.formatDateForMySQL(formValue.fecha_caducidad)
+};
+
+
         if (this.isEditMode && this.loteId) {
             this.loteService.actualizarLote(this.loteId, loteData).subscribe({
                 next: (response) => {

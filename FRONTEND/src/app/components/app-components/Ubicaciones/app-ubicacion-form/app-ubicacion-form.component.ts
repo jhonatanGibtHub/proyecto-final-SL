@@ -48,8 +48,8 @@ export class AppUbicacionFormComponent implements OnInit {
       this.ubicacionForm.reset({
         nombre: '',
         tipo: '',
-        distrito: '',
-        provincia: ''
+        direccion: '',
+        ubicacionTexto: ''
       });
     }
   }
@@ -64,8 +64,10 @@ export class AppUbicacionFormComponent implements OnInit {
     this.ubicacionForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       tipo: ['', [Validators.required]],
-      distrito: ['', [Validators.required]],
-      provincia: ['', [Validators.required]]
+      //distrito: ['', [Validators.required]],
+      //provincia: ['', [Validators.required]],
+      direccion: ['', [Validators.required, Validators.minLength(5)]],
+      ubicacionTexto: ['', Validators.required] // ciudad / distrito / provincia
     });
   }
 
@@ -75,7 +77,17 @@ export class AppUbicacionFormComponent implements OnInit {
         if (response.success && response.data && !Array.isArray(response.data)) {
           const ubicacion = response.data;
           this.ubicacionForm.patchValue(ubicacion);
-        } 
+
+          this.ubicacionForm.patchValue({
+
+            nombre: ubicacion.nombre,
+            tipo: ubicacion.tipo,
+            direccion: ubicacion.direccion,
+            ubicacionTexto: ubicacion.ciudad,
+
+          });
+
+        }
       },
       error: (err) => {
         this.error = 'Error al cargar la ubicación: Fallo de conexión.';
@@ -121,6 +133,7 @@ export class AppUbicacionFormComponent implements OnInit {
 
     const ubicacionData: Ubicacion = this.ubicacionForm.value;
 
+
     if (this.isEditMode && this.ubicacionId) {
       this.ubicacionService.actualizarUbicacion(this.ubicacionId, ubicacionData).subscribe({
         next: (response) => {
@@ -144,8 +157,8 @@ export class AppUbicacionFormComponent implements OnInit {
           this.cerrarModal();
         },
         error: (err) => {
-          this.error = 'Error de conexión al crear la ubicación.';
-          const mensajeError = err.error?.mensaje;
+
+          const mensajeError = err.error?.mensaje || 'Error al crear la ubicación.';
           this.notificationService.error(mensajeError || this.error);
         }
       });
@@ -165,6 +178,7 @@ export class AppUbicacionFormComponent implements OnInit {
     if (field.hasError('required')) {
       return 'Este campo es obligatorio';
     }
+
 
     if (field.hasError('minlength')) {
       const requiredLength = field.errors?.['minlength']?.requiredLength;

@@ -70,6 +70,8 @@
                     <small>{{ getErrorMessage('tipo') }}</small>
                 </div>
             </div>
+
+<!--
             <div class="input-container" (click)="inputDistrito.focus()">
                 <label for="distrito">
                     <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,6 +98,7 @@
                     <small>{{ getErrorMessage('distrito') }}</small>
                 </div>
             </div>
+
             <div class="input-container" (click)="inputProvincia.focus()">
                 <label for="provincia">
                     <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -122,6 +125,50 @@
                     <small>{{ getErrorMessage('provincia') }}</small>
                 </div>
             </div>
+
+        -->
+
+<!-- CIUDAD / DISTRITO / PROVINCIA -->
+<div class="input-container">
+  <label for="ubicacionTexto">
+    <span>Ciudad / Distrito / Provincia</span>
+  </label>
+  <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('ubicacionTexto')}">
+    <input
+      id="ubicacionTexto"
+      type="text"
+      formControlName="ubicacionTexto"
+      placeholder="Ej: Lima, Lince, Coronel Portillo"
+    />
+  </div>
+  <div *ngIf="isFieldInvalid('ubicacionTexto')" class="text-error-message">
+    <small>{{ getErrorMessage('ubicacionTexto') }}</small>
+  </div>
+</div>
+
+<!-- DIRECCIÓN -->
+<div class="input-container">
+  <label for="direccion">
+    <span>Dirección</span>
+  </label>
+  <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('direccion')}">
+    <input
+      id="direccion"
+      type="text"
+      formControlName="direccion"
+      placeholder="Ej: Avenida Abancay 500"
+    />
+  </div>
+  <div *ngIf="isFieldInvalid('direccion')" class="text-error-message">
+    <small>{{ getErrorMessage('direccion') }}</small>
+  </div>
+</div>
+
+
+
+
+
+
             <div class="flex-end" style="margin-top: 30px;">
                 <button type="submit" class="btn btn-blue">
                     <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -31,4 +31,11 @@ export class RegistroMovimientoService {
   eliminarMovimiento(id: number): Observable<RegistroMovimientoResponse> {
     return this.http.delete<RegistroMovimientoResponse>(`${this.apiUrl}/${id}`);
   }
+
+  recepcion(id: number): Observable<RegistroMovimientoResponse> {
+    return this.http.put<RegistroMovimientoResponse>(
+      `${this.apiUrl}/recepcion/${id}`,
+      null // <-- necesario si no envías body
+    );
+  }
 }

@@ -16,6 +16,11 @@ export class LotesService {
     return this.http.get<LoteResponse>(this.apiUrl);
   }
 
+   obtenerLotes_Medicion(): Observable<LoteResponse> {
+    return this.http.get<LoteResponse>(this.apiUrl + '/lotes_medicion');
+  }
+
+  
   obtenerLotePorId(id: number): Observable<LoteResponse> {
     return this.http.get<LoteResponse>(`${this.apiUrl}/${id}`);
   }
@@ -31,4 +36,15 @@ export class LotesService {
   eliminarLote(id: number): Observable<LoteResponse> {
     return this.http.delete<LoteResponse>(`${this.apiUrl}/${id}`);
   }
+
+   actualizarcantidad(
+      id: number,
+      cantidad: number
+    ): Observable<LoteResponse> {
+  
+      return this.http.put<LoteResponse>(
+        `${this.apiUrl}/actualizarcantidad/${id}`,
+        { cantidad_inicial_unidades: cantidad }
+      );
+    }
 }

@@ -1,6 +1,6 @@
 export interface MedicionTemp {
     id_medicion?: number;
-    id_sensor: number;
+    id_sensor?: number;
     id_lote: number;
     temperatura_c: number;
     timestamp_medicion?: string;

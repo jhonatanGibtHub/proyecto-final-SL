@@ -6,9 +6,11 @@ const obtenerInventarioStock = async (req, res) => {
     const [inventario] = await db.query(`
     SELECT 
         I.id_inventario, 
+        I.id_ubicacion,
         V.nombre_comercial AS vacuna,
         I.id_lote,
         U.nombre AS ubicacion,
+        U.direccion AS direccion,
         I.cantidad_actual, 
         I.fecha_ultima_actualizacion
     FROM Inventario_Stock I
@@ -169,6 +171,7 @@ const obtenerInventarioStockPorId = async (req, res) => {
       `
       SELECT 
         I.id_inventario, 
+        I.id_ubicacion,
         V.nombre_comercial AS vacuna,
         I.id_lote,
         U.nombre AS ubicacion,
@@ -207,33 +210,105 @@ const eliminarInventarioStock = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [resultado] = await db.query('DELETE FROM Inventario_Stock WHERE id_inventario = ?', [id]);
+    const [resultado] = await db.query(
+      "DELETE FROM Inventario_Stock WHERE id_inventario = ?",
+      [id]
+    );
 
     if (resultado.affectedRows === 0) {
       return res.status(404).json({
         success: false,
-        mensaje: "Registro de inventario no encontrado."
+        mensaje: "Registro de inventario no encontrado.",
       });
     }
 
     res.json({
       success: true,
-      mensaje: "Registro de inventario eliminado exitosamente"
+      mensaje: "Registro de inventario eliminado exitosamente",
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       mensaje: "Error al eliminar el registro de inventario",
-      error: error.message
+      error: error.message,
     });
   }
 };
 
+const actualizarCantidadInventario = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { cantidad_a_sumar } = req.body;
+
+    // 🔹 Validar ID
+    if (!id || isNaN(id)) {
+      return res.status(400).json({
+        success: false,
+        mensaje: "ID de inventario inválido.",
+      });
+    }
+
+    // 🔹 Validar cantidad a sumar
+    if (cantidad_a_sumar === undefined || isNaN(cantidad_a_sumar)) {
+      return res.status(400).json({
+        success: false,
+        mensaje: "La cantidad_a_sumar debe ser un número válido.",
+      });
+    }
+
+    // 🔹 Verificar existencia
+    const [inventario] = await db.query(
+      "SELECT cantidad_actual FROM Inventario_Stock WHERE id_inventario = ?",
+      [id]
+    );
+
+    if (inventario.length === 0) {
+      return res.status(404).json({
+        success: false,
+        mensaje: "Inventario no encontrado.",
+      });
+    }
+
+    // 🔹 Sumar cantidad existente + nueva
+    await db.query(
+      `
+      UPDATE Inventario_Stock
+      SET 
+        cantidad_actual = cantidad_actual + ?,
+        fecha_ultima_actualizacion = NOW()
+      WHERE id_inventario = ?
+      `,
+      [cantidad_a_sumar, id]
+    );
+
+    const [rows] = await db.query(
+      "SELECT cantidad_actual FROM Inventario_Stock WHERE id_inventario = ?",
+      [id]
+    );
+    const cantidadActual = rows[0].cantidad_actual;
+
+    res.status(200).json({
+      success: true,
+      mensaje: "Cantidad de inventario actualizada correctamente.",
+      data: {
+        id_inventario: id,
+        cantidad_sumada: cantidadActual,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al actualizar la cantidad del inventario.",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   obtenerInventarioStock,
   crearInventarioStock,
   actualizarInventarioStock,
   obtenerInventarioStockPorId,
-  eliminarInventarioStock
+  eliminarInventarioStock,
+  actualizarCantidadInventario,
 };

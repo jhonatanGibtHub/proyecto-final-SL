@@ -28,4 +28,15 @@ export class InventarioStockService {
     return this.http.put<InventarioStockResponse>(`${this.apiUrl}/${id}`, inventarioStock);
   }
 
+
+  actualizarcantidad(
+    id: number,
+    cantidad: number
+  ): Observable<InventarioStockResponse> {
+
+    return this.http.put<InventarioStockResponse>(
+      `${this.apiUrl}/actualizarcantidad/${id}`,
+      { cantidad_a_sumar: cantidad }
+    );
+  }
 }

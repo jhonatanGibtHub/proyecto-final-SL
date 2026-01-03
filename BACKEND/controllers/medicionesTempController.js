@@ -173,6 +173,46 @@ const actualizarMedicion = async (req, res) => {
     }
 };
 
+const actualizarTemperatura = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { temperatura_c } = req.body;
+        // Validación
+        if (temperatura_c === undefined || isNaN(temperatura_c)) {
+            return res.status(400).json({
+                success: false,
+                mensaje: "La temperatura es obligatoria y debe ser numérica."
+            });
+        }
+
+        const [resultado] = await db.query(
+            'UPDATE Mediciones_Temp SET temperatura_c = ? WHERE id_medicion = ?',
+            [temperatura_c, id]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                mensaje: "Medición no encontrada"
+            });
+        }
+
+        res.json({
+            success: true,
+            mensaje: "Temperatura actualizada exitosamente",
+            data: { id, temperatura_c }
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al actualizar la temperatura",
+            error: error.message
+        });
+    }
+};
+
 const eliminarMedicion = async (req, res) => {
     try {
         const { id } = req.params;
@@ -206,4 +246,5 @@ module.exports = {
     crearMedicion,
     actualizarMedicion,
     eliminarMedicion,
+    actualizarTemperatura,
 };

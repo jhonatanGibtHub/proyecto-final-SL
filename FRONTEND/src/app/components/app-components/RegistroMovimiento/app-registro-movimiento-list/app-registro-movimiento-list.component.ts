@@ -30,11 +30,11 @@ export class AppRegistroMovimientoListComponent implements OnInit {
   constructor(
     private readonly movimientoService: RegistroMovimientoService,
     private readonly notificationService: NotificationService, private authService: AuthService
-      ) { }
-    
-       get isAdmin(): boolean {
-        return this.authService.isAdmin();
-      }
+  ) { }
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
 
   ngOnInit(): void {
     this.cargarMovimientos();
@@ -44,9 +44,10 @@ export class AppRegistroMovimientoListComponent implements OnInit {
     this.error = '';
     this.movimientoService.obtenerMovimientos().subscribe({
       next: (response) => {
-        
+
         if (response.success && Array.isArray(response.data)) {
           this.movimientos = response.data;
+          console.log(this.movimientos);
         } else if (response.error) {
           this.error = response.error;
           this.notificationService.error(this.error);

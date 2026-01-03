@@ -1,20 +1,77 @@
-<p>mapa-monitoreo works!</p>
-
 <div class="monitor-wrapper">
-  <div class="search-panel">
-    <h3>📦 Monitoreo de Vacunas</h3>
-    <div class="input-group">
-      <label>Punto de Partida:</label>
-      <input #origenInput type="text" placeholder="Ej: Jirón de la Unión 300, Lima">
-    </div>
-    <div class="input-group">
-      <label>Destino Final:</label>
-      <input #destinoInput type="text" placeholder="Ej: Plaza de Armas, Pucallpa">
-    </div>
-    <button (click)="iniciarSimulacion(origenInput.value, destinoInput.value)">
-      Trazar Ruta y Enviar
+
+  <!-- MENÚ DESPLEGABLE -->
+  <div class="dropdown-wrapper" (click)="$event.stopPropagation()">
+    <button class="dropdown-btn" (click)="toggleDropdown()">
+      Movimientos →
     </button>
+
+    <div class="dropdown-menu" *ngIf="dropdownOpen">
+      <div *ngIf="movimientos.length === 0" class="empty">
+        No hay movimientos registrados
+      </div>
+
+      <div class="dropdown-item" *ngFor="let mov of movimientos" (click)="verMovimiento(mov)">
+        <strong>{{ mov.origen }}</strong> → {{ mov.destino }}
+      </div>
+    </div>
   </div>
 
+  <!-- PANEL DETALLE MODERNO -->
+<div class="detalle-panel" *ngIf="movimientoSeleccionado">
+  <div class="detalle-header">
+    <span class="titulo">Detalle del movimiento</span>
+    <span class="badge">{{ movimientoSeleccionado.vacuna }}</span>
+  </div>
+
+  <div class="detalle-grid">
+    <div class="item">
+      <span class="label">Origen</span>
+      <span class="value">{{ movimientoSeleccionado.origen }}</span>
+    </div>
+
+    <div class="item">
+      <span class="label">Destino</span>
+      <span class="value">{{ movimientoSeleccionado.destino }}</span>
+    </div>
+
+    <div class="item">
+      <span class="label">Caducidad</span>
+      <span class="value">
+        {{ movimientoSeleccionado.caducidad | date:'short' }}
+      </span>
+    </div>
+
+    <div class="item">
+      <span class="label">Cantidad de envio</span>
+      <span class="value">
+        {{ movimientoSeleccionado.cantidad }}
+      </span>
+    </div>
+
+    <div class="item">
+      <span class="label">Temperatura</span>
+      <span class="value temperatura">
+        {{ movimientoSeleccionado.temperatura }} °C
+      </span>
+    </div>
+
+    <div class="item">
+      <span class="label">Temperatura Minima</span>
+      <span class="value">
+        {{ movimientoSeleccionado.minimo }} °C
+      </span>
+    </div>
+
+    <div class="item">
+      <span class="label">Temperatura Maxima</span>
+      <span class="value">
+        {{ movimientoSeleccionado.maximo }} °C
+      </span>
+    </div>
+  </div>
+</div>
+
+  <!-- MAPA -->
   <div id="map"></div>
 </div>

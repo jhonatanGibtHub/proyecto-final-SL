@@ -45,7 +45,7 @@
                             <mat-option value="">Seleccione una ubicacion</mat-option>
 
                             <mat-option *ngFor="let item of ubicaciones" [value]="item.id_ubicacion">
-                                {{ item.nombre }} - {{ item.tipo }}
+                                {{ item.nombre }} - {{ item.direccion }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>

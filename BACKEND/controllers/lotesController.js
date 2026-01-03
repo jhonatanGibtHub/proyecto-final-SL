@@ -31,6 +31,40 @@ const obtenerLotes = async (req, res) => {
 };
 
 
+const obtenerLotes_Medicion = async (req, res) => {
+    try {
+        const [lotes] = await db.query(`
+            SELECT 
+                L.id_lote, 
+                V.nombre_comercial AS vacuna,
+                L.fecha_fabricacion, 
+                L.fecha_caducidad, 
+                L.cantidad_inicial_unidades
+            FROM Lotes L
+            JOIN Vacunas V ON L.id_vacuna = V.id_vacuna
+            WHERE NOT EXISTS (
+                SELECT 1 
+                FROM mediciones_temp MT 
+                WHERE MT.id_lote = L.id_lote
+            )
+            ORDER BY L.fecha_fabricacion DESC
+        `);
+        
+        res.json({
+            success: true,
+            count: lotes.length,
+            data: lotes
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al obtener los Lotes sin medición",
+            error: error.message
+        });
+    }
+};
+
+
 const crearLote = async (req, res) => {
     try {
         const { id_vacuna, fecha_fabricacion, fecha_caducidad, cantidad_inicial_unidades } = req.body;
@@ -88,6 +122,7 @@ const obtenerLotePorId = async (req, res) => {
         const [lotes] = await db.query(`
             SELECT 
                 L.id_lote, 
+                V.id_vacuna,
                 V.nombre_comercial AS vacuna,
                 L.fecha_fabricacion, 
                 L.fecha_caducidad, 
@@ -195,12 +230,69 @@ const eliminarLote = async (req, res) => {
         });
     }
 };
+const actualizarCantidadInicialLote = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { cantidad_inicial_unidades } = req.body;
 
+    // Validación básica
+    if (cantidad_inicial_unidades === undefined || cantidad_inicial_unidades < 0) {
+      return res.status(400).json({
+        success: false,
+        mensaje: "La cantidad inicial de unidades es obligatoria y no puede ser negativa."
+      });
+    }
+
+    // Verificar que el lote exista
+    const [loteExistente] = await db.query(
+      'SELECT id_lote FROM Lotes WHERE id_lote = ?',
+      [id]
+    );
+
+    if (loteExistente.length === 0) {
+      return res.status(404).json({
+        success: false,
+        mensaje: "Lote no encontrado."
+      });
+    }
+
+    // Actualizar solo la cantidad
+    const [resultado] = await db.query(
+      'UPDATE Lotes SET cantidad_inicial_unidades = ? WHERE id_lote = ?',
+      [cantidad_inicial_unidades, id]
+    );
+
+    if (resultado.affectedRows === 0) {
+      return res.status(400).json({
+        success: false,
+        mensaje: "No se pudo actualizar la cantidad inicial."
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      mensaje: "Cantidad inicial del lote actualizada correctamente.",
+      data: {
+        id_lote: id,
+        cantidad_inicial_unidades
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al actualizar la cantidad inicial del lote",
+      error: error.message
+    });
+  }
+};
 
 module.exports = {
     obtenerLotes,
     crearLote,
     obtenerLotePorId,
     actualizarLote,
-    eliminarLote
+    eliminarLote,
+    actualizarCantidadInicialLote,
+    obtenerLotes_Medicion
 };

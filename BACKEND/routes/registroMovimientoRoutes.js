@@ -5,8 +5,8 @@ const {
     obtenerMovimientoPorId,
     crearMovimiento,
     actualizarMovimiento,
-    registrarRecepcion,
-    eliminarMovimiento
+    eliminarMovimiento,
+    marcarRecepcionAutomatica
 } = require('../controllers/registroMovimientoController');
 
 
@@ -14,7 +14,7 @@ router.get('/', obtenerMovimientos);
 router.get('/:id', obtenerMovimientoPorId);
 router.post('/', crearMovimiento);
 router.put('/:id', actualizarMovimiento);
-router.put('/:id/recepcion', registrarRecepcion);
+router.put('/recepcion/:id', marcarRecepcionAutomatica);
 router.delete('/:id', eliminarMovimiento);
 
 module.exports = router;
