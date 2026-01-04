@@ -30,6 +30,40 @@ const obtenerLotes = async (req, res) => {
     }
 };
 
+const obtenerLotes_A_Enviar = async (req, res) => {
+    try {
+        const [lotes] = await db.query(`
+            SELECT 
+                L.id_lote, 
+                V.nombre_comercial AS vacuna,
+                L.fecha_fabricacion, 
+                L.fecha_caducidad, 
+                L.cantidad_inicial_unidades
+            FROM Lotes L
+            JOIN Vacunas V ON L.id_vacuna = V.id_vacuna
+            WHERE L.cantidad_inicial_unidades <> 0
+              AND NOT EXISTS (
+                  SELECT 1 
+                  FROM registro_movimiento RM
+                  WHERE RM.id_lote = L.id_lote
+              )
+            ORDER BY L.fecha_fabricacion DESC
+        `);
+        
+        res.json({
+            success: true,
+            count: lotes.length,
+            data: lotes
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            mensaje: "Error al obtener los lotes a enviar",
+            error: error.message
+        });
+    }
+};
+
 
 const obtenerLotes_Medicion = async (req, res) => {
     try {
@@ -42,11 +76,12 @@ const obtenerLotes_Medicion = async (req, res) => {
                 L.cantidad_inicial_unidades
             FROM Lotes L
             JOIN Vacunas V ON L.id_vacuna = V.id_vacuna
-            WHERE NOT EXISTS (
-                SELECT 1 
-                FROM mediciones_temp MT 
-                WHERE MT.id_lote = L.id_lote
-            )
+            WHERE L.cantidad_inicial_unidades != 0
+              AND NOT EXISTS (
+                  SELECT 1 
+                  FROM mediciones_temp MT 
+                  WHERE MT.id_lote = L.id_lote
+              )
             ORDER BY L.fecha_fabricacion DESC
         `);
         
@@ -58,7 +93,7 @@ const obtenerLotes_Medicion = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            mensaje: "Error al obtener los Lotes sin medición",
+            mensaje: "Error al obtener los lotes sin medición y con cantidad > 0",
             error: error.message
         });
     }
@@ -294,5 +329,6 @@ module.exports = {
     actualizarLote,
     eliminarLote,
     actualizarCantidadInicialLote,
-    obtenerLotes_Medicion
+    obtenerLotes_Medicion,
+    obtenerLotes_A_Enviar
 };

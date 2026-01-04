@@ -1,20 +1,39 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { InventarioStock, InventarioStockResponse } from '../../../../core/models/inventarioStock';
 import { InventarioStockService } from '../../../../core/services/inventarioStock.service';
 import { AppInventarioStockFormComponent } from '../app-inventario-stock-form/app-inventario-stock-form.component';
 
 @Component({
   selector: 'app-app-inventario-stock-list',
+  standalone: true,
   imports: [CommonModule, AppInventarioStockFormComponent],
   templateUrl: './app-inventario-stock-list.component.html',
-  styleUrl: './app-inventario-stock-list.component.css'
+  styleUrls: ['./app-inventario-stock-list.component.css']
 })
-export class AppInventarioStockListComponent implements OnInit {
+export class AppInventarioStockListComponent implements OnInit, OnDestroy {
+
   inventarioStocks: InventarioStock[] = [];
   error: string = '';
 
-  @ViewChild(AppInventarioStockFormComponent) inventarioStockFormModal!: AppInventarioStockFormComponent;
+  private destroy$ = new Subject<void>(); // Para manejar ngOnDestroy y cancelar suscripciones
+
+  @ViewChild(AppInventarioStockFormComponent)
+  inventarioStockFormModal!: AppInventarioStockFormComponent;
+
+  constructor(private inventarioStockService: InventarioStockService) {}
+
+  ngOnInit(): void {
+    this.cargarInventarioStocks();
+  }
+
+  ngOnDestroy(): void {
+    // Completa el Subject para cancelar todas las suscripciones
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   abrirModalNuevo(): void {
     this.inventarioStockFormModal.abrirModal();
@@ -24,33 +43,28 @@ export class AppInventarioStockListComponent implements OnInit {
     this.inventarioStockFormModal.abrirModal(id);
   }
 
-  constructor(private inventarioStockService: InventarioStockService) {}
-
-  ngOnInit(): void {
-    this.cargarInventarioStocks();
-  }
-
-  cargarInventarioStocks() {
-    this.inventarioStockService.obtenerInventarioStock().subscribe({
-      next: (response: InventarioStockResponse) => {
-        if (response.success && Array.isArray(response.data)) {
-          this.inventarioStocks = response.data;
-          
-        } else if (response.success && !response.data) {
-          this.inventarioStocks = [];
-        } else {
-          this.error = response.mensaje || 'Error al obtener la lista de inventario stock.';
-          this.inventarioStocks = [];
+  cargarInventarioStocks(): void {
+    this.inventarioStockService.obtenerInventarioStock()
+      .pipe(takeUntil(this.destroy$)) // Cancela la suscripción al destruir el componente
+      .subscribe({
+        next: (response: InventarioStockResponse) => {
+          if (response.success && Array.isArray(response.data)) {
+            this.inventarioStocks = response.data;
+          } else if (response.success && !response.data) {
+            this.inventarioStocks = [];
+          } else {
+            this.error = response.mensaje || 'Error al obtener la lista de inventario stock.';
+            this.inventarioStocks = [];
+          }
+        },
+        error: (err) => {
+          this.error = 'Error de conexión con el servidor.';
+          console.error('Error HTTP:', err);
         }
-      },
-      error: (err) => {
-        this.error = 'Error de conexión con el servidor.';
-        console.error('Error HTTP:', err);
-      }
-    });
+      });
   }
 
-  onInventarioStockGuardado() {
+  onInventarioStockGuardado(): void {
     this.cargarInventarioStocks();
   }
 }

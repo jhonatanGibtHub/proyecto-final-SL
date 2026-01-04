@@ -23,23 +23,6 @@ const crearTransportista = async (req, res) => {
     try {
         const { nombre, licencia, telefono, tipo_vehiculo } = req.body;
 
-       
-        if (!nombre || !licencia || !tipo_vehiculo) {
-            return res.status(400).json({
-                success: false,
-                mensaje: "Nombre, licencia y tipo de vehículo son obligatorios."
-            });
-        }
-        
-        // Validación 
-        const tiposValidos = ['Camión Refrigerado', 'Avión', 'Furgoneta'];
-        if (!tiposValidos.includes(tipo_vehiculo)) {
-            return res.status(400).json({
-                success: false,
-                mensaje: `Tipo de vehículo inválido. Debe ser uno de: ${tiposValidos.join(', ')}.`
-            });
-        }
-
         const [resultado] = await db.query(
             'INSERT INTO Transportistas (nombre, licencia, telefono, tipo_vehiculo) VALUES (?, ?, ?, ?)',
             [nombre, licencia, telefono, tipo_vehiculo]

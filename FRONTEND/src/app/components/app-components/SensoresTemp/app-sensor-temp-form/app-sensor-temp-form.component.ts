@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { SensoresTempService } from '../../../../core/services/sensoresTemp.service';
 import { SensorTemp } from '../../../../core/models/sensorTemp';
 import { UbicacionesService } from '../../../../core/services/ubicaciones.service';
@@ -15,15 +16,14 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-app-sensor-temp-form',
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatInputModule],
+  imports: [
+    CommonModule, ReactiveFormsModule, MatFormFieldModule,
+    MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatInputModule
+  ],
   templateUrl: './app-sensor-temp-form.component.html',
   styleUrl: './app-sensor-temp-form.component.css'
 })
-export class AppSensorTempFormComponent implements OnInit {
+export class AppSensorTempFormComponent implements OnInit, OnDestroy {
 
   sensorTempForm: FormGroup;
   isEditMode: boolean = false;
@@ -36,26 +36,7 @@ export class AppSensorTempFormComponent implements OnInit {
 
   @Output() sensorTempGuardado = new EventEmitter<void>();
 
-  abrirModal(sensorId?: number): void {
-    this.showModal = true;
-    this.error = '';
-    this.successMessage = '';
-
-    if (sensorId) {
-      this.isEditMode = true;
-      this.sensorId = sensorId;
-      this.cargarSensor(sensorId);
-    } else {
-      this.isEditMode = false;
-      this.sensorId = null;
-
-      this.sensorTempForm.reset({
-        codigo_serie: '',
-        id_ubicacion_actual: '',
-        ultima_calibracion: ''
-      });
-    }
-  }
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -74,17 +55,43 @@ export class AppSensorTempFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarUbicaciones();
-    this.route.params.subscribe(params => {
+
+    const routeSub = this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEditMode = true;
         this.sensorId = +params['id'];
         this.cargarSensor(this.sensorId);
       }
     });
+    this.subscriptions.push(routeSub);
   }
 
-  cargarUbicaciones() {
-    this.ubicacionesService.obtenerUbicaciones().subscribe({
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  abrirModal(sensorId?: number): void {
+    this.showModal = true;
+    this.error = '';
+    this.successMessage = '';
+
+    if (sensorId) {
+      this.isEditMode = true;
+      this.sensorId = sensorId;
+      this.cargarSensor(sensorId);
+    } else {
+      this.isEditMode = false;
+      this.sensorId = null;
+      this.sensorTempForm.reset({
+        codigo_serie: '',
+        id_ubicacion_actual: '',
+        ultima_calibracion: ''
+      });
+    }
+  }
+
+  cargarUbicaciones(): void {
+    const sub = this.ubicacionesService.obtenerUbicaciones().subscribe({
       next: (response) => {
         if (response.success && Array.isArray(response.data)) {
           this.ubicaciones = response.data;
@@ -94,14 +101,14 @@ export class AppSensorTempFormComponent implements OnInit {
         this.error = 'Error al cargar ubicaciones.';
       }
     });
+    this.subscriptions.push(sub);
   }
 
-  cargarSensor(id: number) {
-    this.sensoresTempService.obtenerSensorPorId(id).subscribe({
+  cargarSensor(id: number): void {
+    const sub = this.sensoresTempService.obtenerSensorPorId(id).subscribe({
       next: (response) => {
         if (response.success && response.data && !Array.isArray(response.data)) {
-          const sensor = response.data;
-          this.sensorTempForm.patchValue(sensor);
+          this.sensorTempForm.patchValue(response.data);
         } else if (response.error) {
           this.error = response.error;
         }
@@ -110,6 +117,7 @@ export class AppSensorTempFormComponent implements OnInit {
         this.error = 'Error al cargar el sensor.';
       }
     });
+    this.subscriptions.push(sub);
   }
 
   cerrarModal(): void {
@@ -120,20 +128,23 @@ export class AppSensorTempFormComponent implements OnInit {
     this.cerrarModal();
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.error = '';
     this.successMessage = '';
+
     if (this.sensorTempForm.invalid) {
       this.sensorTempForm.markAllAsTouched();
       this.error = 'Por favor, rellene todos los campos requeridos correctamente.';
       this.notificationService.error(this.error);
       return;
     }
+
     const sensorData: SensorTemp = this.sensorTempForm.value;
 
+    let sub;
     if (this.isEditMode && this.sensorId) {
-      this.sensoresTempService.actualizarSensor(this.sensorId, sensorData).subscribe({
-        next: (response) => {
+      sub = this.sensoresTempService.actualizarSensor(this.sensorId, sensorData).subscribe({
+        next: () => {
           this.successMessage = 'Sensor actualizado correctamente.';
           this.notificationService.success(this.successMessage);
           this.sensorTempGuardado.emit();
@@ -146,8 +157,8 @@ export class AppSensorTempFormComponent implements OnInit {
         }
       });
     } else {
-      this.sensoresTempService.crearSensor(sensorData).subscribe({
-        next: (response) => {
+      sub = this.sensoresTempService.crearSensor(sensorData).subscribe({
+        next: () => {
           this.successMessage = 'Sensor creado correctamente.';
           this.notificationService.success(this.successMessage);
           this.sensorTempGuardado.emit();
@@ -160,6 +171,8 @@ export class AppSensorTempFormComponent implements OnInit {
         }
       });
     }
+
+    this.subscriptions.push(sub);
   }
 
   isFieldInvalid(fieldName: string): boolean {
@@ -168,34 +181,18 @@ export class AppSensorTempFormComponent implements OnInit {
   }
 
   getErrorMessage(fieldName: string): string {
-  const field = this.sensorTempForm.get(fieldName);
+    const field = this.sensorTempForm.get(fieldName);
+    if (!field) return '';
 
-  if (!field) {
-    return '';
+    switch (fieldName) {
+      case 'codigo_serie':
+        return field.hasError('required') ? 'El código de serie es obligatorio' : '';
+      case 'id_ubicacion_actual':
+        return field.hasError('required') ? 'Debe seleccionar una ubicación' : '';
+      case 'ultima_calibracion':
+        return field.hasError('required') ? 'La fecha de última calibración es obligatoria' : '';
+      default:
+        return '';
+    }
   }
-
-  switch (fieldName) {
-
-    case 'codigo_serie':
-      if (field.hasError('required')) {
-        return 'El código de serie es obligatorio';
-      }
-      break;
-
-    case 'id_ubicacion_actual':
-      if (field.hasError('required')) {
-        return 'Debe seleccionar una ubicación';
-      }
-      break;
-
-    case 'ultima_calibracion':
-      if (field.hasError('required')) {
-        return 'La fecha de última calibración es obligatoria';
-      }
-      break;
-  }
-
-  return '';
-}
-
 }

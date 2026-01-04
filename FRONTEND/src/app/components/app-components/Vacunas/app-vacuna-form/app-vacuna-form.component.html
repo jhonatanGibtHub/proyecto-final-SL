@@ -1,113 +1,75 @@
 <div class="modal-overlay" *ngIf="showModal">
-    <div class="modal-container">
-        <form [formGroup]="vacunaForm" (ngSubmit)="onSubmit()">
-            <h1 class="page-tittle">{{ isEditMode ? 'Editar vacuna' : 'Registrar Vacuna' }}</h1>
-            <div class="input-container" (click)="inputComercial.focus()">
-                <label for="nombre_comercial">
-                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path
-                                d="M11.25 17C11.25 17.4142 11.5858 17.75 12 17.75C12.4142 17.75 12.75 17.4142 12.75 17H11.25ZM15.25 9.75C15.25 10.1642 15.5858 10.5 16 10.5C16.4142 10.5 16.75 10.1642 16.75 9.75H15.25ZM7.25 9.75C7.25 10.1642 7.58579 10.5 8 10.5C8.41421 10.5 8.75 10.1642 8.75 9.75H7.25ZM15.7071 7.32544L16.2646 6.82371V6.82371L15.7071 7.32544ZM9.5 16.25C9.08579 16.25 8.75 16.5858 8.75 17C8.75 17.4142 9.08579 17.75 9.5 17.75V16.25ZM15 17.75C15.4142 17.75 15.75 17.4142 15.75 17C15.75 16.5858 15.4142 16.25 15 16.25V17.75ZM10 7.75H12V6.25H10V7.75ZM12 7.75H14V6.25H12V7.75ZM12.75 17V7H11.25V17H12.75ZM15.25 9.22222V9.75H16.75V9.22222H15.25ZM7.25 9.22222V9.75H8.75V9.22222H7.25ZM14 7.75C14.4949 7.75 14.7824 7.75196 14.9865 7.78245C15.0783 7.79617 15.121 7.8118 15.1376 7.8194C15.148 7.82415 15.1477 7.82503 15.1496 7.82716L16.2646 6.82371C15.96 6.4853 15.579 6.35432 15.2081 6.29891C14.8676 6.24804 14.4479 6.25 14 6.25V7.75ZM16.75 9.22222C16.75 8.71757 16.7513 8.27109 16.708 7.91294C16.6629 7.54061 16.559 7.15082 16.2646 6.82371L15.1496 7.82716C15.1523 7.83015 15.1609 7.83939 15.1731 7.87221C15.1873 7.91048 15.2048 7.97725 15.2188 8.09313C15.2487 8.34011 15.25 8.67931 15.25 9.22222H16.75ZM10 6.25C9.55208 6.25 9.13244 6.24804 8.79192 6.29891C8.42102 6.35432 8.04 6.4853 7.73542 6.82371L8.85036 7.82716C8.85228 7.82503 8.85204 7.82415 8.86242 7.8194C8.87904 7.8118 8.92168 7.79617 9.01354 7.78245C9.21765 7.75196 9.50511 7.75 10 7.75V6.25ZM8.75 9.22222C8.75 8.67931 8.75129 8.34011 8.78118 8.09313C8.7952 7.97725 8.81273 7.91048 8.8269 7.87221C8.83905 7.83939 8.84767 7.83015 8.85036 7.82716L7.73542 6.82371C7.44103 7.15082 7.3371 7.54061 7.29204 7.91294C7.24871 8.27109 7.25 8.71757 7.25 9.22222H8.75ZM9.5 17.75H15V16.25H9.5V17.75Z"
-                                fill="currentColor"></path>
-                            <path
-                                d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C21.5093 4.43821 21.8356 5.80655 21.9449 8"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                        </g>
-                    </svg>
-                    <span>
-                        Nombre Comercial
-                    </span>
-                </label>
-                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('nombre_comercial')}">
-                    <input #inputComercial id="nombre_comercial" type="text" formControlName="nombre_comercial"
-                        placeholder="Ingrese el nombre comercial" name="nombre_comercial">
-                </div>
-                <div class="text-error-message" *ngIf="isFieldInvalid('nombre_comercial')">
-                    {{ getErrorMessage('nombre_comercial') }}
-                </div>
-            </div>
-            <div class="input-container" (click)="inputFabricante.focus()">
-                <label for="fabricante">
-                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path
-                                d="M2.92444 4.12856C2.98896 2.93485 3.9757 2 5.17116 2H6.32894C7.52439 2 8.51114 2.93485 8.57566 4.12856L9.4135 19.6286C9.48315 20.917 8.45714 22 7.16678 22H4.33332C3.04296 22 2.01695 20.917 2.0866 19.6286L2.92444 4.12856ZM5.17116 3.5C4.77267 3.5 4.44376 3.81162 4.42225 4.20952L3.58441 19.7095C3.5612 20.139 3.9032 20.5 4.33332 20.5H7.16678C7.5969 20.5 7.9389 20.139 7.91568 19.7095L7.07785 4.20952C7.05634 3.81162 6.72742 3.5 6.32894 3.5H5.17116Z"
-                                fill="currentColor"></path>
-                            <path
-                                d="M9.51184 22H19.75C20.9926 22 22 20.9927 22 19.75V6.00002C22 5.69946 21.8205 5.42792 21.544 5.31007C21.2675 5.19223 20.9474 5.25083 20.7306 5.45898L15.75 10.2404V6.00002C15.75 5.70947 15.5821 5.44506 15.3192 5.32137C15.0563 5.19768 14.7456 5.23698 14.5218 5.42222L9.85566 9.28385L9.9564 11.1475L14.25 7.59424V12C14.25 12.3006 14.4294 12.5721 14.7059 12.69C14.9824 12.8078 15.3025 12.7492 15.5194 12.5411L20.5 7.75968V19.75C20.5 20.1642 20.1642 20.5 19.75 20.5H18.75V16C18.75 15.0335 17.9665 14.25 17 14.25H13C12.0335 14.25 11.25 15.0335 11.25 16L11.25 20.5H10.33C10.1946 21.0724 9.90723 21.5879 9.51184 22ZM17.25 16V20.25H12.75L12.75 16C12.75 15.8619 12.8619 15.75 13 15.75H17C17.1381 15.75 17.25 15.8619 17.25 16Z"
-                                fill="currentColor"></path>
-                        </g>
-                    </svg>
-                    <span>
-                        Fabricante
-                    </span>
-                </label>
-                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('fabricante')}">
-                    <input #inputFabricante id="fabricante" type="text" formControlName="fabricante"
-                        placeholder="Ingrese el nombre del fabricante" name="fabricante">
-                </div>
-                <div class="text-error-message" *ngIf="isFieldInvalid('fabricante')">
-                    {{ getErrorMessage('fabricante') }}
-                </div>
-            </div>
-            <label for="">
-                <svg class="icono-1" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <title>temperature-three-quarters</title>
-                        <path fill="currentColor"
-                            d="M20.75 6.008c0-6.246-9.501-6.248-9.5 0v13.238c-1.235 1.224-2 2.921-2 4.796 0 3.728 3.022 6.75 6.75 6.75s6.75-3.022 6.75-6.75c0-1.875-0.765-3.572-2-4.796l-0.001-0zM16 29.25c-2.9-0-5.25-2.351-5.25-5.251 0-1.553 0.674-2.948 1.745-3.909l0.005-0.004 0.006-0.012c0.13-0.122 0.215-0.29 0.231-0.477l0-0.003c0.001-0.014 0.007-0.024 0.008-0.038l0.006-0.029v-13.52c-0.003-0.053-0.005-0.115-0.005-0.178 0-1.704 1.381-3.085 3.085-3.085 0.060 0 0.12 0.002 0.179 0.005l-0.008-0c0.051-0.003 0.11-0.005 0.17-0.005 1.704 0 3.085 1.381 3.085 3.085 0 0.063-0.002 0.125-0.006 0.186l0-0.008v13.52l0.006 0.029 0.007 0.036c0.015 0.191 0.101 0.36 0.231 0.482l0 0 0.006 0.012c1.076 0.966 1.75 2.361 1.75 3.913 0 2.9-2.35 5.25-5.25 5.251h-0zM16.75 21.367v-11.522c0-0.414-0.336-0.75-0.75-0.75s-0.75 0.336-0.75 0.75v0 11.522c-1.164 0.338-2 1.394-2 2.646 0 1.519 1.231 2.75 2.75 2.75s2.75-1.231 2.75-2.75c0-1.252-0.836-2.308-1.981-2.641l-0.019-0.005zM26.5 2.25c-1.795 0-3.25 1.455-3.25 3.25s1.455 3.25 3.25 3.25c1.795 0 3.25-1.455 3.25-3.25v0c-0.002-1.794-1.456-3.248-3.25-3.25h-0zM26.5 7.25c-0.966 0-1.75-0.784-1.75-1.75s0.784-1.75 1.75-1.75c0.966 0 1.75 0.784 1.75 1.75v0c-0.001 0.966-0.784 1.749-1.75 1.75h-0z">
-                        </path>
-                    </g>
-                </svg>
-                <span>Rango de Temperatura Crítica (°C) [min-max]</span>
-            </label>
-            <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"
-                (valueChange)="onMinChange($event)" (highValueChange)="onMaxChange($event)">
-            </ngx-slider>
-            <div class="text-error-message" *ngIf="isFieldInvalid('temp_min_c')">
-                    {{ getErrorMessage('temp_min_c') }}
-                </div>
-                <div class="text-error-message" *ngIf="isFieldInvalid('temp_max_c')">
-                    {{ getErrorMessage('temp_max_c') }}
-                </div>
-            <div class="flex-end" style="margin-top: 30px;">
-                <button type="submit" class="btn btn-blue" >
-                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z"
-                                fill="currentColor"></path>
-                        </g>
-                    </svg>
-                    <span>{{ isEditMode ? 'Actualizar' : 'Guardar' }}</span>
-                </button>
-                <button type="button" class="btn btn-secondary" (click)="onCancel()">
-                    <svg class="icono-1" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <title>cancel</title>
-                            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                <g id="work-case" fill="#000000" transform="translate(91.520000, 91.520000)">
-                                    <polygon id="Close"
-                                        points="328.96 30.2933333 298.666667 1.42108547e-14 164.48 134.4 30.2933333 1.42108547e-14 1.42108547e-14 30.2933333 134.4 164.48 1.42108547e-14 298.666667 30.2933333 328.96 164.48 194.56 298.666667 328.96 328.96 298.666667 194.56 164.48">
-                                    </polygon>
-                                </g>
-                            </g>
-                        </g>
-                    </svg>
-                    <span>Cancelar</span>
-                </button>
-            </div>
-        </form>
-    </div>
+  <div class="modal-container">
+    <form [formGroup]="vacunaForm" (ngSubmit)="onSubmit()">
+      <h1 class="page-tittle">{{ isEditMode ? 'Editar vacuna' : 'Registrar Vacuna' }}</h1>
+
+      <div class="input-container" (click)="inputComercial.focus()">
+        <label for="nombre_comercial">
+          <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.25 17C11.25 17.4142 11.5858 17.75 12 17.75C12.4142 17.75 12.75 17.4142 12.75 17H11.25ZM15.25 9.75C15.25 10.1642 15.5858 10.5 16 10.5C16.4142 10.5 16.75 10.1642 16.75 9.75H15.25ZM7.25 9.75C7.25 10.1642 7.58579 10.5 8 10.5C8.41421 10.5 8.75 10.1642 8.75 9.75H7.25ZM15.7071 7.32544L16.2646 6.82371L15.7071 7.32544ZM9.5 16.25C9.08579 16.25 8.75 16.5858 8.75 17C8.75 17.4142 9.08579 17.75 9.5 17.75V16.25ZM15 17.75C15.4142 17.75 15.75 17.4142 15.75 17C15.75 16.5858 15.4142 16.25 15 16.25V17.75ZM10 7.75H12V6.25H10V7.75ZM12 7.75H14V6.25H12V7.75ZM12.75 17V7H11.25V17H12.75ZM15.25 9.22222V9.75H16.75V9.22222H15.25ZM7.25 9.22222V9.75H8.75V9.22222H7.25ZM14 7.75C14.4949 7.75 14.7824 7.75196 14.9865 7.78245C15.0783 7.79617 15.121 7.8118 15.1376 7.8194L16.2646 6.82371C15.96 6.4853 15.579 6.35432 15.2081 6.29891C14.8676 6.24804 14.4479 6.25 14 6.25V7.75ZM16.75 9.22222C16.75 8.71757 16.7513 8.27109 16.708 7.91294L15.1496 7.82716L16.2646 6.82371ZM10 6.25C9.55208 6.25 9.13244 6.24804 8.79192 6.29891L8.85036 7.82716L7.73542 6.82371C7.44103 7.15082 7.3371 7.54061 7.29204 7.91294C7.24871 8.27109 7.25 8.71757 7.25 9.22222H8.75ZM9.5 17.75H15V16.25H9.5V17.75Z" fill="currentColor"></path>
+            <path d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C21.5093 4.43821 21.8356 5.80655 21.9449 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+          <span>Nombre Comercial</span>
+        </label>
+        <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('nombre_comercial')}">
+          <input #inputComercial id="nombre_comercial" type="text" formControlName="nombre_comercial"
+                 placeholder="Ingrese el nombre comercial" name="nombre_comercial">
+        </div>
+        <div class="text-error-message" *ngIf="isFieldInvalid('nombre_comercial')">
+          {{ getErrorMessage('nombre_comercial') }}
+        </div>
+      </div>
+
+      <div class="input-container" (click)="inputFabricante.focus()">
+        <label for="fabricante">
+          <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.92444 4.12856C2.98896 2.93485 3.9757 2 5.17116 2H6.32894C7.52439 2 8.51114 2.93485 8.57566 4.12856L9.4135 19.6286C9.48315 20.917 8.45714 22 7.16678 22H4.33332C3.04296 22 2.01695 20.917 2.0866 19.6286L2.92444 4.12856ZM5.17116 3.5C4.77267 3.5 4.44376 3.81162 4.42225 4.20952L3.58441 19.7095C3.5612 20.139 3.9032 20.5 4.33332 20.5H7.16678C7.5969 20.5 7.9389 20.139 7.91568 19.7095L7.07785 4.20952C7.05634 3.81162 6.72742 3.5 6.32894 3.5H5.17116Z" fill="currentColor"></path>
+            <path d="M9.51184 22H19.75C20.9926 22 22 20.9927 22 19.75V6.00002C22 5.69946 21.8205 5.42792 21.544 5.31007C21.2675 5.19223 20.9474 5.25083 20.7306 5.45898L15.75 10.2404V6.00002C15.75 5.70947 15.5821 5.44506 15.3192 5.32137C15.0563 5.19768 14.7456 5.23698 14.5218 5.42222L9.85566 9.28385L9.9564 11.1475L14.25 7.59424V12C14.25 12.3006 14.4294 12.5721 14.7059 12.69C14.9824 12.8078 15.3025 12.7492 15.5194 12.5411L20.5 7.75968V19.75C20.5 20.1642 20.1642 20.5 19.75 20.5H18.75V16C18.75 15.0335 17.9665 14.25 17 14.25H13C12.0335 14.25 11.25 15.0335 11.25 16L11.25 20.5H10.33C10.1946 21.0724 9.90723 21.5879 9.51184 22ZM17.25 16V20.25H12.75L12.75 16C12.75 15.8619 12.8619 15.75 13 15.75H17C17.1381 15.75 17.25 15.8619 17.25 16Z" fill="currentColor"></path>
+          </svg>
+          <span>Fabricante</span>
+        </label>
+        <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('fabricante')}">
+          <input #inputFabricante id="fabricante" type="text" formControlName="fabricante"
+                 placeholder="Ingrese el nombre del fabricante" name="fabricante">
+        </div>
+        <div class="text-error-message" *ngIf="isFieldInvalid('fabricante')">
+          {{ getErrorMessage('fabricante') }}
+        </div>
+      </div>
+
+      <label>
+        <svg class="icono-1" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.75 6.008c0-6.246-9.501-6.248-9.5 0v13.238c-1.235 1.224-2 2.921-2 4.796 0 3.728 3.022 6.75 6.75 6.75s6.75-3.022 6.75-6.75c0-1.875-0.765-3.572-2-4.796v-13.238zM16 29.25c-2.9 0-5.25-2.351-5.25-5.251 0-1.553 0.674-2.948 1.745-3.909l0.006-0.012c0.13-0.122 0.215-0.29 0.231-0.477v-13.52c0-1.704 1.381-3.085 3.085-3.085 1.704 0 3.085 1.381 3.085 3.085v13.52c0.001 0.014 0.007 0.024 0.008 0.038l0.006 0.029c0.015 0.191 0.101 0.36 0.231 0.482 1.076 0.966 1.75 2.361 1.75 3.913 0 2.9-2.35 5.25-5.25 5.251zM16.75 21.367v-11.522c0-0.414-0.336-0.75-0.75-0.75s-0.75 0.336-0.75 0.75v11.522c-1.164 0.338-2 1.394-2 2.646 0 1.519 1.231 2.75 2.75 2.75s2.75-1.231 2.75-2.75c0-1.252-0.836-2.308-1.981-2.641zM26.5 2.25c-1.795 0-3.25 1.455-3.25 3.25s1.455 3.25 3.25 3.25 3.25-1.455 3.25-3.25-1.455-3.25-3.25-3.25z"></path>
+        </svg>
+        <span>Rango de Temperatura Crítica (°C) [min-max]</span>
+      </label>
+
+      <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"
+                  (valueChange)="onMinChange($event)" (highValueChange)="onMaxChange($event)">
+      </ngx-slider>
+
+      <div class="text-error-message" *ngIf="isFieldInvalid('temp_min_c')">
+        {{ getErrorMessage('temp_min_c') }}
+      </div>
+      <div class="text-error-message" *ngIf="isFieldInvalid('temp_max_c')">
+        {{ getErrorMessage('temp_max_c') }}
+      </div>
+
+      <div class="flex-end" style="margin-top: 30px;">
+        <button type="submit" class="btn btn-blue">
+          <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z" fill="currentColor"></path>
+          </svg>
+          <span>{{ isEditMode ? 'Actualizar' : 'Guardar' }}</span>
+        </button>
+
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">
+          <svg class="icono-1" viewBox="0 0 512 512" fill="#000000">
+            <polygon points="328.96 30.2933 298.667 0 164.48 134.4 30.2933 0 0 30.2933 134.4 164.48 0 298.667 30.2933 328.96 164.48 194.56 298.667 328.96 328.96 298.667 194.56 164.48"></polygon>
+          </svg>
+          <span>Cancelar</span>
+        </button>
+      </div>
+    </form>
+  </div>
 </div>

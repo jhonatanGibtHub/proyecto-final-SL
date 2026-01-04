@@ -2,9 +2,7 @@
 
   <!-- MENÚ DESPLEGABLE -->
   <div class="dropdown-wrapper" (click)="$event.stopPropagation()">
-    <button class="dropdown-btn" (click)="toggleDropdown()">
-      Movimientos →
-    </button>
+    <button class="dropdown-btn" (click)="toggleDropdown()">Movimientos →</button>
 
     <div class="dropdown-menu" *ngIf="dropdownOpen">
       <div *ngIf="movimientos.length === 0" class="empty">
@@ -17,60 +15,59 @@
     </div>
   </div>
 
-  <!-- PANEL DETALLE MODERNO -->
-<div class="detalle-panel" *ngIf="movimientoSeleccionado">
-  <div class="detalle-header">
-    <span class="titulo">Detalle del movimiento</span>
-    <span class="badge">{{ movimientoSeleccionado.vacuna }}</span>
+  <!-- PANEL DETALLE -->
+  <div class="detalle-panel" *ngIf="movimientoSeleccionado">
+    <div class="detalle-header">
+      <span class="titulo">Detalles</span>
+      <span class="badge">{{ movimientoSeleccionado.vacuna }}</span>
+    </div>
+
+    <div class="detalle-grid">
+      <div class="item">
+        <span class="label">Lote ID</span>
+        <span class="value">{{ movimientoSeleccionado.id_lote }}</span>
+      </div>
+
+      <div class="item">
+        <span class="label">Origen</span>
+        <span class="value">{{ movimientoSeleccionado.origen }}</span>
+      </div>
+
+      <div class="item">
+        <span class="label">Destino</span>
+        <span class="value">{{ movimientoSeleccionado.destino }}</span>
+      </div>
+
+      <div class="item">
+        <span class="label">Caducidad</span>
+        <span class="value">{{ movimientoSeleccionado.caducidad | date:'short' }}</span>
+      </div>
+
+      <div class="item">
+        <span class="label">Cantidad de envío</span>
+        <span class="value">{{ movimientoSeleccionado.cantidad }}</span>
+      </div>
+
+      <div class="item">
+        <span class="label">Temperatura</span>
+        <span class="value temperatura">
+          {{ movimientoSeleccionado.temperatura != null 
+             ? movimientoSeleccionado.temperatura + ' °C' 
+             : 'No tiene sensor' }}
+        </span>
+      </div>
+
+      <div class="item">
+        <span class="label">Temperatura Mínima</span>
+        <span class="value">{{ movimientoSeleccionado.minimo }} °C</span>
+      </div>
+
+      <div class="item">
+        <span class="label">Temperatura Máxima</span>
+        <span class="value">{{ movimientoSeleccionado.maximo }} °C</span>
+      </div>
+    </div>
   </div>
-
-  <div class="detalle-grid">
-    <div class="item">
-      <span class="label">Origen</span>
-      <span class="value">{{ movimientoSeleccionado.origen }}</span>
-    </div>
-
-    <div class="item">
-      <span class="label">Destino</span>
-      <span class="value">{{ movimientoSeleccionado.destino }}</span>
-    </div>
-
-    <div class="item">
-      <span class="label">Caducidad</span>
-      <span class="value">
-        {{ movimientoSeleccionado.caducidad | date:'short' }}
-      </span>
-    </div>
-
-    <div class="item">
-      <span class="label">Cantidad de envio</span>
-      <span class="value">
-        {{ movimientoSeleccionado.cantidad }}
-      </span>
-    </div>
-
-    <div class="item">
-      <span class="label">Temperatura</span>
-      <span class="value temperatura">
-        {{ movimientoSeleccionado.temperatura }} °C
-      </span>
-    </div>
-
-    <div class="item">
-      <span class="label">Temperatura Minima</span>
-      <span class="value">
-        {{ movimientoSeleccionado.minimo }} °C
-      </span>
-    </div>
-
-    <div class="item">
-      <span class="label">Temperatura Maxima</span>
-      <span class="value">
-        {{ movimientoSeleccionado.maximo }} °C
-      </span>
-    </div>
-  </div>
-</div>
 
   <!-- MAPA -->
   <div id="map"></div>

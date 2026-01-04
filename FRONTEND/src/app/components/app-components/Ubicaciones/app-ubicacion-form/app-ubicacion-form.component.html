@@ -1,206 +1,90 @@
-<div class="modal-overlay" *ngIf="showModal">
-    <div class="modal-container">
-        <form [formGroup]="ubicacionForm" (ngSubmit)="onSubmit()">
-            <h1 class="page-tittle">{{ isEditMode ? 'Editar ubicación' : 'Registrar Ubicación' }}</h1>
-            <div class="input-container" (click)="inputNombre.focus()">
-                <label for="nombre">
-                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path
-                                d="M11.25 17C11.25 17.4142 11.5858 17.75 12 17.75C12.4142 17.75 12.75 17.4142 12.75 17H11.25ZM15.25 9.75C15.25 10.1642 15.5858 10.5 16 10.5C16.4142 10.5 16.75 10.1642 16.75 9.75H15.25ZM7.25 9.75C7.25 10.1642 7.58579 10.5 8 10.5C8.41421 10.5 8.75 10.1642 8.75 9.75H7.25ZM15.7071 7.32544L16.2646 6.82371V6.82371L15.7071 7.32544ZM9.5 16.25C9.08579 16.25 8.75 16.5858 8.75 17C8.75 17.4142 9.08579 17.75 9.5 17.75V16.25ZM15 17.75C15.4142 17.75 15.75 17.4142 15.75 17C15.75 16.5858 15.4142 16.25 15 16.25V17.75ZM10 7.75H12V6.25H10V7.75ZM12 7.75H14V6.25H12V7.75ZM12.75 17V7H11.25V17H12.75ZM15.25 9.22222V9.75H16.75V9.22222H15.25ZM7.25 9.22222V9.75H8.75V9.22222H7.25ZM14 7.75C14.4949 7.75 14.7824 7.75196 14.9865 7.78245C15.0783 7.79617 15.121 7.8118 15.1376 7.8194C15.148 7.82415 15.1477 7.82503 15.1496 7.82716L16.2646 6.82371C15.96 6.4853 15.579 6.35432 15.2081 6.29891C14.8676 6.24804 14.4479 6.25 14 6.25V7.75ZM16.75 9.22222C16.75 8.71757 16.7513 8.27109 16.708 7.91294C16.6629 7.54061 16.559 7.15082 16.2646 6.82371L15.1496 7.82716C15.1523 7.83015 15.1609 7.83939 15.1731 7.87221C15.1873 7.91048 15.2048 7.97725 15.2188 8.09313C15.2487 8.34011 15.25 8.67931 15.25 9.22222H16.75ZM10 6.25C9.55208 6.25 9.13244 6.24804 8.79192 6.29891C8.42102 6.35432 8.04 6.4853 7.73542 6.82371L8.85036 7.82716C8.85228 7.82503 8.85204 7.82415 8.86242 7.8194C8.87904 7.8118 8.92168 7.79617 9.01354 7.78245C9.21765 7.75196 9.50511 7.75 10 7.75V6.25ZM8.75 9.22222C8.75 8.67931 8.75129 8.34011 8.78118 8.09313C8.7952 7.97725 8.81273 7.91048 8.8269 7.87221C8.83905 7.83939 8.84767 7.83015 8.85036 7.82716L7.73542 6.82371C7.44103 7.15082 7.3371 7.54061 7.29204 7.91294C7.24871 8.27109 7.25 8.71757 7.25 9.22222H8.75ZM9.5 17.75H15V16.25H9.5V17.75Z"
-                                fill="currentColor"></path>
-                            <path
-                                d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C21.5093 4.43821 21.8356 5.80655 21.9449 8"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                        </g>
-                    </svg>
-                    <span>
-                        Nombre
-                    </span>
-                </label>
-                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('nombre')}">
-                    <input #inputNombre id="nombre" type="text" formControlName="nombre"
-                        placeholder="Ingrese el nombre de la ubicación" name="nombre">
-                </div>
-                <div *ngIf="isFieldInvalid('nombre')" class="text-error-message">
-                    <small>{{ getErrorMessage('nombre') }}</small>
-                </div>
-            </div>
-            <div class="input-container">
-                <label for="tipo">
-                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path
-                                d="M2.92444 4.12856C2.98896 2.93485 3.9757 2 5.17116 2H6.32894C7.52439 2 8.51114 2.93485 8.57566 4.12856L9.4135 19.6286C9.48315 20.917 8.45714 22 7.16678 22H4.33332C3.04296 22 2.01695 20.917 2.0866 19.6286L2.92444 4.12856ZM5.17116 3.5C4.77267 3.5 4.44376 3.81162 4.42225 4.20952L3.58441 19.7095C3.5612 20.139 3.9032 20.5 4.33332 20.5H7.16678C7.5969 20.5 7.9389 20.139 7.91568 19.7095L7.07785 4.20952C7.05634 3.81162 6.72742 3.5 6.32894 3.5H5.17116Z"
-                                fill="currentColor"></path>
-                            <path
-                                d="M9.51184 22H19.75C20.9926 22 22 20.9927 22 19.75V6.00002C22 5.69946 21.8205 5.42792 21.544 5.31007C21.2675 5.19223 20.9474 5.25083 20.7306 5.45898L15.75 10.2404V6.00002C15.75 5.70947 15.5821 5.44506 15.3192 5.32137C15.0563 5.19768 14.7456 5.23698 14.5218 5.42222L9.85566 9.28385L9.9564 11.1475L14.25 7.59424V12C14.25 12.3006 14.4294 12.5721 14.7059 12.69C14.9824 12.8078 15.3025 12.7492 15.5194 12.5411L20.5 7.75968V19.75C20.5 20.1642 20.1642 20.5 19.75 20.5H18.75V16C18.75 15.0335 17.9665 14.25 17 14.25H13C12.0335 14.25 11.25 15.0335 11.25 16L11.25 20.5H10.33C10.1946 21.0724 9.90723 21.5879 9.51184 22ZM17.25 16V20.25H12.75L12.75 16C12.75 15.8619 12.8619 15.75 13 15.75H17C17.1381 15.75 17.25 15.8619 17.25 16Z"
-                                fill="currentColor"></path>
-                        </g>
-                    </svg>
-                    <span>
-                        Tipo
-                    </span>
-                </label>
+<div class="modal-overlay" *ngIf="showModal"> 
+  <div class="modal-container">
+    <form [formGroup]="ubicacionForm" (ngSubmit)="onSubmit()">
+      <h1 class="page-tittle">{{ isEditMode ? 'Editar ubicación' : 'Registrar Ubicación' }}</h1>
 
+      <div class="input-container" (click)="inputNombre.focus()">
+        <label for="nombre">
+          <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.25 17C11.25 17.4142 11.5858 17.75 12 17.75C12.4142 17.75 12.75 17.4142 12.75 17H11.25ZM15.25 9.75C15.25 10.1642 15.5858 10.5 16 10.5C16.4142 10.5 16.75 10.1642 16.75 9.75H15.25ZM7.25 9.75C7.25 10.1642 7.58579 10.5 8 10.5C8.41421 10.5 8.75 10.1642 8.75 9.75H7.25ZM15.7071 7.32544L16.2646 6.82371V6.82371L15.7071 7.32544ZM9.5 16.25C9.08579 16.25 8.75 16.5858 8.75 17C8.75 17.4142 9.08579 17.75 9.5 17.75V16.25ZM15 17.75C15.4142 17.75 15.75 17.4142 15.75 17C15.75 16.5858 15.4142 16.25 15 16.25V17.75ZM10 7.75H12V6.25H10V7.75ZM12 7.75H14V6.25H12V7.75ZM12.75 17V7H11.25V17H12.75ZM15.25 9.22222V9.75H16.75V9.22222H15.25ZM7.25 9.22222V9.75H8.75V9.22222H7.25ZM14 7.75C14.4949 7.75 14.7824 7.75196 14.9865 7.78245C15.0783 7.79617 15.121 7.8118 15.1376 7.8194C15.148 7.82415 15.1477 7.82503 15.1496 7.82716L16.2646 6.82371C15.96 6.4853 15.579 6.35432 15.2081 6.29891C14.8676 6.24804 14.4479 6.25 14 6.25V7.75ZM16.75 9.22222C16.75 8.71757 16.7513 8.27109 16.708 7.91294C16.6629 7.54061 16.559 7.15082 16.2646 6.82371L15.1496 7.82716C15.1523 7.83015 15.1609 7.83939 15.1731 7.87221C15.1873 7.91048 15.2048 7.97725 15.2188 8.09313C15.2487 8.34011 15.25 8.67931 15.25 9.22222H16.75ZM10 6.25C9.55208 6.25 9.13244 6.24804 8.79192 6.29891C8.42102 6.35432 8.04 6.4853 7.73542 6.82371L8.85036 7.82716C8.85228 7.82503 8.85204 7.82415 8.86242 7.8194C8.87904 7.8118 8.92168 7.79617 9.01354 7.78245C9.21765 7.75196 9.50511 7.75 10 7.75V6.25ZM8.75 9.22222C8.75 8.67931 8.75129 8.34011 8.78118 8.09313C8.7952 7.97725 8.81273 7.91048 8.8269 7.87221C8.83905 7.83939 8.84767 7.83015 8.85036 7.82716L7.73542 6.82371C7.44103 7.15082 7.3371 7.54061 7.29204 7.91294C7.24871 8.27109 7.25 8.71757 7.25 9.22222H8.75ZM9.5 17.75H15V16.25H9.5V17.75Z" fill="currentColor"/>
+            <path d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C21.5093 4.43821 21.8356 5.80655 21.9449 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>Nombre</span>
+        </label>
+        <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('nombre')}">
+          <input #inputNombre id="nombre" type="text" formControlName="nombre" placeholder="Ingrese el nombre de la ubicación" name="nombre">
+        </div>
+        <div *ngIf="isFieldInvalid('nombre')" class="text-error-message">
+          <small>{{ getErrorMessage('nombre') }}</small>
+        </div>
+      </div>
 
-                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('tipo')}">
+      <div class="input-container">
+        <label for="tipo">
+          <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.92444 4.12856C2.98896 2.93485 3.9757 2 5.17116 2H6.32894C7.52439 2 8.51114 2.93485 8.57566 4.12856L9.4135 19.6286C9.48315 20.917 8.45714 22 7.16678 22H4.33332C3.04296 22 2.01695 20.917 2.0866 19.6286L2.92444 4.12856ZM5.17116 3.5C4.77267 3.5 4.44376 3.81162 4.42225 4.20952L3.58441 19.7095C3.5612 20.139 3.9032 20.5 4.33332 20.5H7.16678C7.5969 20.5 7.9389 20.139 7.91568 19.7095L7.07785 4.20952C7.05634 3.81162 6.72742 3.5 6.32894 3.5H5.17116Z" fill="currentColor"/>
+            <path d="M9.51184 22H19.75C20.9926 22 22 20.9927 22 19.75V6.00002C22 5.69946 21.8205 5.42792 21.544 5.31007C21.2675 5.19223 20.9474 5.25083 20.7306 5.45898L15.75 10.2404V6.00002C15.75 5.70947 15.5821 5.44506 15.3192 5.32137C15.0563 5.19768 14.7456 5.23698 14.5218 5.42222L9.85566 9.28385L9.9564 11.1475L14.25 7.59424V12C14.25 12.3006 14.4294 12.5721 14.7059 12.69C14.9824 12.8078 15.3025 12.7492 15.5194 12.5411L20.5 7.75968V19.75C20.5 20.1642 20.1642 20.5 19.75 20.5H18.75V16C18.75 15.0335 17.9665 14.25 17 14.25H13C12.0335 14.25 11.25 15.0335 11.25 16L11.25 20.5H10.33C10.1946 21.0724 9.90723 21.5879 9.51184 22ZM17.25 16V20.25H12.75L12.75 16C12.75 15.8619 12.8619 15.75 13 15.75H17C17.1381 15.75 17.25 15.8619 17.25 16Z" fill="currentColor"/>
+          </svg>
+          <span>Tipo de ubicación</span>
+        </label>
+        <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('tipo')}">
+          <mat-form-field appearance="outline">
+            <mat-select id="tipo" formControlName="tipo">
+              <mat-option value="">Seleccione el tipo de ubicación</mat-option>
+              <mat-option *ngFor="let item of tipos" [value]="item">{{ item }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div *ngIf="isFieldInvalid('tipo')" class="text-error-message">
+          <small>{{ getErrorMessage('tipo') }}</small>
+        </div>
+      </div>
 
+      <div class="input-container">
+        <label for="ubicacionTexto">
+          <svg class="icono-0" xmlns="http://www.w3.org/2000/svg" width="64px" height="64px" viewBox="0 0 64 64" fill="currentColor">
+            <path d="M32,0C18.746,0,8,10.746,8,24c0,5.219,1.711,10.008,4.555,13.93c0.051,0.094,0.059,0.199,0.117,0.289l16,24 C29.414,63.332,30.664,64,32,64s2.586-0.668,3.328-1.781l16-24c0.059-0.09,0.066-0.195,0.117-0.289C54.289,34.008,56,29.219,56,24 C56,10.746,45.254,0,32,0z M32,32c-4.418,0-8-3.582-8-8s3.582-8,8-8s8,3.582,8,8S36.418,32,32,32z"/>
+          </svg>
+          <span>Ciudad / Distrito / Provincia</span>
+        </label>
+        <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('ubicacionTexto')}">
+          <input id="ubicacionTexto" type="text" formControlName="ubicacionTexto" placeholder="Ej: Lima, Lince, Coronel Portillo"/>
+        </div>
+        <div *ngIf="isFieldInvalid('ubicacionTexto')" class="text-error-message">
+          <small>{{ getErrorMessage('ubicacionTexto') }}</small>
+        </div>
+      </div>
 
+      <div class="input-container">
+        <label for="direccion">
+          <svg class="icono-0" xmlns="http://www.w3.org/2000/svg" width="64px" height="64px" viewBox="0 0 64 64" fill="currentColor">
+            <path d="M32,0C18.746,0,8,10.746,8,24c0,5.219,1.711,10.008,4.555,13.93c0.051,0.094,0.059,0.199,0.117,0.289l16,24 C29.414,63.332,30.664,64,32,64s2.586-0.668,3.328-1.781l16-24c0.059-0.09,0.066-0.195,0.117-0.289C54.289,34.008,56,29.219,56,24 C56,10.746,45.254,0,32,0z M32,32c-4.418,0-8-3.582-8-8s3.582-8,8-8s8,3.582,8,8S36.418,32,32,32z"/>
+          </svg>
+          <span>Dirección</span>
+        </label>
+        <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('direccion')}">
+          <input id="direccion" type="text" formControlName="direccion" placeholder="Ej: Avenida Abancay 500"/>
+        </div>
+        <div *ngIf="isFieldInvalid('direccion')" class="text-error-message">
+          <small>{{ getErrorMessage('direccion') }}</small>
+        </div>
+      </div>
 
-                    <mat-form-field appearance="outline">
-                        <mat-select id="tipo" formControlName="tipo">
-                            <mat-option value="">Seleccione una ubicacion</mat-option>
+      <div class="flex-end" style="margin-top: 30px;">
+        <button type="submit" class="btn btn-blue">
+          <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z" fill="currentColor"/>
+          </svg>
+          <span>{{ isEditMode ? 'Actualizar Ubicación' : 'Guardar Ubicación' }}</span>
+        </button>
 
-                            <mat-option *ngFor="let item of tipos" [value]="item">
-                                {{ item }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-
-                </div>
-
-
-                <div *ngIf="isFieldInvalid('tipo')" class="text-error-message">
-                    <small>{{ getErrorMessage('tipo') }}</small>
-                </div>
-            </div>
-
-<!--
-            <div class="input-container" (click)="inputDistrito.focus()">
-                <label for="distrito">
-                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path
-                                d="M11.25 17C11.25 17.4142 11.5858 17.75 12 17.75C12.4142 17.75 12.75 17.4142 12.75 17H11.25ZM15.25 9.75C15.25 10.1642 15.5858 10.5 16 10.5C16.4142 10.5 16.75 10.1642 16.75 9.75H15.25ZM7.25 9.75C7.25 10.1642 7.58579 10.5 8 10.5C8.41421 10.5 8.75 10.1642 8.75 9.75H7.25ZM15.7071 7.32544L16.2646 6.82371V6.82371L15.7071 7.32544ZM9.5 16.25C9.08579 16.25 8.75 16.5858 8.75 17C8.75 17.4142 9.08579 17.75 9.5 17.75V16.25ZM15 17.75C15.4142 17.75 15.75 17.4142 15.75 17C15.75 16.5858 15.4142 16.25 15 16.25V17.75ZM10 7.75H12V6.25H10V7.75ZM12 7.75H14V6.25H12V7.75ZM12.75 17V7H11.25V17H12.75ZM15.25 9.22222V9.75H16.75V9.22222H15.25ZM7.25 9.22222V9.75H8.75V9.22222H7.25ZM14 7.75C14.4949 7.75 14.7824 7.75196 14.9865 7.78245C15.0783 7.79617 15.121 7.8118 15.1376 7.8194C15.148 7.82415 15.1477 7.82503 15.1496 7.82716L16.2646 6.82371C15.96 6.4853 15.579 6.35432 15.2081 6.29891C14.8676 6.24804 14.4479 6.25 14 6.25V7.75ZM16.75 9.22222C16.75 8.71757 16.7513 8.27109 16.708 7.91294C16.6629 7.54061 16.559 7.15082 16.2646 6.82371L15.1496 7.82716C15.1523 7.83015 15.1609 7.83939 15.1731 7.87221C15.1873 7.91048 15.2048 7.97725 15.2188 8.09313C15.2487 8.34011 15.25 8.67931 15.25 9.22222H16.75ZM10 6.25C9.55208 6.25 9.13244 6.24804 8.79192 6.29891C8.42102 6.35432 8.04 6.4853 7.73542 6.82371L8.85036 7.82716C8.85228 7.82503 8.85204 7.82415 8.86242 7.8194C8.87904 7.8118 8.92168 7.79617 9.01354 7.78245C9.21765 7.75196 9.50511 7.75 10 7.75V6.25ZM8.75 9.22222C8.75 8.67931 8.75129 8.34011 8.78118 8.09313C8.7952 7.97725 8.81273 7.91048 8.8269 7.87221C8.83905 7.83939 8.84767 7.83015 8.85036 7.82716L7.73542 6.82371C7.44103 7.15082 7.3371 7.54061 7.29204 7.91294C7.24871 8.27109 7.25 8.71757 7.25 9.22222H8.75ZM9.5 17.75H15V16.25H9.5V17.75Z"
-                                fill="currentColor"></path>
-                            <path
-                                d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C21.5093 4.43821 21.8356 5.80655 21.9449 8"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                        </g>
-                    </svg>
-                    <span>
-                        Distrito
-                    </span>
-                </label>
-                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('distrito')}">
-                    <input #inputDistrito id="distrito" type="text" formControlName="distrito"
-                        placeholder="Ingrese el distrito" name="distrito">
-                </div>
-                <div *ngIf="isFieldInvalid('distrito')" class="text-error-message">
-                    <small>{{ getErrorMessage('distrito') }}</small>
-                </div>
-            </div>
-
-            <div class="input-container" (click)="inputProvincia.focus()">
-                <label for="provincia">
-                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path
-                                d="M11.25 17C11.25 17.4142 11.5858 17.75 12 17.75C12.4142 17.75 12.75 17.4142 12.75 17H11.25ZM15.25 9.75C15.25 10.1642 15.5858 10.5 16 10.5C16.4142 10.5 16.75 10.1642 16.75 9.75H15.25ZM7.25 9.75C7.25 10.1642 7.58579 10.5 8 10.5C8.41421 10.5 8.75 10.1642 8.75 9.75H7.25ZM15.7071 7.32544L16.2646 6.82371V6.82371L15.7071 7.32544ZM9.5 16.25C9.08579 16.25 8.75 16.5858 8.75 17C8.75 17.4142 9.08579 17.75 9.5 17.75V16.25ZM15 17.75C15.4142 17.75 15.75 17.4142 15.75 17C15.75 16.5858 15.4142 16.25 15 16.25V17.75ZM10 7.75H12V6.25H10V7.75ZM12 7.75H14V6.25H12V7.75ZM12.75 17V7H11.25V17H12.75ZM15.25 9.22222V9.75H16.75V9.22222H15.25ZM7.25 9.22222V9.75H8.75V9.22222H7.25ZM14 7.75C14.4949 7.75 14.7824 7.75196 14.9865 7.78245C15.0783 7.79617 15.121 7.8118 15.1376 7.8194C15.148 7.82415 15.1477 7.82503 15.1496 7.82716L16.2646 6.82371C15.96 6.4853 15.579 6.35432 15.2081 6.29891C14.8676 6.24804 14.4479 6.25 14 6.25V7.75ZM16.75 9.22222C16.75 8.71757 16.7513 8.27109 16.708 7.91294C16.6629 7.54061 16.559 7.15082 16.2646 6.82371L15.1496 7.82716C15.1523 7.83015 15.1609 7.83939 15.1731 7.87221C15.1873 7.91048 15.2048 7.97725 15.2188 8.09313C15.2487 8.34011 15.25 8.67931 15.25 9.22222H16.75ZM10 6.25C9.55208 6.25 9.13244 6.24804 8.79192 6.29891C8.42102 6.35432 8.04 6.4853 7.73542 6.82371L8.85036 7.82716C8.85228 7.82503 8.85204 7.82415 8.86242 7.8194C8.87904 7.8118 8.92168 7.79617 9.01354 7.78245C9.21765 7.75196 9.50511 7.75 10 7.75V6.25ZM8.75 9.22222C8.75 8.67931 8.75129 8.34011 8.78118 8.09313C8.7952 7.97725 8.81273 7.91048 8.8269 7.87221C8.83905 7.83939 8.84767 7.83015 8.85036 7.82716L7.73542 6.82371C7.44103 7.15082 7.3371 7.54061 7.29204 7.91294C7.24871 8.27109 7.25 8.71757 7.25 9.22222H8.75ZM9.5 17.75H15V16.25H9.5V17.75Z"
-                                fill="currentColor"></path>
-                            <path
-                                d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C21.5093 4.43821 21.8356 5.80655 21.9449 8"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                        </g>
-                    </svg>
-                    <span>
-                        Provincia
-                    </span>
-                </label>
-                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('provincia')}">
-                    <input #inputProvincia id="provincia" type="text" formControlName="provincia"
-                        placeholder="Ingrese la provincia" name="provincia">
-                </div>
-                <div *ngIf="isFieldInvalid('provincia')" class="text-error-message">
-                    <small>{{ getErrorMessage('provincia') }}</small>
-                </div>
-            </div>
-
-        -->
-
-<!-- CIUDAD / DISTRITO / PROVINCIA -->
-<div class="input-container">
-  <label for="ubicacionTexto">
-    <span>Ciudad / Distrito / Provincia</span>
-  </label>
-  <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('ubicacionTexto')}">
-    <input
-      id="ubicacionTexto"
-      type="text"
-      formControlName="ubicacionTexto"
-      placeholder="Ej: Lima, Lince, Coronel Portillo"
-    />
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">
+          <svg class="icono-1" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+            <polygon points="328.96 30.2933 298.667 0 164.48 134.4 30.2933 0 0 30.2933 134.4 164.48 0 298.667 30.2933 328.96 164.48 194.56 298.667 328.96 328.96 298.667 194.56 164.48" fill="#000"/>
+          </svg>
+          <span>Cancelar</span>
+        </button>
+      </div>
+    </form>
   </div>
-  <div *ngIf="isFieldInvalid('ubicacionTexto')" class="text-error-message">
-    <small>{{ getErrorMessage('ubicacionTexto') }}</small>
-  </div>
-</div>
-
-<!-- DIRECCIÓN -->
-<div class="input-container">
-  <label for="direccion">
-    <span>Dirección</span>
-  </label>
-  <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('direccion')}">
-    <input
-      id="direccion"
-      type="text"
-      formControlName="direccion"
-      placeholder="Ej: Avenida Abancay 500"
-    />
-  </div>
-  <div *ngIf="isFieldInvalid('direccion')" class="text-error-message">
-    <small>{{ getErrorMessage('direccion') }}</small>
-  </div>
-</div>
-
-
-
-
-
-
-            <div class="flex-end" style="margin-top: 30px;">
-                <button type="submit" class="btn btn-blue">
-                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z"
-                                fill="currentColor"></path>
-                        </g>
-                    </svg>
-                    <span>{{ isEditMode ? 'Actualizar Ubicación' : 'Guardar Ubicación' }}</span>
-                </button>
-                <button type="button" class="btn btn-secondary" (click)="onCancel()">
-                    <svg class="icono-1" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <title>cancel</title>
-                            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                <g id="work-case" fill="#000000" transform="translate(91.520000, 91.520000)">
-                                    <polygon id="Close"
-                                        points="328.96 30.2933333 298.666667 1.42108547e-14 164.48 134.4 30.2933333 1.42108547e-14 1.42108547e-14 30.2933333 134.4 164.48 1.42108547e-14 298.666667 30.2933333 328.96 164.48 194.56 298.666667 328.96 328.96 298.666667 194.56 164.48">
-                                    </polygon>
-                                </g>
-                            </g>
-                        </g>
-                    </svg>
-                    <span>Cancelar</span>
-                </button>
-            </div>
-        </form>
-    </div>
 </div>

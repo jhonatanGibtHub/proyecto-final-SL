@@ -134,6 +134,7 @@ table {
     border-collapse: collapse;
     overflow: hidden;
     border-radius: 7px;
+    box-shadow: var(--button-box-shadow);
 }
 
 thead {
@@ -172,7 +173,7 @@ tbody tr {
 }
 
 tbody tr:hover {
-    background: var(--blue-50);
+    background: var(--blue-200);
 }
 
 svg {

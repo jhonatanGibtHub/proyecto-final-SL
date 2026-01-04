@@ -1,22 +1,7 @@
-<div class="flex-between">
-    <h2 class="page-tittle">Alertas de Cadena de Frío</h2>
-    <div class="flex-end">
-        <button (click)="abrirModalNuevo()" class="btn btn-yellow">
-            <svg class="icono-1 " viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                    <path
-                        d="M11 8C11 7.44772 11.4477 7 12 7C12.5523 7 13 7.44771 13 8V11H16C16.5523 11 17 11.4477 17 12C17 12.5523 16.5523 13 16 13H13V16C13 16.5523 12.5523 17 12 17C11.4477 17 11 16.5523 11 16V13H8C7.44772 13 7 12.5523 7 12C7 11.4477 7.44771 11 8 11H11V8Z"
-                        fill="currentColor"></path>
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M23 4C23 2.34315 21.6569 1 20 1H4C2.34315 1 1 2.34315 1 4V20C1 21.6569 2.34315 23 4 23H20C21.6569 23 23 21.6569 23 20V4ZM21 4C21 3.44772 20.5523 3 20 3H4C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21H20C20.5523 21 21 20.5523 21 20V4Z"
-                        fill="currentColor"></path>
-                </g>
-            </svg>
-            <span>Nueva Alerta</span> </button>
-    </div>
+<div class="flex-start">
+    <h2 class="page-tittle">Alertas de Medicion</h2>
 </div>
+
 <table class="table">
     <thead>
         <tr>
@@ -31,49 +16,28 @@
     </thead>
     <tbody>
         <tr *ngFor="let alerta of alertas">
-            <td> {{ alerta.id_alerta }} </td>
-            <td> {{ alerta.vacuna }} </td>
-            <td> {{ alerta.temp_violada }}°C </td>
-            <td> {{ alerta.tipo_alerta }} </td>
-            <td> {{ alerta.fecha_alerta | date:'short'  }} </td>
-            <td>
-                <mat-button-toggle-group [value]="alerta.estado" (change)="cambiarEstadoAlerta(alerta.id_alerta, $event.value)">
-                    <mat-button-toggle value="Activa">Activa</mat-button-toggle>
-                    <mat-button-toggle value="Resuelta">Resuelta</mat-button-toggle>
-                    <mat-button-toggle value="Desechado">Desechado</mat-button-toggle>
-                </mat-button-toggle-group>
-            </td>
+            <td>{{ alerta.id_alerta }}</td>
+            <td>{{ alerta.vacuna }}</td>
+            <td>{{ alerta.temp_violada }}°C</td>
+            <td>{{ alerta.tipo_alerta }}</td>
+            <td>{{ alerta.fecha_alerta | date:'short' }}</td>
+            <td>{{ alerta.estado }}</td>
             <td>
                 <div class="acciones">
-                    <button  *ngIf="isAdmin" (click)="eliminarAlerta(alerta.id_alerta)" >
+                    <button *ngIf="isAdmin" (click)="eliminarAlerta(alerta.id_alerta)">
                         <svg class="icono-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path
-                                    d="M10 12V17"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                <path
-                                    d="M14 12V17"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                <path
-                                    d="M4 7H20"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                <path
-                                    d="M6 10V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V10"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                <path
-                                    d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </g>
+                            <path d="M10 12V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M14 12V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M6 10V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
                 </div>
             </td>
         </tr>
-        <tr *ngIf="alertas.length === 0 ">
+        <tr *ngIf="alertas.length === 0">
             <td colspan="7" style="text-align: center;">No hay registros en el sistema.</td>
         </tr>
     </tbody>
 </table>
-<app-app-alerta-cadena-frio-form #formComponent (alertaGuardada)="cargarAlertas()"></app-app-alerta-cadena-frio-form>

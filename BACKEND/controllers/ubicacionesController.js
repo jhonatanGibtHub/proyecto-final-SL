@@ -19,26 +19,54 @@ const obtenerUbicaciones = async (req, res) => {
   }
 };
 
+const obtenerUbicaciones_Cliente = async (req, res) => {
+  try {
+    const [ubicaciones] = await db.query(`
+      SELECT * 
+      FROM Ubicaciones
+      WHERE tipo <> 'Distribuidor'
+    `);
+
+    res.json({
+      success: true,
+      count: ubicaciones.length,
+      data: ubicaciones,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al obtener las Ubicaciones",
+      error: error.message,
+    });
+  }
+};
+
+const obtenerUbicaciones_Distribuidor = async (req, res) => {
+  try {
+    const [ubicaciones] = await db.query(`
+      SELECT * 
+      FROM Ubicaciones
+      WHERE tipo = 'Distribuidor'
+    `);
+
+    res.json({
+      success: true,
+      count: ubicaciones.length,
+      data: ubicaciones,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al obtener las Ubicaciones",
+      error: error.message,
+    });
+  }
+};
+
 const crearUbicacion = async (req, res) => {
   try {
     const { nombre, tipo, direccion, ubicacionTexto } = req.body;
 
-    if (!nombre || !tipo || !direccion || !ubicacionTexto) {
-      return res.status(400).json({
-        success: false,
-        mensaje: "Nombre, tipo, dirección y ubicación son obligatorios."
-      });
-    }
-
-    const tiposValidos = ['Almacén Central', 'Distribuidor', 'Centro de Salud'];
-    if (!tiposValidos.includes(tipo)) {
-      return res.status(400).json({
-        success: false,
-        mensaje: "Tipo de ubicación inválido."
-      });
-    }
-
-    // 🔍 función de búsqueda
     const buscar = async (query) => {
       const r = await axios.get(
         'https://nominatim.openstreetmap.org/search',
@@ -126,6 +154,7 @@ const crearUbicacion = async (req, res) => {
     });
 
   } catch (error) {
+    
     res.status(500).json({
       success: false,
       mensaje: "Error al crear la ubicación"
@@ -296,4 +325,6 @@ module.exports = {
   actualizarUbicacion,
   eliminarUbicacion,
   obtenerUbicacionPorId,
+  obtenerUbicaciones_Cliente,
+  obtenerUbicaciones_Distribuidor
 };

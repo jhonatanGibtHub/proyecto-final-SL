@@ -7,11 +7,14 @@ const {
     actualizarLote,
     eliminarLote,
     actualizarCantidadInicialLote,
-    obtenerLotes_Medicion
+    obtenerLotes_Medicion,
+    obtenerLotes_A_Enviar
 } = require('../controllers/lotesController');
 
 
 router.get('/', obtenerLotes);
+router.get('/lotes_enviar', obtenerLotes_A_Enviar);
+
 router.get('/lotes_medicion/', obtenerLotes_Medicion);
 
 router.get('/:id', obtenerLotePorId);

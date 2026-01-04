@@ -5,11 +5,16 @@ const {
     crearUbicacion,
     actualizarUbicacion,
     eliminarUbicacion,
-    obtenerUbicacionPorId
+    obtenerUbicacionPorId,
+    obtenerUbicaciones_Cliente,
+    obtenerUbicaciones_Distribuidor
 } = require('../controllers/ubicacionesController');
 
 
 router.get('/', obtenerUbicaciones);
+router.get('/clientes', obtenerUbicaciones_Cliente);
+router.get('/distribuidores', obtenerUbicaciones_Distribuidor);
+
 
 router.post('/', crearUbicacion);
 

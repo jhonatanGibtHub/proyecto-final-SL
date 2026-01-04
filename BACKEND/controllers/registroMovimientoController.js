@@ -4,61 +4,66 @@ const obtenerMovimientos = async (req, res) => {
   try {
     const [movimientos] = await db.query(`
            SELECT  
-    RM.id_movimiento, 
-    RM.id_lote, 
-    V.nombre_comercial AS vacuna,
+              RM.id_movimiento, 
+              RM.id_lote, 
+              RM.fecha_envio, 
+              RM.fecha_recepcion,
 
-    UO.direccion AS origen,
-    UO.latitud AS origen_latitud,
-    UO.longitud AS origen_longitud,
+              V.nombre_comercial AS vacuna,
+              V.temp_min_c AS minimo,
+              V.temp_max_c AS maximo, 
 
-    UD.direccion AS destino,
-    UD.latitud AS destino_latitud,
-    UD.longitud AS destino_longitud,
+              UO.direccion AS origen,
+              UO.latitud AS origen_latitud,
+              UO.longitud AS origen_longitud,
 
-    L.fecha_caducidad AS caducidad, 
-    L.cantidad_inicial_unidades AS cantidad, 
+              UD.direccion AS destino,
+              UD.latitud AS destino_latitud,
+              UD.longitud AS destino_longitud,
 
-    MT.temperatura_c AS temperatura, 
-    MT.id_medicion AS medicion, 
+              L.fecha_caducidad AS caducidad, 
+              L.cantidad_inicial_unidades AS cantidad, 
 
-    V.temp_min_c AS minimo,
-    V.temp_max_c AS maximo,
-    
-    ISK.id_inventario AS inventario,
+              MT.temperatura_c AS temperatura, 
+              MT.id_medicion AS medicion, 
 
-    T.nombre AS transportista,
-    RM.fecha_envio, 
-    RM.fecha_recepcion
-FROM Registro_Movimiento RM
-JOIN Ubicaciones UO ON RM.ubicacion_origen = UO.id_ubicacion
-JOIN Ubicaciones UD ON RM.ubicacion_destino = UD.id_ubicacion
-JOIN Transportistas T ON RM.id_transportista = T.id_transportista
-JOIN Lotes L ON RM.id_lote = L.id_lote 
-LEFT JOIN inventario_stock ISK ON ISK.id_ubicacion = RM.ubicacion_destino
-JOIN Vacunas V ON L.id_vacuna = V.id_vacuna 
+              ISK.id_inventario AS inventario,
 
-        LEFT JOIN (
-    SELECT MT1.id_lote, MT1.temperatura_c, MT1.id_medicion
-    FROM mediciones_temp MT1
-    JOIN (
-        SELECT id_lote, MAX(id_medicion) AS ultima_medicion
-        FROM mediciones_temp
-        GROUP BY id_lote
-    ) MT2 ON MT1.id_lote = MT2.id_lote AND MT1.id_medicion = MT2.ultima_medicion
-) MT ON RM.id_lote = MT.id_lote
+              T.nombre AS transportista
 
-ORDER BY RM.fecha_envio DESC;
+          FROM Registro_Movimiento RM
+          JOIN Ubicaciones UO ON RM.ubicacion_origen = UO.id_ubicacion
+          JOIN Ubicaciones UD ON RM.ubicacion_destino = UD.id_ubicacion
+          JOIN Transportistas T ON RM.id_transportista = T.id_transportista
+          JOIN Lotes L ON RM.id_lote = L.id_lote 
+          JOIN Vacunas V ON L.id_vacuna = V.id_vacuna 
+
+          -- Última medición por lote
+          LEFT JOIN (
+              SELECT MT1.id_lote, MT1.temperatura_c, MT1.id_medicion
+              FROM mediciones_temp MT1
+              JOIN (
+                  SELECT id_lote, MAX(id_medicion) AS ultima_medicion
+                  FROM mediciones_temp
+                  GROUP BY id_lote
+              ) MT2 ON MT1.id_lote = MT2.id_lote AND MT1.id_medicion = MT2.ultima_medicion
+          ) MT ON RM.id_lote = MT.id_lote
+
+          -- Último inventario por ubicación y vacuna
+          LEFT JOIN (
+              SELECT ISK1.id_ubicacion, ISK1.id_vacuna, MAX(ISK1.id_inventario) AS id_inventario
+              FROM inventario_stock ISK1
+              GROUP BY ISK1.id_ubicacion, ISK1.id_vacuna
+          ) ISK ON ISK.id_ubicacion = RM.ubicacion_destino AND ISK.id_vacuna = L.id_vacuna
+
+          ORDER BY RM.fecha_envio DESC
         `);
-
-    console.log(movimientos);
     res.json({
       success: true,
       count: movimientos.length,
       data: movimientos,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({
       success: false,
       mensaje: "Error al obtener el Historial de Movimientos",

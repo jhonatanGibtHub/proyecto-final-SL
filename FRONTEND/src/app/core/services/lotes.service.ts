@@ -20,6 +20,10 @@ export class LotesService {
     return this.http.get<LoteResponse>(this.apiUrl + '/lotes_medicion');
   }
 
+   obtenerLotes_A_Enviar(): Observable<LoteResponse> {
+    return this.http.get<LoteResponse>(this.apiUrl + '/lotes_enviar');
+  }
+
   
   obtenerLotePorId(id: number): Observable<LoteResponse> {
     return this.http.get<LoteResponse>(`${this.apiUrl}/${id}`);

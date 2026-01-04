@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { RegistroMovimientoService } from '../../../../core/services/registroMovimiento.service';
 import { RegistroMovimiento } from '../../../../core/models/registroMovimiento';
 import { LotesService } from '../../../../core/services/lotes.service';
@@ -21,15 +22,12 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'app-app-registro-movimiento-form',
   imports: [
     CommonModule, ReactiveFormsModule, MatFormFieldModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatInputModule
+    MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatInputModule
   ],
   templateUrl: './app-registro-movimiento-form.component.html',
   styleUrl: './app-registro-movimiento-form.component.css'
 })
-export class AppRegistroMovimientoFormComponent implements OnInit {
+export class AppRegistroMovimientoFormComponent implements OnInit, OnDestroy {
 
   movimientoForm: FormGroup;
   isEditMode: boolean = false;
@@ -39,32 +37,14 @@ export class AppRegistroMovimientoFormComponent implements OnInit {
   showModal: boolean = false;
 
   lotes: Lote[] = [];
-  ubicaciones: Ubicacion[] = [];
+  ubicaciones_distribuidores: Ubicacion[] = [];
+  ubicaciones_clientes: Ubicacion[] = [];
   transportistas: Transportista[] = [];
 
   @Output() movimientoGuardado = new EventEmitter<void>();
 
-  abrirModal(movimientoId?: number): void {
-    this.showModal = true;
-    this.error = '';
-    this.successMessage = '';
-
-    if (movimientoId) {
-      this.isEditMode = true;
-      this.movimientoId = movimientoId;
-      this.cargarMovimiento(movimientoId);
-    } else {
-      this.isEditMode = false;
-      this.movimientoId = null;
-      this.movimientoForm.reset({
-        id_lote: '',
-        ubicacion_origen: '',
-        ubicacion_destino: '',
-        id_transportista: '',
-        fecha_envio: ''
-      });
-    }
-  }
+  // Arreglo de suscripciones para manejar cancelaciones
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -87,109 +67,119 @@ export class AppRegistroMovimientoFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarLotes();
-    this.cargarUbicaciones();
+    this.cargarUbicaciones_Distribuidores();
+    this.cargarUbicaciones_Clientes();
     this.cargarTransportistas();
   }
 
-  cargarLotes() {
-    this.lotesService.obtenerLotes().subscribe({
-      next: (response) => {
-        if (response.success && Array.isArray(response.data)) {
-          this.lotes = response.data;
-        }
-      },
-      error: (err) => {
-        console.error('Error al cargar lotes:', err);
-      }
-    });
+  ngOnDestroy(): void {
+    // Cancelar todas las suscripciones al destruir el componente
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  cargarUbicaciones() {
-    this.ubicacionesService.obtenerUbicaciones().subscribe({
-      next: (response) => {
-        if (response.success && Array.isArray(response.data)) {
-          this.ubicaciones = response.data;
-        }
-      },
-      error: (err) => {
-        console.error('Error al cargar ubicaciones:', err);
-      }
-    });
+  abrirModal(movimientoId?: number): void {
+    this.showModal = true;
+    this.error = '';
+    this.successMessage = '';
+    this.cargarLotes();
+
+    if (movimientoId) {
+      this.isEditMode = true;
+      this.movimientoId = movimientoId;
+      this.cargarMovimiento(movimientoId);
+    } else {
+      this.isEditMode = false;
+      this.movimientoId = null;
+      this.movimientoForm.reset({
+        id_lote: '',
+        ubicacion_origen: '',
+        ubicacion_destino: '',
+        id_transportista: '',
+        fecha_envio: ''
+      });
+    }
   }
 
-  cargarTransportistas() {
-    this.transportistasService.obtenerTransportistas().subscribe({
-      next: (response) => {
-        if (response.success && Array.isArray(response.data)) {
-          this.transportistas = response.data;
-        }
-      },
-      error: (err) => {
-        console.error('Error al cargar transportistas:', err);
-      }
-    });
+  private toMySQLDateTime(date: Date): string {
+    const fecha = new Date(date);
+    const ahora = new Date();
+
+    fecha.setHours(ahora.getHours(), ahora.getMinutes(), ahora.getSeconds(), 0);
+
+    const yyyy = fecha.getFullYear();
+    const mm = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dd = String(fecha.getDate()).padStart(2, '0');
+    const hh = String(fecha.getHours()).padStart(2, '0');
+    const mi = String(fecha.getMinutes()).padStart(2, '0');
+    const ss = String(fecha.getSeconds()).padStart(2, '0');
+
+    return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
   }
 
-  cargarMovimiento(id: number) {
-    this.movimientoService.obtenerMovimientoPorId(id).subscribe({
-      next: (response) => {
-        if (response.success && response.data && !Array.isArray(response.data)) {
-          const movimiento = response.data as RegistroMovimiento;
-          const movimientoData = {
+  cargarLotes(): void {
+    const sub = this.lotesService.obtenerLotes_A_Enviar().subscribe({
+      next: (res) => {
+        if (res.success && Array.isArray(res.data)) this.lotes = res.data;
+      },
+      error: (err) => console.error('Error al cargar lotes:', err)
+    });
+    this.subscriptions.push(sub);
+  }
+
+  cargarUbicaciones_Distribuidores(): void {
+    const sub = this.ubicacionesService.obtenerUbicacione_Distribudor().subscribe({
+      next: (res) => { if (res.success && Array.isArray(res.data)) this.ubicaciones_distribuidores = res.data; },
+      error: (err) => console.error('Error al cargar ubicaciones distribuidores:', err)
+    });
+    this.subscriptions.push(sub);
+  }
+
+  cargarUbicaciones_Clientes(): void {
+    const sub = this.ubicacionesService.obtenerUbicacione_Clientes().subscribe({
+      next: (res) => { if (res.success && Array.isArray(res.data)) this.ubicaciones_clientes = res.data; },
+      error: (err) => console.error('Error al cargar ubicaciones clientes:', err)
+    });
+    this.subscriptions.push(sub);
+  }
+
+  cargarTransportistas(): void {
+    const sub = this.transportistasService.obtenerTransportistas().subscribe({
+      next: (res) => { if (res.success && Array.isArray(res.data)) this.transportistas = res.data; },
+      error: (err) => console.error('Error al cargar transportistas:', err)
+    });
+    this.subscriptions.push(sub);
+  }
+
+  cargarMovimiento(id: number): void {
+    const sub = this.movimientoService.obtenerMovimientoPorId(id).subscribe({
+      next: (res) => {
+        if (res.success && res.data && !Array.isArray(res.data)) {
+          const movimiento = res.data as RegistroMovimiento;
+          this.movimientoForm.patchValue({
             ...movimiento,
-            fecha_envio: movimiento.fecha_envio
-              ? new Date(movimiento.fecha_envio)
-              : null,
-            
-          };
-          this.movimientoForm.patchValue(movimientoData);
-        } else if (response.error) {
-          this.error = response.error;
+            fecha_envio: movimiento.fecha_envio ? new Date(movimiento.fecha_envio) : null
+          });
+        } else if (res.error) {
+          this.error = res.error;
           this.notificationService.error(this.error);
         }
       },
       error: (err) => {
-        this.error = 'Error al cargar el movimiento: Fallo de conexión.';
+        this.error = 'Error al cargar el movimiento: fallo de conexión.';
         const mensajeError = err.error?.mensaje;
         this.notificationService.error(mensajeError || this.error);
       }
     });
+    this.subscriptions.push(sub);
   }
 
-  cerrarModal(): void {
-    this.showModal = false;
-  }
+  cerrarModal(): void { this.showModal = false; }
+  onCancel(): void { this.cerrarModal(); }
 
-  onCancel(): void {
-    this.cerrarModal();
-  }
-
-  private toMySQLDateTime(date: Date): string {
-  const fecha = new Date(date);   // fecha seleccionada
-  const ahora = new Date();       // hora real del sistema
-
-  fecha.setHours(
-    ahora.getHours(),
-    ahora.getMinutes(),
-    ahora.getSeconds(),
-    0
-  );
-
-  const yyyy = fecha.getFullYear();
-  const mm = String(fecha.getMonth() + 1).padStart(2, '0');
-  const dd = String(fecha.getDate()).padStart(2, '0');
-
-  const hh = String(fecha.getHours()).padStart(2, '0');
-  const mi = String(fecha.getMinutes()).padStart(2, '0');
-  const ss = String(fecha.getSeconds()).padStart(2, '0');
-
-  return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
-}
-
-
-  onSubmit() {
+  onSubmit(): void {
     this.error = '';
     this.successMessage = '';
+
     if (this.movimientoForm.invalid) {
       this.movimientoForm.markAllAsTouched();
       this.error = 'Por favor, rellene todos los campos requeridos correctamente.';
@@ -198,14 +188,15 @@ export class AppRegistroMovimientoFormComponent implements OnInit {
     }
 
     const formValue = this.movimientoForm.value;
-
     const movimientoData: RegistroMovimiento = {
       ...formValue,
       fecha_envio: this.toMySQLDateTime(formValue.fecha_envio)
     };
+
+    let sub;
     if (this.isEditMode && this.movimientoId) {
-      this.movimientoService.actualizarMovimiento(this.movimientoId, movimientoData).subscribe({
-        next: (response) => {
+      sub = this.movimientoService.actualizarMovimiento(this.movimientoId, movimientoData).subscribe({
+        next: () => {
           this.successMessage = 'Movimiento actualizado correctamente.';
           this.notificationService.success(this.successMessage);
           this.movimientoGuardado.emit();
@@ -218,8 +209,8 @@ export class AppRegistroMovimientoFormComponent implements OnInit {
         }
       });
     } else {
-      this.movimientoService.crearMovimiento(movimientoData).subscribe({
-        next: (response) => {
+      sub = this.movimientoService.crearMovimiento(movimientoData).subscribe({
+        next: () => {
           this.successMessage = 'Movimiento creado correctamente.';
           this.notificationService.success(this.successMessage);
           this.movimientoGuardado.emit();
@@ -232,6 +223,8 @@ export class AppRegistroMovimientoFormComponent implements OnInit {
         }
       });
     }
+
+    this.subscriptions.push(sub);
   }
 
   isFieldInvalid(fieldName: string): boolean {
@@ -241,13 +234,8 @@ export class AppRegistroMovimientoFormComponent implements OnInit {
 
   getErrorMessage(fieldName: string): string {
     const field = this.movimientoForm.get(fieldName);
-
     if (!field) return '';
-
-    if (field.hasError('required')) {
-      return 'Este campo es obligatorio';
-    }
-
+    if (field.hasError('required')) return 'Este campo es obligatorio';
     return '';
   }
 }

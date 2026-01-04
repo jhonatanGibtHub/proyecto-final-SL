@@ -2,148 +2,96 @@
     <div class="modal-container">
         <form [formGroup]="loteForm" (ngSubmit)="onSubmit()">
             <h1 class="page-tittle">{{ isEditMode ? 'Editar lote' : 'Registrar Lote' }}</h1>
+
             <div class="input-container">
                 <label for="id_vacuna">
-                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </g>
+                    <svg class="icono-1" fill="currentColor" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M505.379,107.294c-9.647-9.647-91.12-91.12-100.681-100.681c-20.153-20.158-50.683,10.328-30.506,30.506l12.234,12.234l-58.83,58.828L276.584,57.17c-20.153-20.158-50.683,10.328-30.506,30.506l23.524,23.524l-28.484,28.484l48.81,48.81c20.153,20.153-10.326,50.69-30.506,30.506l-48.81-48.81l-17.287,17.287l48.81,48.81c20.152,20.152-10.326,50.69-30.506,30.506l-48.81-48.81l-17.286,17.287l48.81,48.81c20.152,20.152-10.326,50.69-30.506,30.506l-48.81-48.81l-43.737,43.737c-8.424,8.424-8.424,22.082,0,30.506l35.088,35.088L6.612,474.872c-20.152,20.152,10.326,50.69,30.506,30.506l99.763-99.763l35.088,35.088c8.423,8.424,22.082,8.424,30.506,0L400.79,242.389l23.524,23.524c19.988,19.991,50.94-10.072,30.506-30.506c-6.397-6.395-37.504-37.504-51.012-51.012l58.83-58.83l12.234,12.234C495.023,157.954,525.561,127.477,505.379,107.294z M373.303,153.889c-5.501-5.501-9.7-9.7-15.201-15.201L416.93,79.86l15.201,15.201L373.303,153.889z"/>
                     </svg>
                     <span>Vacuna</span>
                 </label>
                 <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('id_vacuna')}">
-
-
-
-                     <mat-form-field appearance="outline">
+                    <mat-form-field appearance="outline">
                         <mat-select id="id_vacuna" formControlName="id_vacuna">
                             <mat-option value="">Seleccione una vacuna</mat-option>
-
                             <mat-option *ngFor="let item of vacunas" [value]="item.id_vacuna">
                                 {{ item.nombre_comercial }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-
-                    
-
-
-
-
                 </div>
                 <div *ngIf="isFieldInvalid('id_vacuna')" class="text-error-message">
                     <small>{{ getErrorMessage('id_vacuna') }}</small>
                 </div>
             </div>
 
-             <div class="input-container">
-                <label for="cantidad_inicial_unidades">
-                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </g>
+            <div class="input-container">
+                <label for="fecha_fabricacion">
+                    <svg class="icono-1" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM7 3V8.41421L10.2929 11.7071L11.7071 10.2929L9 7.58579V3H7Z"/>
                     </svg>
-                    <span>Cantidad Inicial</span>
+                    <span>Fecha Fabricación</span>
+                </label>
+                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('fecha_fabricacion')}">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <input matInput [matDatepicker]="picker1" formControlName="fecha_fabricacion"/>
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="isFieldInvalid('fecha_fabricacion')" class="text-error-message">
+                    <small>{{ getErrorMessage('fecha_fabricacion') }}</small>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <label for="fecha_caducidad">
+                    <svg class="icono-1" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM7 3V8.41421L10.2929 11.7071L11.7071 10.2929L9 7.58579V3H7Z"/>
+                    </svg>
+                    <span>Fecha Caducidad</span>
+                </label>
+                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('fecha_caducidad')}">
+                    <mat-form-field appearance="outline">
+                        <input matInput [matDatepicker]="picker2" formControlName="fecha_caducidad"/>
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="isFieldInvalid('fecha_caducidad')" class="text-error-message">
+                    <small>{{ getErrorMessage('fecha_caducidad') }}</small>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <label for="cantidad_inicial_unidades">
+                    <svg class="icono-1" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.048,2.001 L17.164,2.014 C17.709,2.104 18.077,2.62 17.986,3.164 L17.182,7.992 L21,7.99 C21.552,7.99 22,8.437 22,8.989 C22.001,9.541 21.553,9.99 21.001,9.99 L16.848,9.992 L16.181,13.994 L20,13.992 C20.552,13.992 21,14.44 21,14.992 C21.001,15.544 20.553,15.992 20.001,15.992 L15.848,15.994 L14.986,21.164 C14.896,21.709 14.38,22.077 13.836,21.986 C13.291,21.896 12.923,21.38 13.014,20.836 L13.82,15.995 L8.845,15.997 L7.983,21.164 C7.892,21.709 7.377,22.077 6.832,21.986 C6.287,21.896 5.92,21.38 6.01,20.836 L6.817,15.998 L3,16 C2.448,16 2,15.553 2,15 C1.999,14.448 2.447,14 3,14 L7.151,13.998 L7.818,9.998 L4,10 C3.448,10 3,9.553 3,9 C2.999,8.448 3.447,8 4,8 L8.151,7.998 L9.012,2.835 C9.103,2.291 9.618,1.923 10.163,2.014 C10.708,2.104 11.076,2.62 10.985,3.164 L10.179,7.996 L15.154,7.993 L16.014,2.836 C16.104,2.291 16.62,1.923 17.164,2.014 Z M14.821,9.994 L9.845,9.997 L9.178,13.997 L14.154,13.995 L14.821,9.994 Z"/>
+                    </svg>
+                    <span>Cantidad</span>
                 </label>
                 <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('cantidad_inicial_unidades')}">
-                    <input id="cantidad_inicial_unidades" type="text"  maxlength="6" formControlName="cantidad_inicial_unidades" placeholder="Ingrese la cantidad inicial">
+                    <input id="cantidad_inicial_unidades" type="text" maxlength="6"
+                        formControlName="cantidad_inicial_unidades" placeholder="Ingrese la cantidad inicial">
                 </div>
                 <div *ngIf="isFieldInvalid('cantidad_inicial_unidades')" class="text-error-message">
                     <small>{{ getErrorMessage('cantidad_inicial_unidades') }}</small>
                 </div>
             </div>
 
-
-            <div class="input-container">
-                <label for="fecha_fabricacion">
-                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path d="M7 20V4C7 3.44772 7.44772 3 8 3H16C16.5523 3 17 3.44772 17 4V20M7 20H5C4.44772 20 4 19.5523 4 19V7C4 6.44772 4.44772 6 5 6H7M7 20H17M17 20H19C19.5523 20 20 19.5523 20 19V7C20 6.44772 19.5523 6 19 6H17M9 6H15M9 10H15M9 14H15" stroke="currentColor" stroke-width="2"/>
-                        </g>
-                    </svg>
-                    <span>Fecha Fabricación</span>
-                </label>
-                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('fecha_fabricacion')}">
-
-
-                    <mat-form-field appearance="outline" class="w-100"> 
-                        <input matInput [matDatepicker]="picker1" formControlName="fecha_fabricacion" />
-                        <mat-datepicker-toggle matSuffix [for]="picker1">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #picker1></mat-datepicker>
-                    </mat-form-field>
-
-                    
-
-
-
-                </div>
-                <div *ngIf="isFieldInvalid('fecha_fabricacion')" class="text-error-message">
-                    <small>{{ getErrorMessage('fecha_fabricacion') }}</small>
-                </div>
-            </div>
-            <div class="input-container">
-                <label for="fecha_caducidad">
-                    <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path d="M7 20V4C7 3.44772 7.44772 3 8 3H16C16.5523 3 17 3.44772 17 4V20M7 20H5C4.44772 20 4 19.5523 4 19V7C4 6.44772 4.44772 6 5 6H7M7 20H17M17 20H19C19.5523 20 20 19.5523 20 19V7C20 6.44772 19.5523 6 19 6H17M9 6H15M9 10H15M9 14H15" stroke="currentColor" stroke-width="2"/>
-                        </g>
-                    </svg>
-                    <span>Fecha Caducidad</span>
-                </label>
-                <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('fecha_caducidad')}">
-
-                    <mat-form-field appearance="outline"> 
-                        <input matInput [matDatepicker]="picker2" formControlName="fecha_caducidad" />
-                        <mat-datepicker-toggle matSuffix [for]="picker2">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #picker2></mat-datepicker>
-                    </mat-form-field>
-
-
-
-                </div>
-                <div *ngIf="isFieldInvalid('fecha_caducidad')" class="text-error-message">
-                    <small>{{ getErrorMessage('fecha_caducidad') }}</small>
-                </div>
-            </div>
-           
             <div class="flex-end" style="margin-top: 30px;">
                 <button type="submit" class="btn btn-blue">
                     <svg class="icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z"
-                                fill="currentColor"></path>
-                        </g>
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z"
+                            fill="currentColor"></path>
                     </svg>
                     <span>{{ isEditMode ? 'Actualizar Lote' : 'Guardar Lote' }}</span>
                 </button>
+
                 <button type="button" class="btn btn-secondary" (click)="onCancel()">
-                    <svg class="icono-1" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <title>cancel</title>
-                            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                <g id="work-case" fill="#000000" transform="translate(91.520000, 91.520000)">
-                                    <polygon id="Close"
-                                        points="328.96 30.2933333 298.666667 1.42108547e-14 164.48 134.4 30.2933333 1.42108547e-14 1.42108547e-14 30.2933333 134.4 164.48 1.42108547e-14 298.666667 30.2933333 328.96 164.48 194.56 298.666667 328.96 328.96 298.666667 194.56 164.48">
-                                    </polygon>
-                                </g>
-                            </g>
-                        </g>
+                    <svg class="icono-1" viewBox="0 0 512 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="328.96 30.293 298.667 0 164.48 134.4 30.293 0 0 30.293 134.4 164.48 0 298.667 30.293 328.96 164.48 194.56 298.667 328.96 328.96 298.667 194.56 164.48"/>
                     </svg>
                     <span>Cancelar</span>
                 </button>

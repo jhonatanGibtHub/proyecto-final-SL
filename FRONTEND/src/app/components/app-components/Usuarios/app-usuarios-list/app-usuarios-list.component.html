@@ -1,52 +1,42 @@
 <div class="flex-start">
-    <h2 class="page-tittle">Gestión de Usuarios</h2>
+  <h2 class="page-tittle">Gestión de Usuarios</h2>
 </div>
 
-
 <table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Última Conexión</th>
-            <th>Rol</th>
-            <th>Estado</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let usuario of usuarios">
-            <td>{{ usuario.id }}</td>
-            <td>{{ usuario.nombre }}</td>
-            <td>{{ usuario.email }}</td>
-            <td>{{ usuario.ultima_conexion | date:'short' }}</td>
-            <td>
-                <mat-button-toggle-group [value]="usuario.rol" (change)="cambiarRolUsuario(usuario, $event.value)">
-
-                    <mat-button-toggle value="usuario">Usuario</mat-button-toggle>
-                    <mat-button-toggle value="admin">Admin</mat-button-toggle>
-
-                </mat-button-toggle-group>
-
-            </td>
-            <td>
-                <mat-button-toggle-group [value]="usuario.activo ? 'activo' : 'inactivo'"
-                    (change)="cambiarEstadoUsuario(usuario, $event.value)">
-
-                    <mat-button-toggle value="activo">Activo</mat-button-toggle>
-                    <mat-button-toggle value="inactivo">Inactivo</mat-button-toggle>
-
-                </mat-button-toggle-group>
-
-            </td>
-            
-            <td>
-                
-            </td>
-        </tr>
-        <tr *ngIf="usuarios.length === 0">
-            <td colspan="7" style="text-align: center;">No hay registros en el sistema.</td>
-        </tr>
-    </tbody>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Última Conexión</th>
+      <th>Rol</th>
+      <th>Estado</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let usuario of usuarios">
+      <td>{{ usuario.id }}</td>
+      <td>{{ usuario.nombre }}</td>
+      <td>{{ usuario.email }}</td>
+      <td>{{ usuario.ultima_conexion | date:'short' }}</td>
+      <td>
+        <mat-button-toggle-group [value]="usuario.rol" (change)="cambiarRolUsuario(usuario, $event.value)">
+          <mat-button-toggle value="usuario">Usuario</mat-button-toggle>
+          <mat-button-toggle value="admin">Admin</mat-button-toggle>
+        </mat-button-toggle-group>
+      </td>
+      <td>
+        <mat-button-toggle-group [value]="usuario.activo ? 'activo' : 'inactivo'"
+                                 (change)="cambiarEstadoUsuario(usuario, $event.value)">
+          <mat-button-toggle value="activo">Activo</mat-button-toggle>
+          <mat-button-toggle value="inactivo">Inactivo</mat-button-toggle>
+        </mat-button-toggle-group>
+      </td>
+      <td></td>
+    </tr>
+    <tr *ngIf="usuarios.length === 0">
+      <td colspan="7" style="text-align: center;">No hay registros en el sistema.</td>
+    </tr>
+  </tbody>
 </table>

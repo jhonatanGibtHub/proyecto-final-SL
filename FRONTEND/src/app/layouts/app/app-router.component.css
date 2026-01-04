@@ -133,21 +133,4 @@ section {
     overflow: hidden;
 }
 
-.bg-track {
-    position: absolute;
-    width: 100%;
-    height: calc(1080px);
-    background-image: url('/fondo_app.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    opacity: 0.2;
-}
 
-.bg-color {
-    position: absolute;
-    inset: 0;
-    background: var(--blue-50);
-    mix-blend-mode: multiply;
-    pointer-events: none;
-}

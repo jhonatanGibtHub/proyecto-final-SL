@@ -5,7 +5,8 @@ const {
     crearAlerta, 
     cambiarEstadoAlerta,
     obtenerAlertaPorId,
-    eliminarAlerta
+    eliminarAlerta,
+    actualizarOCrearAlerta
 } = require('../controllers/alertasCadenaFrioController');
 
 
@@ -16,6 +17,8 @@ router.get('/:id', obtenerAlertaPorId);
 router.post('/', crearAlerta); 
 
 router.put('/:id/estado', cambiarEstadoAlerta);
+
+router.post('/enviaralerta/', actualizarOCrearAlerta);
 
 router.delete('/:id', eliminarAlerta);
 

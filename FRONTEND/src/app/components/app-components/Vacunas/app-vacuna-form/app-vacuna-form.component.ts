@@ -1,7 +1,8 @@
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { VacunasService } from '../../../../core/services/vacunas.service';
 import { Vacuna } from '../../../../core/models/vacuna';
 import { NgxSliderModule, Options } from '@angular-slider/ngx-slider';
@@ -11,9 +12,9 @@ import { NotificationService } from '../../../../core/services/notificacion/noti
   selector: 'app-app-vacuna-form',
   imports: [CommonModule, ReactiveFormsModule, NgxSliderModule],
   templateUrl: './app-vacuna-form.component.html',
-  styleUrl: './app-vacuna-form.component.css'
+  styleUrls: ['./app-vacuna-form.component.css']
 })
-export class AppVacunaFormComponent implements OnInit {
+export class AppVacunaFormComponent implements OnInit, OnDestroy {
 
   vacunaForm: FormGroup;
   isEditMode: boolean = false;
@@ -23,12 +24,43 @@ export class AppVacunaFormComponent implements OnInit {
   showModal: boolean = false;
 
   @Output() vacunaGuardado = new EventEmitter<void>();
+
   minValue: number = -50;
   maxValue: number = 50;
   options: Options = {
     floor: -99,
     ceil: 99,
+    step: 1
   };
+
+  private subscriptions: Subscription[] = [];
+
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly vacunaService: VacunasService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly notificationService: NotificationService
+  ) {
+    this.vacunaForm = this.fb.group({
+      nombre_comercial: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      fabricante: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      temp_min_c: [this.minValue, [Validators.required, Validators.min(-100), Validators.max(100)]],
+      temp_max_c: [this.maxValue, [Validators.required, Validators.min(-100), Validators.max(100)]],
+    });
+  }
+
+  ngOnInit(): void {
+    const routeSub = this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.isEditMode = true;
+        this.vacunaId = +params['id'];
+        this.cargarVacuna(this.vacunaId);
+      }
+    });
+
+    this.subscriptions.push(routeSub);
+  }
 
   abrirModal(vacunaId?: number): void {
     this.showModal = true;
@@ -42,69 +74,42 @@ export class AppVacunaFormComponent implements OnInit {
     } else {
       this.isEditMode = false;
       this.vacunaId = null;
-      this.minValue = -50;
-      this.maxValue = 50;
-      this.vacunaForm.reset();
-      this.vacunaForm.patchValue({
-        temp_min_c: this.minValue,
-        temp_max_c: this.maxValue
-      });
+      this.resetForm();
     }
   }
 
-  constructor(
-    private readonly fb: FormBuilder,
-    private readonly vacunaService: VacunasService,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private readonly notificationService: NotificationService
-  ) {
-    this.vacunaForm = this.fb.group(
-      {
-        nombre_comercial: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(3),
-            Validators.maxLength(50)
-          ]
-        ],
-        fabricante: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(3),
-            Validators.maxLength(50)
-          ]
-        ],
-        temp_min_c: [
-          this.minValue,
-          [
-            Validators.required,
-            Validators.min(-100),
-            Validators.max(100)
-          ]
-        ],
-        temp_max_c: [
-          this.maxValue,
-          [
-            Validators.required,
-            Validators.min(-100),
-            Validators.max(100)
-          ]
-        ],
-      }
-    );
+  private resetForm(): void {
+    this.minValue = -50;
+    this.maxValue = 50;
+    this.options = { ...this.options, floor: -99, ceil: 99 };
+    this.vacunaForm.reset({
+      temp_min_c: this.minValue,
+      temp_max_c: this.maxValue
+    });
   }
 
-  cargarVacuna(id: number) {
-    this.vacunaService.obtenerVacunaPorId(id).subscribe({
+  cargarVacuna(id: number): void {
+    const sub = this.vacunaService.obtenerVacunaPorId(id).subscribe({
       next: (response) => {
         if (response.success && response.data && !Array.isArray(response.data)) {
           const vacuna = response.data;
-          this.vacunaForm.patchValue(vacuna);
-          this.minValue = vacuna.temp_min_c;
-          this.maxValue = vacuna.temp_max_c;
+          this.minValue = Math.max(this.options.floor!, vacuna.temp_min_c);
+          this.maxValue = Math.min(this.options.ceil!, vacuna.temp_max_c);
+
+          if (this.minValue >= this.maxValue) {
+            this.maxValue = Math.min(this.options.ceil!, this.minValue + 1);
+            if (this.maxValue > this.options.ceil!) {
+              this.maxValue = this.options.ceil!;
+              this.minValue = this.maxValue - 1;
+            }
+          }
+
+          this.vacunaForm.patchValue({
+            ...vacuna,
+            temp_min_c: this.minValue,
+            temp_max_c: this.maxValue
+          });
+
         } else if (response.error) {
           this.error = response.error;
           this.notificationService.error(this.error);
@@ -113,21 +118,11 @@ export class AppVacunaFormComponent implements OnInit {
       error: (err) => {
         this.error = 'Error al cargar la vacuna: Fallo de conexión.';
         const mensajeError = err.error?.mensaje;
-        this.notificationService.error(
-          mensajeError || this.error
-        );
+        this.notificationService.error(mensajeError || this.error);
       }
     });
-  }
 
-  ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      if (params['id']) {
-        this.isEditMode = true;
-        this.vacunaId = +params['id'];
-        this.cargarVacuna(this.vacunaId);
-      }
-    });
+    this.subscriptions.push(sub);
   }
 
   cerrarModal(): void {
@@ -138,71 +133,55 @@ export class AppVacunaFormComponent implements OnInit {
     this.cerrarModal();
   }
 
-  onMinChange(value: number) {
+  onMinChange(value: number): void {
     this.minValue = value;
-    this.vacunaForm.get('temp_min_c')?.setValue(value);
     if (this.minValue >= this.maxValue) {
-      this.maxValue = this.minValue + 1;
-      this.vacunaForm.get('temp_max_c')?.setValue(this.maxValue);
+      this.maxValue = Math.min(this.options.ceil!, this.minValue + 1);
     }
+    this.vacunaForm.patchValue({ temp_min_c: this.minValue, temp_max_c: this.maxValue });
   }
 
-  onMaxChange(value: number) {
+  onMaxChange(value: number): void {
     this.maxValue = value;
-    this.vacunaForm.get('temp_max_c')?.setValue(value);
     if (this.maxValue <= this.minValue) {
-      this.minValue = this.maxValue - 1;
-      this.vacunaForm.get('temp_min_c')?.setValue(this.minValue);
+      this.minValue = Math.max(this.options.floor!, this.maxValue - 1);
     }
+    this.vacunaForm.patchValue({ temp_min_c: this.minValue, temp_max_c: this.maxValue });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.error = '';
     this.successMessage = '';
-    this.vacunaForm.patchValue({
-      temp_min_c: this.minValue,
-      temp_max_c: this.maxValue
-    });
+    this.vacunaForm.patchValue({ temp_min_c: this.minValue, temp_max_c: this.maxValue });
+
     if (this.vacunaForm.invalid) {
       this.vacunaForm.markAllAsTouched();
       this.error = 'Por favor, rellene todos los campos requeridos correctamente.';
       this.notificationService.error(this.error);
       return;
     }
+
     const vacunaData: Vacuna = this.vacunaForm.value;
-    if (this.isEditMode && this.vacunaId) {
-      this.vacunaService.actualizarVacuna(this.vacunaId, vacunaData).subscribe({
-        next: (response) => {
-          this.successMessage = 'Vacuna actualizada correctamente.';
-          this.notificationService.info(this.successMessage);
-          this.vacunaGuardado.emit();
-          this.cerrarModal();
-        },
-        error: (err) => {
-          this.error = 'Error de conexión al actualizar la vacuna.';
-          const mensajeError = err.error?.mensaje;
-          this.notificationService.error(
-            mensajeError || this.error
-          );
-        }
-      });
-    } else {
-      this.vacunaService.crearVacuna(vacunaData).subscribe({
-        next: (response) => {
-            this.successMessage = 'Vacuna creada correctamente.';
-            this.notificationService.success(this.successMessage);
-            this.vacunaGuardado.emit();
-            this.cerrarModal();
-        },
-        error: (err) => {
-          this.error = 'Error de conexión al crear la vacuna.';
-          const mensajeError = err.error?.mensaje;
-          this.notificationService.error(
-            mensajeError || this.error
-          );
-        }
-      });
-    }
+
+    const sub = this.isEditMode && this.vacunaId
+      ? this.vacunaService.actualizarVacuna(this.vacunaId, vacunaData)
+      : this.vacunaService.crearVacuna(vacunaData);
+
+    const actionSub = sub.subscribe({
+      next: () => {
+        this.successMessage = this.isEditMode ? 'Vacuna actualizada correctamente.' : 'Vacuna creada correctamente.';
+        this.notificationService.success(this.successMessage);
+        this.vacunaGuardado.emit();
+        this.cerrarModal();
+      },
+      error: (err) => {
+        this.error = this.isEditMode ? 'Error de conexión al actualizar la vacuna.' : 'Error de conexión al crear la vacuna.';
+        const mensajeError = err.error?.mensaje;
+        this.notificationService.error(mensajeError || this.error);
+      }
+    });
+
+    this.subscriptions.push(actionSub);
   }
 
   isFieldInvalid(fieldName: string): boolean {
@@ -212,42 +191,18 @@ export class AppVacunaFormComponent implements OnInit {
 
   getErrorMessage(fieldName: string): string {
     const field = this.vacunaForm.get(fieldName);
-
     if (!field) return '';
 
-    if (field.hasError('required')) {
-      return 'Este campo es obligatorio';
-    }
-
-    if (field.hasError('minlength')) {
-      const requiredLength = field.errors?.['minlength']?.requiredLength;
-      return `Mínimo ${requiredLength} caracteres`;
-    }
-
-    if (field.hasError('maxlength')) {
-      const requiredLength = field.errors?.['maxlength']?.requiredLength;
-      return `Máximo ${requiredLength} caracteres`;
-    }
-
-    if (field.hasError('min')) {
-      const min = field.errors?.['min']?.min;
-      return `El valor mínimo permitido es ${min}°C`;
-    }
-
-    if (field.hasError('max')) {
-      const max = field.errors?.['max']?.max;
-      return `El valor máximo permitido es ${max}°C`;
-    }
-
-    // Error a nivel de formulario
-    if (
-      this.vacunaForm.hasError('tempRangeInvalid') &&
-      (fieldName === 'temp_min_c' || fieldName === 'temp_max_c')
-    ) {
-      return 'La temperatura mínima debe ser menor que la máxima';
-    }
+    if (field.hasError('required')) return 'Este campo es obligatorio';
+    if (field.hasError('minlength')) return `Mínimo ${field.errors?.['minlength']?.requiredLength} caracteres`;
+    if (field.hasError('maxlength')) return `Máximo ${field.errors?.['maxlength']?.requiredLength} caracteres`;
+    if (field.hasError('min')) return `El valor mínimo permitido es ${field.errors?.['min']?.min}°C`;
+    if (field.hasError('max')) return `El valor máximo permitido es ${field.errors?.['max']?.max}°C`;
 
     return '';
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
 }

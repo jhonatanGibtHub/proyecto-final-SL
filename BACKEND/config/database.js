@@ -6,7 +6,7 @@ const pool = mysql.createPool({
     password:process.env.DB_PASSWORD || '123456',
     database:process.env.DB_NAME || 'proyecto_Final_SL',
     waitForConnections:true,
-    connectionLimit:10,
+    connectionLimit:100,
     queueLimit:0
 });
 

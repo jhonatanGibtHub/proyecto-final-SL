@@ -1,2 +1,5 @@
 npm install leaflet
-npm install @types/leaflet --save-dev
+    npm install @types/leaflet --save-dev
+
+npm install three
+    npm install --save-dev @types/three

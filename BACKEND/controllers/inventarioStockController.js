@@ -8,15 +8,14 @@ const obtenerInventarioStock = async (req, res) => {
         I.id_inventario, 
         I.id_ubicacion,
         V.nombre_comercial AS vacuna,
-        I.id_lote,
         U.nombre AS ubicacion,
         U.direccion AS direccion,
         I.cantidad_actual, 
         I.fecha_ultima_actualizacion
     FROM Inventario_Stock I
-    JOIN Lotes L ON I.id_lote = L.id_lote
-    JOIN Vacunas V ON L.id_vacuna = V.id_vacuna
+    JOIN Vacunas V ON I.id_vacuna = V.id_vacuna
     JOIN Ubicaciones U ON I.id_ubicacion = U.id_ubicacion
+    ORDER BY  U.nombre DESC
 `);
 
     res.json({
@@ -35,40 +34,26 @@ const obtenerInventarioStock = async (req, res) => {
 
 const crearInventarioStock = async (req, res) => {
   try {
-    const { id_lote, id_ubicacion, cantidad_actual } = req.body;
-
-    // Validación básica
-    if (
-      !id_lote ||
-      !id_ubicacion ||
-      cantidad_actual === undefined ||
-      cantidad_actual <= 0
-    ) {
-      return res.status(400).json({
-        success: false,
-        mensaje:
-          "Lote, ubicación y una cantidad positiva son obligatorios para el ingreso de stock.",
-      });
-    }
+    const { id_vacuna, id_ubicacion, cantidad_actual } = req.body;
 
     // Regla de Negocio: Evitar duplicados.
     // Un lote solo puede tener un registro de stock en una ubicación a la vez.
     const [stockExistente] = await db.query(
-      "SELECT * FROM Inventario_Stock WHERE id_lote = ? AND id_ubicacion = ?",
-      [id_lote, id_ubicacion]
+      "SELECT * FROM Inventario_Stock WHERE id_vacuna = ? AND id_ubicacion = ?",
+      [id_vacuna, id_ubicacion]
     );
 
     if (stockExistente.length > 0) {
       return res.status(409).json({
         success: false,
         mensaje:
-          "Ya existe un registro de stock para este lote en esta ubicación. Por favor, use la función de 'actualizar' para incrementar la cantidad.",
+          "Ya existe un registro de stock para este lote en esta ubicación. Por favor, use la función de 'actualizar'.",
       });
     }
 
     const [resultado] = await db.query(
-      "INSERT INTO Inventario_Stock (id_lote, id_ubicacion, cantidad_actual) VALUES (?, ?, ?)",
-      [id_lote, id_ubicacion, cantidad_actual]
+      "INSERT INTO Inventario_Stock (id_vacuna, id_ubicacion, cantidad_actual) VALUES (?, ?, ?)",
+      [id_vacuna, id_ubicacion, cantidad_actual]
     );
 
     res.status(201).json({
@@ -76,80 +61,16 @@ const crearInventarioStock = async (req, res) => {
       mensaje: "Stock de lote ingresado exitosamente",
       data: {
         id: resultado.insertId,
-        id_lote,
+        id_vacuna,
         id_ubicacion,
         cantidad_actual,
       },
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       mensaje: "Error al crear el registro de Stock",
-      error: error.message,
-    });
-  }
-};
-
-const actualizarInventarioStock = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { cantidad_actual } = req.body;
-
-    const [stockExistente] = await db.query(
-      "SELECT * FROM Inventario_Stock WHERE id_inventario = ?",
-      [id]
-    );
-    if (stockExistente.length === 0) {
-      return res.status(404).json({
-        success: false,
-        mensaje: "Registro de Stock no encontrado.",
-      });
-    }
-
-    if (
-      cantidad_actual === undefined ||
-      isNaN(cantidad_actual) ||
-      cantidad_actual < 0
-    ) {
-      return res.status(400).json({
-        success: false,
-        mensaje: "La cantidad actual debe ser un número positivo o cero.",
-      });
-    }
-
-    // No se permite incrementar la cantidad si esta ya existe en otro lado (manejo logístico).
-    // Solo se debería permitir decrementar (por consumo) o mover (a otra ubicación).
-    // Aquí permitimos la actualización directa, pero validamos que no sea excesiva.
-    if (
-      cantidad_actual > stockExistente[0].cantidad_actual &&
-      stockExistente[0].cantidad_actual > 0
-    ) {
-      // Este es un caso de RECEPCIÓN o DEVOLUCIÓN. Se recomienda usar una ruta específica
-      // para RECEPCIÓN para un mejor control. Aquí solo se valida la lógica.
-    }
-
-    const [resultado] = await db.query(
-      "UPDATE Inventario_Stock SET cantidad_actual=? WHERE id_inventario=?",
-      [cantidad_actual, id]
-    );
-
-    if (resultado.affectedRows === 0) {
-      return res.status(404).json({
-        success: false,
-        mensaje:
-          "Error al actualizar la cantidad de stock. Ningún registro afectado.",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      mensaje: "Stock actualizado exitosamente.",
-      data: { id, cantidad_actual },
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      mensaje: "Error al modificar el Stock",
       error: error.message,
     });
   }
@@ -172,14 +93,13 @@ const obtenerInventarioStockPorId = async (req, res) => {
       SELECT 
         I.id_inventario, 
         I.id_ubicacion,
+        I.id_vacuna,
         V.nombre_comercial AS vacuna,
-        I.id_lote,
         U.nombre AS ubicacion,
         I.cantidad_actual, 
         I.fecha_ultima_actualizacion
       FROM Inventario_Stock I
-      JOIN Lotes L ON I.id_lote = L.id_lote
-      JOIN Vacunas V ON L.id_vacuna = V.id_vacuna
+      JOIN Vacunas V ON I.id_vacuna = V.id_vacuna
       JOIN Ubicaciones U ON I.id_ubicacion = U.id_ubicacion
       WHERE I.id_inventario = ?
       `,
@@ -307,7 +227,6 @@ const actualizarCantidadInventario = async (req, res) => {
 module.exports = {
   obtenerInventarioStock,
   crearInventarioStock,
-  actualizarInventarioStock,
   obtenerInventarioStockPorId,
   eliminarInventarioStock,
   actualizarCantidadInventario,

@@ -3,7 +3,6 @@ const router = express.Router();
 const {
     obtenerInventarioStock,
     crearInventarioStock,
-    actualizarInventarioStock,
     obtenerInventarioStockPorId,
     eliminarInventarioStock,
     actualizarCantidadInventario
@@ -15,8 +14,6 @@ router.get('/', obtenerInventarioStock);
 router.get('/:id', obtenerInventarioStockPorId);
 
 router.post('/', crearInventarioStock);
-
-router.put('/:id', actualizarInventarioStock);
 
 router.put('/actualizarcantidad/:id', actualizarCantidadInventario);
 

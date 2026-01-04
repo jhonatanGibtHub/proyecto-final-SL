@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterLinkWithHref, RouterOutlet } from '@angular/router';
 import { UserMenuComponent } from '../../shared/user-menu/user-menu.component';
 import { AuthService } from '../../core/services/auth/auth.service';
+import { Back3Component } from "../../shared/back-3/back-3.component";
 
 @Component({
   selector: 'app-app-router',
@@ -12,8 +13,9 @@ import { AuthService } from '../../core/services/auth/auth.service';
     CommonModule,
     RouterLink,
     RouterLinkWithHref,
-    RouterLinkActive
-  ],
+    RouterLinkActive,
+    Back3Component
+],
   templateUrl: './app-router.component.html',
   styleUrl: './app-router.component.css'
 })
