@@ -34,7 +34,7 @@ CREATE TABLE `alertas_cadena_frio` (
   KEY `id_lote` (`id_lote`),
   CONSTRAINT `alertas_cadena_frio_ibfk_1` FOREIGN KEY (`id_medicion`) REFERENCES `mediciones_temp` (`id_medicion`),
   CONSTRAINT `alertas_cadena_frio_ibfk_2` FOREIGN KEY (`id_lote`) REFERENCES `lotes` (`id_lote`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,6 +43,7 @@ CREATE TABLE `alertas_cadena_frio` (
 
 LOCK TABLES `alertas_cadena_frio` WRITE;
 /*!40000 ALTER TABLE `alertas_cadena_frio` DISABLE KEYS */;
+INSERT INTO `alertas_cadena_frio` VALUES (8,12,6,'Estable','2026-01-09 20:54:36','Resuelta'),(9,3,1,'Estable','2026-01-09 21:16:38','Resuelta'),(10,4,2,'Estable','2026-01-09 21:30:27','Resuelta');
 /*!40000 ALTER TABLE `alertas_cadena_frio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -64,7 +65,7 @@ CREATE TABLE `inventario_stock` (
   KEY `inventario_stock_ibfk_1_idx` (`id_vacuna`),
   CONSTRAINT `inventario_stock_ibfk_1` FOREIGN KEY (`id_vacuna`) REFERENCES `vacunas` (`id_vacuna`),
   CONSTRAINT `inventario_stock_ibfk_2` FOREIGN KEY (`id_ubicacion`) REFERENCES `ubicaciones` (`id_ubicacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,7 +74,7 @@ CREATE TABLE `inventario_stock` (
 
 LOCK TABLES `inventario_stock` WRITE;
 /*!40000 ALTER TABLE `inventario_stock` DISABLE KEYS */;
-INSERT INTO `inventario_stock` VALUES (8,1,20,100,'2026-01-04 02:43:04'),(11,2,20,300,'2026-01-04 02:43:04'),(12,27,20,500,'2026-01-04 02:48:18'),(13,1,24,500,'2026-01-04 05:27:44');
+INSERT INTO `inventario_stock` VALUES (8,1,20,100,'2026-01-04 07:43:04'),(11,2,20,300,'2026-01-04 07:43:04'),(12,27,20,500,'2026-01-04 07:48:18'),(13,1,24,500,'2026-01-04 10:27:44'),(14,1,25,4200,'2026-01-09 20:55:42');
 /*!40000 ALTER TABLE `inventario_stock` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -93,7 +94,7 @@ CREATE TABLE `lotes` (
   PRIMARY KEY (`id_lote`),
   KEY `id_vacuna` (`id_vacuna`),
   CONSTRAINT `lotes_ibfk_1` FOREIGN KEY (`id_vacuna`) REFERENCES `vacunas` (`id_vacuna`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,7 +103,7 @@ CREATE TABLE `lotes` (
 
 LOCK TABLES `lotes` WRITE;
 /*!40000 ALTER TABLE `lotes` DISABLE KEYS */;
-INSERT INTO `lotes` VALUES (1,1,'2025-10-01','2026-04-01',700),(2,2,'2025-11-20','2026-11-20',400),(3,2,'2026-01-03','2026-01-10',0),(4,1,'2026-01-14','2026-01-31',0),(5,1,'2026-01-08','2026-01-23',0),(6,1,'2026-01-03','2026-01-23',4000),(7,30,'2026-01-04','2026-01-14',400);
+INSERT INTO `lotes` VALUES (1,1,'2025-10-01','2026-04-01',700),(2,2,'2025-11-20','2026-11-20',400),(3,2,'2026-01-03','2026-01-10',0),(4,1,'2026-01-14','2026-01-31',0),(5,1,'2026-01-08','2026-01-23',0),(6,1,'2026-01-03','2026-01-23',0),(7,30,'2026-01-04','2026-01-14',400),(8,28,'2026-01-05','2026-01-16',1212),(9,1,'2026-01-01','2026-01-09',500);
 /*!40000 ALTER TABLE `lotes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,7 +125,7 @@ CREATE TABLE `mediciones_temp` (
   KEY `id_lote` (`id_lote`),
   CONSTRAINT `mediciones_temp_ibfk_1` FOREIGN KEY (`id_sensor`) REFERENCES `sensores_temp` (`id_sensor`),
   CONSTRAINT `mediciones_temp_ibfk_2` FOREIGN KEY (`id_lote`) REFERENCES `lotes` (`id_lote`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,7 +134,7 @@ CREATE TABLE `mediciones_temp` (
 
 LOCK TABLES `mediciones_temp` WRITE;
 /*!40000 ALTER TABLE `mediciones_temp` DISABLE KEYS */;
-INSERT INTO `mediciones_temp` VALUES (3,1,1,16.42,'2025-12-12 09:25:07'),(4,1,2,-21.06,'2025-12-27 01:37:34'),(11,1,5,4.64,'2026-01-04 03:28:53'),(12,1,6,38.48,'2026-01-04 05:41:28');
+INSERT INTO `mediciones_temp` VALUES (3,1,1,21.38,'2025-12-12 14:25:07'),(4,1,2,-24.45,'2025-12-27 06:37:34'),(11,1,5,4.64,'2026-01-04 08:28:53'),(12,1,6,39.80,'2026-01-04 10:41:28'),(13,2,7,23.00,'2026-01-09 18:53:09');
 /*!40000 ALTER TABLE `mediciones_temp` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -152,6 +153,7 @@ CREATE TABLE `registro_movimiento` (
   `id_transportista` int DEFAULT NULL,
   `fecha_envio` datetime DEFAULT CURRENT_TIMESTAMP,
   `fecha_recepcion` datetime DEFAULT NULL,
+  `estado` enum('ACTIVO','ANULADO','COMPLETADO') NOT NULL DEFAULT 'ACTIVO',
   PRIMARY KEY (`id_movimiento`),
   KEY `id_lote` (`id_lote`),
   KEY `ubicacion_origen` (`ubicacion_origen`),
@@ -161,7 +163,7 @@ CREATE TABLE `registro_movimiento` (
   CONSTRAINT `registro_movimiento_ibfk_2` FOREIGN KEY (`ubicacion_origen`) REFERENCES `ubicaciones` (`id_ubicacion`),
   CONSTRAINT `registro_movimiento_ibfk_3` FOREIGN KEY (`ubicacion_destino`) REFERENCES `ubicaciones` (`id_ubicacion`),
   CONSTRAINT `registro_movimiento_ibfk_4` FOREIGN KEY (`id_transportista`) REFERENCES `transportistas` (`id_transportista`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -170,7 +172,7 @@ CREATE TABLE `registro_movimiento` (
 
 LOCK TABLES `registro_movimiento` WRITE;
 /*!40000 ALTER TABLE `registro_movimiento` DISABLE KEYS */;
-INSERT INTO `registro_movimiento` VALUES (30,7,17,24,11,'2026-01-07 01:40:04',NULL);
+INSERT INTO `registro_movimiento` VALUES (30,7,17,24,11,'2026-01-07 01:40:04',NULL,'ANULADO'),(31,8,22,25,1,'2026-01-09 14:15:25','2026-01-09 14:53:20','COMPLETADO'),(32,6,22,25,12,'2026-01-09 15:54:27','2026-01-09 15:55:43','COMPLETADO'),(33,1,17,24,1,'2026-01-08 16:16:24',NULL,'ACTIVO'),(34,2,22,20,1,'2026-01-09 16:17:22',NULL,'ACTIVO');
 /*!40000 ALTER TABLE `registro_movimiento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -190,7 +192,7 @@ CREATE TABLE `sensores_temp` (
   UNIQUE KEY `codigo_serie` (`codigo_serie`),
   KEY `id_ubicacion_actual` (`id_ubicacion_actual`),
   CONSTRAINT `sensores_temp_ibfk_1` FOREIGN KEY (`id_ubicacion_actual`) REFERENCES `ubicaciones` (`id_ubicacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -217,7 +219,7 @@ CREATE TABLE `transportistas` (
   `telefono` varchar(20) DEFAULT NULL,
   `tipo_vehiculo` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_transportista`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -249,7 +251,7 @@ CREATE TABLE `ubicaciones` (
   `region` varchar(100) DEFAULT NULL,
   `ciudad` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_ubicacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -258,7 +260,7 @@ CREATE TABLE `ubicaciones` (
 
 LOCK TABLES `ubicaciones` WRITE;
 /*!40000 ALTER TABLE `ubicaciones` DISABLE KEYS */;
-INSERT INTO `ubicaciones` VALUES (17,'Almacén Nacional','Distribuidor',NULL,'Lima Metropolitana','Avenida Abancay 500',-12.0507188,-77.0279288,'Lima','Lima'),(20,'Inkafarma Pucallpa','Centro de Salud','Fray Martín','Ucayali','Av. Bellavista 775',-8.3851351,-74.5481689,'Ucayali','Pucallpa'),(22,'Lima central botica','Distribuidor','Surquillo','Lima Metropolitana','Av. Manuel Villarán 1199',-12.1200903,-76.9986136,'Lima','Lima'),(24,'Hospital Cusco','Hospital Pediátrico','Cusco','Cusco','Av. Micaela Bastidas 637',-12.5245047,-73.8210370,'Cusco','Cusco');
+INSERT INTO `ubicaciones` VALUES (17,'Almacén Nacional','Distribuidor',NULL,'Lima Metropolitana','Avenida Abancay 500',-12.0507188,-77.0279288,'Lima','Lima'),(20,'Inkafarma Pucallpa','Centro de Salud','Fray Martín','Ucayali','Av. Bellavista 775',-8.3851351,-74.5481689,'Ucayali','Pucallpa'),(22,'Lima central botica','Distribuidor','Surquillo','Lima Metropolitana','Av. Manuel Villarán 1199',-12.1200903,-76.9986136,'Lima','Lima'),(24,'Hospital Cusco','Hospital Pediátrico','Cusco','Cusco','Av. Micaela Bastidas 637',-12.5245047,-73.8210370,'Cusco','Cusco'),(25,'Botica Santa Maria','Centro de Salud','Zapallal','Lima Metropolitana','Calle Santa María',-11.8434794,-77.0974713,'Lima','Lima'),(26,'Plaza Vea ','Laboratorio Clínico','Independencia','Lima Metropolitana','Independencia 15311',-11.9919461,-77.0503721,'Lima','Lima'),(27,'Iglesia de Lima','Centro de Rehabilitación','San Juan de Miraflores','Lima Metropolitana','Av. Víctor Castro Iglesias 297',-12.1702638,-76.9609322,'Lima','Lima');
 /*!40000 ALTER TABLE `ubicaciones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -281,7 +283,7 @@ CREATE TABLE `usuarios` (
   `fecha_registro` timestamp NULL DEFAULT NULL,
   `ultima_conexion` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -290,7 +292,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (29,'Ricardo Yanhua',NULL,'ricardoyanhua@gmail.com','$2b$10$GPQIdsGDJaaoNVxZk8SoB.Kke8uvEY5XJ4hiUEPV0yAOGhz5P6kLy',0,'admin',1,NULL,'2026-01-04 07:04:49');
+INSERT INTO `usuarios` VALUES (30,'Jhonatan Jumpa',NULL,'jhonatan@gmail.com','$2b$10$GPQIdsGDJaaoNVxZk8SoB.Kke8uvEY5XJ4hiUEPV0yAOGhz5P6kLy',0,'admin',1,NULL,'2026-01-04 12:04:49'),(31,'jhonatan',NULL,'jhonatancito0015@gmail.com','$2b$10$1I8J0oPu.Nnd0nLGSv70nOtoAqPg7qObC3FLUf2reQTGg/Sy8srMK',0,'usuario',1,NULL,'2026-01-08 06:24:20'),(32,'Ricardo',NULL,'ricardoyanhua@gmail.com','$2b$10$C06kMEkq1WmSogJqj82F8OQu2hdOEqSqCPbSTAlafKLj6PkKaU9tO',0,'admin',1,NULL,'2026-01-09 21:46:58');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -308,7 +310,7 @@ CREATE TABLE `vacunas` (
   `temp_min_c` decimal(4,2) NOT NULL,
   `temp_max_c` decimal(4,2) NOT NULL,
   PRIMARY KEY (`id_vacuna`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -317,7 +319,7 @@ CREATE TABLE `vacunas` (
 
 LOCK TABLES `vacunas` WRITE;
 /*!40000 ALTER TABLE `vacunas` DISABLE KEYS */;
-INSERT INTO `vacunas` VALUES (1,'Bio-R COV','Globopharm',-46.00,89.00),(2,'Flu-Vax Plus','VaxCorp',-79.00,54.00),(27,'Hepatitis B','GlaxoSmithKline (Engerix-B)',-50.00,63.00),(28,'MMR','GlaxoSmithKline',-50.00,50.00),(29,'Polio (IPV)','Sanofi Pasteur',-50.00,52.00),(30,'Rotavirus','Merck',-50.00,50.00),(31,'Influenza','Sanofi Pasteur',-50.00,50.00);
+INSERT INTO `vacunas` VALUES (1,'Bio-R COV','Globopharm',-46.00,89.00),(2,'Flu-Vax Plus','VaxCorp',-79.00,54.00),(27,'Hepatitis B','GlaxoSmithKline (Engerix-B)',-50.00,63.00),(28,'MMR','GlaxoSmithKline',-50.00,50.00),(29,'Polio (IPV)','Sanofi Pasteur',-50.00,52.00),(30,'Rotavirus','Merck',-50.00,-10.00),(31,'Influenza','Sanofi Pasteur',-86.00,-50.00);
 /*!40000 ALTER TABLE `vacunas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -334,4 +336,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-04  2:08:49
+-- Dump completed on 2026-01-09 17:40:13
