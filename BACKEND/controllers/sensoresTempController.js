@@ -3,7 +3,7 @@ const db = require('../config/database');
 
 const obtenerSensores = async (req, res) => {
     try {
-        //JOIN con Ubicaciones
+       
         const [sensores] = await db.query(`
             SELECT 
                 ST.id_sensor, 
@@ -69,13 +69,13 @@ const crearSensor = async (req, res) => {
     try {
         const { codigo_serie, id_ubicacion_actual, ultima_calibracion } = req.body;
 
-        // Formatear la fecha si es necesaria
+       
         let fechaCalibracion = ultima_calibracion;
         if (ultima_calibracion && typeof ultima_calibracion === 'string') {
-            // Si viene como string, intentar parsear
+            
             const date = new Date(ultima_calibracion);
             if (!isNaN(date.getTime())) {
-                fechaCalibracion = date.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+                fechaCalibracion = date.toISOString().split('T')[0]; 
             }
         } else if (ultima_calibracion instanceof Date) {
             fechaCalibracion = ultima_calibracion.toISOString().split('T')[0];
@@ -98,7 +98,7 @@ const crearSensor = async (req, res) => {
         });
 
     } catch (error) {
-        // Error por código_serie duplicado
+   
         if (error.code === 'ER_DUP_ENTRY') {
             return res.status(409).json({ 
                 success: false,
@@ -119,19 +119,19 @@ const actualizarSensor = async (req, res) => {
         const { id } = req.params; 
         const { id_ubicacion_actual, ultima_calibracion } = req.body;
 
-        // Formatear la fecha si es necesaria
+       
         let fechaCalibracion = ultima_calibracion;
         if (ultima_calibracion && typeof ultima_calibracion === 'string') {
-            // Si viene como string, intentar parsear
+           
             const date = new Date(ultima_calibracion);
             if (!isNaN(date.getTime())) {
-                fechaCalibracion = date.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+                fechaCalibracion = date.toISOString().split('T')[0]; 
             }
         } else if (ultima_calibracion instanceof Date) {
             fechaCalibracion = ultima_calibracion.toISOString().split('T')[0];
         }
 
-        // 1. Verificar existencia
+        
         const [sensorExistente] = await db.query('SELECT * FROM Sensores_Temp WHERE id_sensor = ?', [id]);
         if (sensorExistente.length === 0) {
             return res.status(404).json({

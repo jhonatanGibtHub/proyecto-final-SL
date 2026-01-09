@@ -2,7 +2,7 @@ const db = require("../config/database");
 
 const obtenerInventarioStock = async (req, res) => {
   try {
-    // JOIN con Lotes y Ubicaciones
+    
     const [inventario] = await db.query(`
     SELECT 
         I.id_inventario, 
@@ -36,8 +36,7 @@ const crearInventarioStock = async (req, res) => {
   try {
     const { id_vacuna, id_ubicacion, cantidad_actual } = req.body;
 
-    // Regla de Negocio: Evitar duplicados.
-    // Un lote solo puede tener un registro de stock en una ubicación a la vez.
+   
     const [stockExistente] = await db.query(
       "SELECT * FROM Inventario_Stock WHERE id_vacuna = ? AND id_ubicacion = ?",
       [id_vacuna, id_ubicacion]
@@ -80,7 +79,7 @@ const obtenerInventarioStockPorId = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Validación básica del parámetro
+   
     if (!id || isNaN(id)) {
       return res.status(400).json({
         success: false,
@@ -160,7 +159,7 @@ const actualizarCantidadInventario = async (req, res) => {
     const { id } = req.params;
     const { cantidad_a_sumar } = req.body;
 
-    // 🔹 Validar ID
+   
     if (!id || isNaN(id)) {
       return res.status(400).json({
         success: false,
@@ -168,7 +167,7 @@ const actualizarCantidadInventario = async (req, res) => {
       });
     }
 
-    // 🔹 Validar cantidad a sumar
+   
     if (cantidad_a_sumar === undefined || isNaN(cantidad_a_sumar)) {
       return res.status(400).json({
         success: false,
@@ -176,7 +175,7 @@ const actualizarCantidadInventario = async (req, res) => {
       });
     }
 
-    // 🔹 Verificar existencia
+   
     const [inventario] = await db.query(
       "SELECT cantidad_actual FROM Inventario_Stock WHERE id_inventario = ?",
       [id]
@@ -189,7 +188,7 @@ const actualizarCantidadInventario = async (req, res) => {
       });
     }
 
-    // 🔹 Sumar cantidad existente + nueva
+   
     await db.query(
       `
       UPDATE Inventario_Stock

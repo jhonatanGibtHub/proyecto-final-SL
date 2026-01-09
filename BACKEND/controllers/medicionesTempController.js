@@ -68,14 +68,14 @@ const crearMedicion = async (req, res) => {
         if (rangos.length > 0) {
             const { temp_min_c, temp_max_c } = rangos[0];
             
-            // Lógica de verificación
+            
             if (temperatura_c > temp_max_c) {
                 tipo_alerta = 'Máx. Excedida';
             } else if (temperatura_c < temp_min_c) {
                 tipo_alerta = 'Mín. Violada';
             }
             
-            // Alerta
+        
             if (tipo_alerta) {
                 await crearAlertaInterna({
                     id_medicion: id_medicion_nueva,
@@ -177,7 +177,7 @@ const actualizarTemperatura = async (req, res) => {
     try {
         const { id } = req.params;
         const { temperatura_c } = req.body;
-        // Validación
+       
         if (temperatura_c === undefined || isNaN(temperatura_c)) {
             return res.status(400).json({
                 success: false,

@@ -84,10 +84,10 @@ const crearUbicacion = async (req, res) => {
       return r.data?.length ? r.data[0] : null;
     };
 
-    // 🔹 1. Buscar usando el texto enviado (ciudad/distrito/provincia)
+   
     let place = await buscar(`${direccion}, ${ubicacionTexto}, Perú`);
 
-    // 🔹 2. Fallback: solo dirección
+    
     if (!place) {
       place = await buscar(`${direccion}, Perú`);
     }
@@ -101,7 +101,7 @@ const crearUbicacion = async (req, res) => {
 
     const address = place.address || {};
 
-    // 📌 Extracción automática REAL para Perú
+   
     const distrito =
       address.city_district ||
       address.suburb ||
@@ -252,7 +252,7 @@ const eliminarUbicacion = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // 1. Verificar existencia
+   
     const [ubicacionExistente] = await db.query(
       "SELECT * FROM Ubicaciones WHERE id_ubicacion = ?",
       [id]
@@ -271,10 +271,10 @@ const eliminarUbicacion = async (req, res) => {
       mensaje: "Ubicación eliminada exitosamente.",
     });
   } catch (error) {
-    // Regla de Borrado
+  
     if (error.code === "ER_ROW_IS_REFERENCED_2") {
       return res.status(409).json({
-        // 409 Conflict
+        
         success: false,
 
         mensaje:

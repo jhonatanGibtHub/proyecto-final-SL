@@ -61,7 +61,7 @@ const actualizarVacunas = async (req, res) => {
             });
         }
         
-        //  Validación de rangos de temperatura**
+      
         if (isNaN(temp_min_c) || isNaN(temp_max_c) || temp_min_c >= temp_max_c) {
             return res.status(400).json({
                 success: false,
@@ -101,7 +101,7 @@ const eliminarVacunas = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // 1. Verificar existencia
+        
         const [VacunasExistente] = await db.query('SELECT * FROM vacunas WHERE id_vacuna= ?', [id]);
         if (VacunasExistente.length === 0) {
             return res.status(404).json({
@@ -110,7 +110,7 @@ const eliminarVacunas = async (req, res) => {
             });
         }
 
-        // 2. Ejecutar eliminación
+        
         await db.query(
             'DELETE FROM vacunas where id_vacuna=?',
             [id]
@@ -122,7 +122,7 @@ const eliminarVacunas = async (req, res) => {
         });
 
     } catch (error) {
-        //  Manejo de error de Llave Foránea**
+       
         if (error.code === 'ER_ROW_IS_REFERENCED_2') {
              return res.status(409).json({ 
                  success: false,
@@ -143,22 +143,22 @@ const obtenerVacunaPorId = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Búsqueda en la base de datos por id_vacuna
+        
         const [Vacuna] = await db.query('SELECT * FROM vacunas WHERE id_vacuna = ?', [id]);
 
         if (Vacuna.length === 0) {
-            // Si no se encuentra la vacuna, retornar 404
+          
             return res.status(404).json({
                 success: false,
                 mensaje: "Vacuna no encontrada"
             });
         }
 
-        // Si se encuentra, retornar el objeto único (no el array)
+       
         res.status(200).json({
             success: true,
             mensaje: "Vacuna obtenida exitosamente",
-            data: Vacuna[0] // Retorna el primer y único elemento del array
+            data: Vacuna[0] 
         });
 
     } catch (error) {

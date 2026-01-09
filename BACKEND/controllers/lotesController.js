@@ -192,7 +192,7 @@ const actualizarLote = async (req, res) => {
         const { id } = req.params;
         const { id_vacuna, fecha_fabricacion, fecha_caducidad, cantidad_inicial_unidades } = req.body;
 
-        // Verificar existencia
+        
         const [loteExistente] = await db.query('SELECT * FROM Lotes WHERE id_lote = ?', [id]);
         if (loteExistente.length === 0) {
             return res.status(404).json({
@@ -201,7 +201,7 @@ const actualizarLote = async (req, res) => {
             });
         }
 
-        // Validaciones
+        
         if (fecha_fabricacion && fecha_caducidad) {
             const fab = new Date(fecha_fabricacion);
             const cad = new Date(fecha_caducidad);
@@ -270,7 +270,7 @@ const actualizarCantidadInicialLote = async (req, res) => {
     const { id } = req.params;
     const { cantidad_inicial_unidades } = req.body;
 
-    // Validación básica
+    
     if (cantidad_inicial_unidades === undefined || cantidad_inicial_unidades < 0) {
       return res.status(400).json({
         success: false,
@@ -278,7 +278,7 @@ const actualizarCantidadInicialLote = async (req, res) => {
       });
     }
 
-    // Verificar que el lote exista
+    
     const [loteExistente] = await db.query(
       'SELECT id_lote FROM Lotes WHERE id_lote = ?',
       [id]
@@ -291,7 +291,7 @@ const actualizarCantidadInicialLote = async (req, res) => {
       });
     }
 
-    // Actualizar solo la cantidad
+
     const [resultado] = await db.query(
       'UPDATE Lotes SET cantidad_inicial_unidades = ? WHERE id_lote = ?',
       [cantidad_inicial_unidades, id]

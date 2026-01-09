@@ -1,13 +1,9 @@
 const jwt = require('jsonwebtoken');
-
-/**
- * Middleware para verificar el token JWT
- */
 const verificarToken = (req, res, next) => {
     try {
-        // Obtener token del header
+        
         const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+        const token = authHeader && authHeader.split(' ')[1];
 
         if (!token) {
             return res.status(401).json({
@@ -16,10 +12,10 @@ const verificarToken = (req, res, next) => {
             });
         }
 
-        // Verificar token
+        
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         
-        // Agregar información del usuario a la request
+        
         req.usuario = decoded;
         
         next();
@@ -46,9 +42,7 @@ const verificarToken = (req, res, next) => {
     }
 };
 
-/**
- * Middleware para verificar rol de administrador
- */
+
 const verificarAdmin = (req, res, next) => {
     if (req.usuario.rol !== 'admin') {
         return res.status(403).json({

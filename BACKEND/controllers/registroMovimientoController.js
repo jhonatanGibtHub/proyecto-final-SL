@@ -117,9 +117,12 @@ const eliminarMovimiento = async (req, res) => {
   try {
     const { id } = req.params;
     const [resultado] = await db.query(
-      "DELETE FROM Registro_Movimiento WHERE id_movimiento = ?",
-      [id]
-    );
+  `UPDATE Registro_Movimiento 
+   SET estado = 'ANULADO' 
+   WHERE id_movimiento = ? AND estado = 'ACTIVO'`,
+  [id]
+);
+
 
     if (resultado.affectedRows === 0) {
       return res.status(404).json({
@@ -248,7 +251,7 @@ const marcarRecepcionAutomatica = async (req, res) => {
       });
     }
 
-    // Si ya tiene fecha de recepción, no hacer nada
+    
     if (movimientoExistente[0].fecha_recepcion !== null) {
       return res.status(400).json({
         success: false,
@@ -256,7 +259,7 @@ const marcarRecepcionAutomatica = async (req, res) => {
       });
     }
 
-    // Actualizar fecha_recepcion con la fecha/hora actual
+    
     const fechaActual = new Date();
     const [resultado] = await db.query(
       "UPDATE Registro_Movimiento SET fecha_recepcion = ? WHERE id_movimiento = ?",

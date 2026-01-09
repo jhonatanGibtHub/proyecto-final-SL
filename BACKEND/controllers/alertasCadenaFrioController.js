@@ -21,7 +21,7 @@ const actualizarOCrearAlerta = async (req, res) => {
   const { id_medicion, id_lote, tipo_alerta, estado } = req.body;
   try {
 
-    // Revisar si ya existe una alerta para este lote y tipo
+    
     const [alertaExistente] = await db.query(
       `SELECT * FROM Alertas_Cadena_Frio 
              WHERE id_lote = ?`,
@@ -29,14 +29,14 @@ const actualizarOCrearAlerta = async (req, res) => {
     );
 
     if (alertaExistente.length === 0) {
-      // No existe, crear una nueva alerta
+      
       await db.query(
         `INSERT INTO Alertas_Cadena_Frio (id_medicion, id_lote, tipo_alerta, estado)
                  VALUES (?, ?, ?, ?)`,
         [id_medicion, id_lote, tipo_alerta, estado]
       );
     } else {
-      // Existe, actualizar solo el estado
+    
       const id_alerta = alertaExistente[0].id_alerta;
       await db.query(
         `UPDATE Alertas_Cadena_Frio 
@@ -65,7 +65,7 @@ const obtenerAlertas = async (req, res) => {
             JOIN Mediciones_Temp MT ON A.id_medicion = MT.id_medicion
             JOIN Lotes L ON A.id_lote = L.id_lote
             JOIN Vacunas V ON L.id_vacuna = V.id_vacuna
-            ORDER BY A.fecha_alerta DESC
+            
         `);
 
     res.json({

@@ -64,7 +64,7 @@ const actualizarTransportista = async (req, res) => {
             });
         }
 
-        // Validación
+       
         const tiposValidos = ['Camión Refrigerado', 'Avión', 'Furgoneta'];
         if (tipo_vehiculo && !tiposValidos.includes(tipo_vehiculo)) {
             return res.status(400).json({
@@ -99,7 +99,7 @@ const eliminarTransportista = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // 1. Verificar existencia
+        
         const [transportistaExistente] = await db.query('SELECT * FROM Transportistas WHERE id_transportista = ?', [id]);
         if (transportistaExistente.length === 0) {
             return res.status(404).json({
@@ -108,7 +108,7 @@ const eliminarTransportista = async (req, res) => {
             });
         }
 
-        //Manejo de la restricción de Llave Foránea
+       
         await db.query(
             'DELETE FROM Transportistas WHERE id_transportista=?',
             [id]
@@ -120,7 +120,7 @@ const eliminarTransportista = async (req, res) => {
         });
 
     } catch (error) {
-        // (Regla de Borrado)
+    
         if (error.code === 'ER_ROW_IS_REFERENCED_2') {
              return res.status(409).json({
                  success: false,

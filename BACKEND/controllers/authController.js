@@ -2,16 +2,13 @@ const db = require("../config/database");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-/**
- * Registrar nuevo usuario
- * POST /api/auth/registro
- */
+
 const registrarUsuario = async (req, res) => {
   try {
     const { nombre, email, password, rol, is_google_account, picture } =
       req.body;
 
-    // Verificar si el email ya existe
+    
     if (!is_google_account) {
       const [USUARIO_EXISTE] = await db.query(
         "SELECT * FROM usuarios WHERE email = ? AND is_google_account = 0",
@@ -27,7 +24,7 @@ const registrarUsuario = async (req, res) => {
       }
     }
 
-    // Hashear password
+  
     const salt = await bcrypt.genSalt(
       parseInt(process.env.BCRYPT_ROUNDS) || 10
     );
@@ -69,15 +66,12 @@ const registrarUsuario = async (req, res) => {
   }
 };
 
-/**
- * Iniciar sesión
- * POST /api/auth/login
- */
+
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validar campos
+    
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -85,7 +79,7 @@ const login = async (req, res) => {
       });
     }
 
-    // Buscar usuario
+    
     const [usuarios] = await db.query(
       "SELECT * FROM usuarios WHERE email = ? AND activo = 1 AND is_google_account = 0",
       [email]
@@ -100,7 +94,7 @@ const login = async (req, res) => {
 
     const usuario = usuarios[0];
 
-    // Verificar password
+   
     const passwordValido = await bcrypt.compare(password, usuario.password);
 
     if (!passwordValido) {
@@ -110,13 +104,13 @@ const login = async (req, res) => {
       });
     }
 
-    // Actualizar última conexión
+   
     await db.query(
       "UPDATE usuarios SET ultima_conexion = CURRENT_TIMESTAMP WHERE id = ?",
       [usuario.id]
     );
 
-    // Generar token JWT
+   
     const token = jwt.sign(
       {
         id: usuario.id,
@@ -151,9 +145,7 @@ const login = async (req, res) => {
   }
 };
 
-/**
- * Generar contraseña para una cuenta google
- */
+
 async function generarContraseña() {
   const length = 20;
   const charset =
@@ -171,10 +163,7 @@ async function generarContraseña() {
   return passwordHash;
 }
 
-/**
- * Login con Google
- * POST /api/auth/google
- */
+
 const loginGoogle = async (req, res) => {
   try {
     const { idToken } = req.body;
@@ -197,7 +186,7 @@ const loginGoogle = async (req, res) => {
 
     const { email, name, picture } = decoded;
 
-    // Buscar usuario Google activo
+   
     const [usuarios] = await db.query(
       `SELECT * FROM usuarios 
        WHERE email = ? 
@@ -209,7 +198,7 @@ const loginGoogle = async (req, res) => {
     let usuario;
 
     if (usuarios.length === 0) {
-      // Crear usuario Google
+      
       const passwordHash = await generarContraseña();
       const [result] = await db.query(
         `INSERT INTO usuarios 
@@ -225,7 +214,7 @@ const loginGoogle = async (req, res) => {
         ]
       );
 
-      // Obtener usuario recién creado
+      
       const [nuevoUsuario] = await db.query(
         "SELECT * FROM usuarios WHERE id = ?",
         [result.insertId]
@@ -236,7 +225,7 @@ const loginGoogle = async (req, res) => {
       usuario = usuarios[0];
     }
 
-    // Generar JWT propio
+
     const token = jwt.sign(
       {
         id: usuario.id,
@@ -250,7 +239,7 @@ const loginGoogle = async (req, res) => {
       { expiresIn: "24h" }
     );
 
-    // Actualizar última conexión
+   
     await db.query(
       "UPDATE usuarios SET ultima_conexion = CURRENT_TIMESTAMP WHERE id = ?",
       [usuario.id]
@@ -280,10 +269,7 @@ const loginGoogle = async (req, res) => {
 };
 
 
-/**
- * Obtener perfil del usuario autenticado
- * GET /api/auth/perfil
- */
+
 const obtenerPerfil = async (req, res) => {
   try {
     const [usuarios] = await db.query(
@@ -312,10 +298,7 @@ const obtenerPerfil = async (req, res) => {
   }
 };
 
-/**
- * Obtener todos los usuarios (solo admin)
- * GET /api/auth/usuarios
- */
+
 const obtenerUsuarios = async (req, res) => {
   try {
     const [usuarios] = await db.query(
@@ -336,15 +319,12 @@ const obtenerUsuarios = async (req, res) => {
   }
 };
 
-/**
- * Deshabilitar/Habilitar usuario (solo admin)
- * PUT /api/auth/usuarios/:id/toggle-activo
- */
+
 const toggleActivoUsuario = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Obtener estado actual
+   
     const [usuarios] = await db.query("SELECT activo FROM usuarios WHERE id = ?", [id]);
     if (usuarios.length === 0) {
       return res.status(404).json({
@@ -355,7 +335,7 @@ const toggleActivoUsuario = async (req, res) => {
 
     const nuevoEstado = !usuarios[0].activo;
 
-    // Actualizar estado
+   
     await db.query("UPDATE usuarios SET activo = ? WHERE id = ?", [nuevoEstado, id]);
 
     res.json({
@@ -372,10 +352,7 @@ const toggleActivoUsuario = async (req, res) => {
   }
 };
 
-/**
- * Cambiar rol de usuario (solo admin)
- * PUT /api/auth/usuarios/:id/rol
- */
+
 const cambiarRolUsuario = async (req, res) => {
   try {
     const { id } = req.params;
@@ -388,7 +365,7 @@ const cambiarRolUsuario = async (req, res) => {
       });
     }
 
-    // Verificar que no sea el último admin
+    
     if (rol === 'usuario') {
       const [admins] = await db.query("SELECT COUNT(*) as count FROM usuarios WHERE rol = 'admin' AND activo = 1");
       if (admins[0].count <= 1) {
