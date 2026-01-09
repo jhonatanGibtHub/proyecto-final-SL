@@ -2,8 +2,7 @@ const db = require("../config/database");
 
 const obtenerInventarioStock = async (req, res) => {
   try {
-    
-    const [inventario] = await db.query(`
+    const [Inventarios] = await db.query(`
     SELECT 
         I.id_inventario, 
         I.id_ubicacion,
@@ -20,23 +19,33 @@ const obtenerInventarioStock = async (req, res) => {
 
     res.json({
       success: true,
-      count: inventario.length,
-      data: inventario,
+      count: Inventarios.length,
+      data: Inventarios,
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
-      mensaje: "Error al obtener el Inventario de Stock",
+      mensaje: "Error al obtener Los Inventarios",
       error: error.message,
     });
   }
+};
+
+const existeInventarioPorId = async (id) => {
+  const [result] = await db.query(
+    "SELECT id_inventario FROM Inventario_Stock WHERE id_inventario = ?",
+    [id]
+  );
+
+  return result.length > 0;
 };
 
 const crearInventarioStock = async (req, res) => {
   try {
     const { id_vacuna, id_ubicacion, cantidad_actual } = req.body;
 
-   
     const [stockExistente] = await db.query(
       "SELECT * FROM Inventario_Stock WHERE id_vacuna = ? AND id_ubicacion = ?",
       [id_vacuna, id_ubicacion]
@@ -50,16 +59,16 @@ const crearInventarioStock = async (req, res) => {
       });
     }
 
-    const [resultado] = await db.query(
+    const [inventarioCreado] = await db.query(
       "INSERT INTO Inventario_Stock (id_vacuna, id_ubicacion, cantidad_actual) VALUES (?, ?, ?)",
       [id_vacuna, id_ubicacion, cantidad_actual]
     );
 
     res.status(201).json({
       success: true,
-      mensaje: "Stock de lote ingresado exitosamente",
+      mensaje: "Nuevo inventario creado exitosamente",
       data: {
-        id: resultado.insertId,
+        id: inventarioCreado.insertId,
         id_vacuna,
         id_ubicacion,
         cantidad_actual,
@@ -67,9 +76,10 @@ const crearInventarioStock = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+
     res.status(500).json({
       success: false,
-      mensaje: "Error al crear el registro de Stock",
+      mensaje: "Error al crear  un nuevo inventario",
       error: error.message,
     });
   }
@@ -79,11 +89,11 @@ const obtenerInventarioStockPorId = async (req, res) => {
   try {
     const { id } = req.params;
 
-   
-    if (!id || isNaN(id)) {
-      return res.status(400).json({
+    const inventarioExiste = await existeInventarioPorId(id);
+    if (!inventarioExiste) {
+      return res.status(404).json({
         success: false,
-        mensaje: "El ID del inventario es inválido.",
+        mensaje: "Inventario no encontrado",
       });
     }
 
@@ -93,6 +103,7 @@ const obtenerInventarioStockPorId = async (req, res) => {
         I.id_inventario, 
         I.id_ubicacion,
         I.id_vacuna,
+
         V.nombre_comercial AS vacuna,
         U.nombre AS ubicacion,
         I.cantidad_actual, 
@@ -105,18 +116,13 @@ const obtenerInventarioStockPorId = async (req, res) => {
       [id]
     );
 
-    if (inventario.length === 0) {
-      return res.status(404).json({
-        success: false,
-        mensaje: "Registro de inventario no encontrado.",
-      });
-    }
-
     res.status(200).json({
       success: true,
       data: inventario[0],
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       mensaje: "Error al obtener el inventario por ID",
@@ -129,26 +135,67 @@ const eliminarInventarioStock = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [resultado] = await db.query(
+    const inventarioExiste = await existeInventarioPorId(id);
+    if (!inventarioExiste) {
+      return res.status(404).json({
+        success: false,
+        mensaje: "Inventario no encontrada",
+      });
+    }
+
+    await db.query(
       "DELETE FROM Inventario_Stock WHERE id_inventario = ?",
       [id]
     );
-
-    if (resultado.affectedRows === 0) {
-      return res.status(404).json({
-        success: false,
-        mensaje: "Registro de inventario no encontrado.",
-      });
-    }
 
     res.json({
       success: true,
       mensaje: "Registro de inventario eliminado exitosamente",
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       mensaje: "Error al eliminar el registro de inventario",
+      error: error.message,
+    });
+  }
+};
+
+const inventariosClientes = async (req, res) => {
+  try {
+    const { id_lote } = req.params;
+    
+    const [inventariosClientes] = await db.query(`
+      SELECT 
+      I.id_inventario,
+      I.id_vacuna,
+      I.id_ubicacion,
+      I.cantidad_actual,
+
+      V.nombre_comercial AS nombre_vacuna,
+      U.nombre AS nombre_ubicacion,
+      U.direccion AS direccion
+
+      FROM Inventario_Stock I
+      JOIN Ubicaciones U ON I.id_ubicacion = U.id_ubicacion
+      JOIN Vacunas V ON I.id_vacuna = V.id_vacuna
+      JOIN Lotes L ON I.id_vacuna = L.id_vacuna
+      WHERE L.id_lote = ?
+      
+    `,[id_lote]);
+    res.json({
+      success: true,
+      count: inventariosClientes.length,
+      data: inventariosClientes,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al obtener los inventarios de los clientes",
       error: error.message,
     });
   }
@@ -159,36 +206,21 @@ const actualizarCantidadInventario = async (req, res) => {
     const { id } = req.params;
     const { cantidad_a_sumar } = req.body;
 
-   
-    if (!id || isNaN(id)) {
-      return res.status(400).json({
+    const inventarioExiste = await existeInventarioPorId(id);
+    if (!inventarioExiste) {
+      return res.status(404).json({
         success: false,
-        mensaje: "ID de inventario inválido.",
+        mensaje: "Inventario no encontrada",
       });
     }
-
-   
-    if (cantidad_a_sumar === undefined || isNaN(cantidad_a_sumar)) {
+    
+    if (cantidad_a_sumar === undefined || Number.isNaN(cantidad_a_sumar)) {
       return res.status(400).json({
         success: false,
         mensaje: "La cantidad_a_sumar debe ser un número válido.",
       });
     }
 
-   
-    const [inventario] = await db.query(
-      "SELECT cantidad_actual FROM Inventario_Stock WHERE id_inventario = ?",
-      [id]
-    );
-
-    if (inventario.length === 0) {
-      return res.status(404).json({
-        success: false,
-        mensaje: "Inventario no encontrado.",
-      });
-    }
-
-   
     await db.query(
       `
       UPDATE Inventario_Stock
@@ -200,11 +232,11 @@ const actualizarCantidadInventario = async (req, res) => {
       [cantidad_a_sumar, id]
     );
 
-    const [rows] = await db.query(
+    const [columnaCantidad] = await db.query(
       "SELECT cantidad_actual FROM Inventario_Stock WHERE id_inventario = ?",
       [id]
     );
-    const cantidadActual = rows[0].cantidad_actual;
+    const cantidadActual = columnaCantidad[0].cantidad_actual;
 
     res.status(200).json({
       success: true,
@@ -215,6 +247,8 @@ const actualizarCantidadInventario = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       mensaje: "Error al actualizar la cantidad del inventario.",
@@ -229,4 +263,5 @@ module.exports = {
   obtenerInventarioStockPorId,
   eliminarInventarioStock,
   actualizarCantidadInventario,
+  inventariosClientes,
 };

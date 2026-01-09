@@ -27,6 +27,14 @@ export class InventarioStockService {
   actualizarInventarioStock(id: number, inventarioStock: InventarioStock): Observable<InventarioStockResponse> {
     return this.http.put<InventarioStockResponse>(`${this.apiUrl}/${id}`, inventarioStock);
   }
+  
+  obtenerInventarioClientesStock(
+    id_lote: number
+  ): Observable<InventarioStockResponse> {
+    return this.http.get<InventarioStockResponse>(`${this.apiUrl}/inventariosclientes/${id_lote}`,
+    );
+  }
+
 
 
   actualizarcantidad(

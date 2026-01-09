@@ -6,6 +6,7 @@
     <thead>
         <tr>
             <th>ID</th>
+            <th>Id Lote</th>
             <th>Vacuna</th>
             <th>Temp. Violada</th>
             <th>Tipo Alerta</th>
@@ -17,6 +18,7 @@
     <tbody>
         <tr *ngFor="let alerta of alertas">
             <td>{{ alerta.id_alerta }}</td>
+            <td>{{ alerta.id_lote }}</td>
             <td>{{ alerta.vacuna }}</td>
             <td>{{ alerta.temp_violada }}°C</td>
             <td>{{ alerta.tipo_alerta }}</td>
@@ -37,7 +39,7 @@
             </td>
         </tr>
         <tr *ngIf="alertas.length === 0">
-            <td colspan="7" style="text-align: center;">No hay registros en el sistema.</td>
+            <td colspan="8" style="text-align: center;">No hay registros en el sistema.</td>
         </tr>
     </tbody>
 </table>

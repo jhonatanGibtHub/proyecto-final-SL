@@ -1,11 +1,17 @@
-<div class="bg-container">
+<div class="layer-container">
+
+  <div class="layer background-layer">
     <app-back-3></app-back-3>
+    <app-back-2></app-back-2>
+  </div>
+
 </div>
+
 <header>
 
     <div class="flex-center">
         <button class="toggle-btn" (click)="toggleSidebar()">
-            <svg class="icono-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="icono-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                 <g id="SVGRepo_iconCarrier">
@@ -158,7 +164,7 @@
                     </g>
                 </g>
             </svg>
-            <span>LOTES A DISTRIBUIR</span>
+            <span>LOTES</span>
         </button>
 
         <button class="btn-aside" routerLink="/app/registro-movimiento" routerLinkActive="active-btn"
@@ -173,7 +179,7 @@
                     </path>
                 </g>
             </svg>
-            <span>DISTRIBUCION</span>
+            <span>MOVIMIENTOS</span>
         </button>
 
         <button class="btn-aside" routerLink="/app/mediciones-temp" routerLinkActive="active-btn"
@@ -204,7 +210,7 @@
             <span>MEDIDOR DE LOTE</span>
         </button>
 
-        <button *ngIf="isAdmin" class="btn-aside" routerLink="/app/monitoreo" routerLinkActive="active-btn"
+        <button class="btn-aside" routerLink="/app/monitoreo" routerLinkActive="active-btn"
             [routerLinkActiveOptions]="{ exact: true }">
             <svg class = "icono-3" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>

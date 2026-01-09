@@ -1,10 +1,8 @@
-const db = require('../config/database');
-
+const db = require("../config/database");
 
 const obtenerLotes = async (req, res) => {
-    try {
-      
-        const [lotes] = await db.query(`
+  try {
+    const [Lotes] = await db.query(`
             SELECT 
                 L.id_lote, 
                 V.nombre_comercial AS vacuna,
@@ -13,26 +11,28 @@ const obtenerLotes = async (req, res) => {
                 L.cantidad_inicial_unidades
             FROM Lotes L
             JOIN Vacunas V ON L.id_vacuna = V.id_vacuna
-            ORDER BY L.fecha_fabricacion DESC
+            ORDER BY L.cantidad_inicial_unidades DESC
         `);
-        
-        res.json({
-            success: true,
-            count: lotes.length,
-            data: lotes
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            mensaje: "Error al obtener los Lotes",
-            error: error.message
-        });
-    }
+
+    res.json({
+      success: true,
+      count: Lotes.length,
+      data: Lotes,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al obtener los Lotes",
+      error: error.message,
+    });
+  }
 };
 
 const obtenerLotes_A_Enviar = async (req, res) => {
-    try {
-        const [lotes] = await db.query(`
+  try {
+    const [lotes] = await db.query(`
             SELECT 
                 L.id_lote, 
                 V.nombre_comercial AS vacuna,
@@ -49,25 +49,26 @@ const obtenerLotes_A_Enviar = async (req, res) => {
               )
             ORDER BY L.fecha_fabricacion DESC
         `);
-        
-        res.json({
-            success: true,
-            count: lotes.length,
-            data: lotes
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            mensaje: "Error al obtener los lotes a enviar",
-            error: error.message
-        });
-    }
+
+    res.json({
+      success: true,
+      count: lotes.length,
+      data: lotes,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al obtener los lotes a enviar",
+      error: error.message,
+    });
+  }
 };
 
-
 const obtenerLotes_Medicion = async (req, res) => {
-    try {
-        const [lotes] = await db.query(`
+  try {
+    const [lotes] = await db.query(`
             SELECT 
                 L.id_lote, 
                 V.nombre_comercial AS vacuna,
@@ -84,77 +85,93 @@ const obtenerLotes_Medicion = async (req, res) => {
               )
             ORDER BY L.fecha_fabricacion DESC
         `);
-        
-        res.json({
-            success: true,
-            count: lotes.length,
-            data: lotes
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            mensaje: "Error al obtener los lotes sin medición y con cantidad > 0",
-            error: error.message
-        });
-    }
+
+    res.json({
+      success: true,
+      count: lotes.length,
+      data: lotes,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al obtener los lotes sin medición y con cantidad > 0",
+      error: error.message,
+    });
+  }
 };
 
-
 const crearLote = async (req, res) => {
-    try {
-        const { id_vacuna, fecha_fabricacion, fecha_caducidad, cantidad_inicial_unidades } = req.body;
+  try {
+    const {
+      id_vacuna,
+      fecha_fabricacion,
+      fecha_caducidad,
+      cantidad_inicial_unidades,
+    } = req.body;
 
-        
-        if (!id_vacuna || !fecha_fabricacion || !fecha_caducidad || cantidad_inicial_unidades === undefined) {
-            return res.status(400).json({
-                success: false,
-                mensaje: "ID de vacuna, fechas de fabricación/caducidad y cantidad inicial son obligatorios."
-            });
-        }
-        
-       
-        const fab = new Date(fecha_fabricacion);
-        const cad = new Date(fecha_caducidad);
-        if (fab >= cad) {
-            return res.status(400).json({
-                success: false,
-                mensaje: "La fecha de caducidad debe ser posterior a la fecha de fabricación."
-            });
-        }
+    const fab = new Date(fecha_fabricacion);
+    const cad = new Date(fecha_caducidad);
 
-        const [resultado] = await db.query(
-            'INSERT INTO Lotes (id_vacuna, fecha_fabricacion, fecha_caducidad, cantidad_inicial_unidades) VALUES (?, ?, ?, ?)',
-            [id_vacuna, fecha_fabricacion, fecha_caducidad, cantidad_inicial_unidades]
-        );
-        
-   
-
-        res.status(201).json({
-            success: true,
-            mensaje: "Lote registrado exitosamente",
-            data: {
-                id: resultado.insertId,
-                id_vacuna,
-                fecha_fabricacion,
-                fecha_caducidad,
-                cantidad_inicial_unidades
-            }
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            mensaje: "Error al registrar el Lote",
-            error: error.message
-        });
+    if (fab >= cad) {
+      return res.status(400).json({
+        success: false,
+        mensaje:
+          "La fecha de caducidad debe ser posterior a la fecha de fabricación.",
+      });
     }
+
+    const [resultado] = await db.query(
+      "INSERT INTO Lotes (id_vacuna, fecha_fabricacion, fecha_caducidad, cantidad_inicial_unidades) VALUES (?, ?, ?, ?)",
+      [id_vacuna, fecha_fabricacion, fecha_caducidad, cantidad_inicial_unidades]
+    );
+
+    res.status(201).json({
+      success: true,
+      mensaje: "Lote registrado exitosamente",
+      data: {
+        id: resultado.insertId,
+        id_vacuna,
+        fecha_fabricacion,
+        fecha_caducidad,
+        cantidad_inicial_unidades,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al registrar el Lote",
+      error: error.message,
+    });
+  }
+};
+
+const existeLotePorId = async (id) => {
+  const [result] = await db.query(
+    "SELECT id_lote FROM Lotes WHERE id_lote = ?",
+    [id]
+  );
+
+  return result.length > 0;
 };
 
 const obtenerLotePorId = async (req, res) => {
-    try {
-        const { id } = req.params;
-        
-        const [lotes] = await db.query(`
+  try {
+    const { id } = req.params;
+
+    const loteExiste = await existeLotePorId(id);
+    if (!loteExiste) {
+      return res.status(404).json({
+        success: false,
+        mensaje: "Lote no encontrado",
+      });
+    }
+
+    const [lotes] = await db.query(
+      `
             SELECT 
                 L.id_lote, 
                 V.id_vacuna,
@@ -165,170 +182,159 @@ const obtenerLotePorId = async (req, res) => {
             FROM Lotes L
             JOIN Vacunas V ON L.id_vacuna = V.id_vacuna
             WHERE L.id_lote = ?
-        `, [id]);
-        
-        if (lotes.length === 0) {
-            return res.status(404).json({
-                success: false,
-                mensaje: "Lote no encontrado"
-            });
-        }
-        
-        res.json({
-            success: true,
-            data: lotes[0]
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            mensaje: "Error al obtener el lote",
-            error: error.message
-        });
-    }
+        `,
+      [id]
+    );
+    res.json({
+      success: true,
+      data: lotes[0],
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al obtener el lote",
+      error: error.message,
+    });
+  }
 };
 
 const actualizarLote = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { id_vacuna, fecha_fabricacion, fecha_caducidad, cantidad_inicial_unidades } = req.body;
+  try {
+    const { id } = req.params;
+    const {
+      id_vacuna,
+      fecha_fabricacion,
+      fecha_caducidad,
+      cantidad_inicial_unidades,
+    } = req.body;
 
-        
-        const [loteExistente] = await db.query('SELECT * FROM Lotes WHERE id_lote = ?', [id]);
-        if (loteExistente.length === 0) {
-            return res.status(404).json({
-                success: false,
-                mensaje: "Lote no encontrado."
-            });
-        }
-
-        
-        if (fecha_fabricacion && fecha_caducidad) {
-            const fab = new Date(fecha_fabricacion);
-            const cad = new Date(fecha_caducidad);
-            if (fab >= cad) {
-                return res.status(400).json({
-                    success: false,
-                    mensaje: "La fecha de caducidad debe ser posterior a la fecha de fabricación."
-                });
-            }
-        }
-
-        const [resultado] = await db.query(
-            'UPDATE Lotes SET id_vacuna=?, fecha_fabricacion=?, fecha_caducidad=?, cantidad_inicial_unidades=? WHERE id_lote=?',
-            [id_vacuna, fecha_fabricacion, fecha_caducidad, cantidad_inicial_unidades, id]
-        );
-        
-        if (resultado.affectedRows === 0) {
-            return res.status(404).json({
-                success: false,
-                mensaje: "Error al actualizar el lote. Ningún registro afectado."
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            mensaje: "Lote actualizado exitosamente.",
-            data: { id, id_vacuna, fecha_fabricacion, fecha_caducidad, cantidad_inicial_unidades }
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            mensaje: "Error al modificar el Lote",
-            error: error.message
-        });
+    const loteExiste = await existeLotePorId(id);
+    if (!loteExiste) {
+      return res.status(404).json({
+        success: false,
+        mensaje: "Lote no encontrado",
+      });
     }
+
+    const fab = new Date(fecha_fabricacion);
+    const cad = new Date(fecha_caducidad);
+    if (fab >= cad) {
+      return res.status(400).json({
+        success: false,
+        mensaje:
+          "La fecha de caducidad debe ser posterior a la fecha de fabricación.",
+      });
+    }
+
+    await db.query(
+      "UPDATE Lotes SET id_vacuna=?, fecha_fabricacion=?, fecha_caducidad=?, cantidad_inicial_unidades=? WHERE id_lote=?",
+      [
+        id_vacuna,
+        fecha_fabricacion,
+        fecha_caducidad,
+        cantidad_inicial_unidades,
+        id,
+      ]
+    );
+
+    res.status(200).json({
+      success: true,
+      mensaje: "Lote actualizado exitosamente.",
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al modificar el Lote",
+      error: error.message,
+    });
+  }
 };
 
 const eliminarLote = async (req, res) => {
-    try {
-        const { id } = req.params;
-        
-        const [resultado] = await db.query('DELETE FROM Lotes WHERE id_lote = ?', [id]);
-        
-        if (resultado.affectedRows === 0) {
-            return res.status(404).json({
-                success: false,
-                mensaje: "Lote no encontrado."
-            });
-        }
-        
-        res.json({
-            success: true,
-            mensaje: "Lote eliminado exitosamente"
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            mensaje: "Error al eliminar el lote",
-            error: error.message
-        });
+  try {
+    const { id } = req.params;
+
+    const loteExiste = await existeLotePorId(id);
+    if (!loteExiste) {
+      return res.status(404).json({
+        success: false,
+        mensaje: "Lote no encontrado",
+      });
     }
+
+    await db.query("DELETE FROM Lotes WHERE id_lote = ?", [
+      id,
+    ]);
+
+    res.json({
+      success: true,
+      mensaje: "Lote eliminado exitosamente",
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al eliminar el lote",
+      error: error.message,
+    });
+  }
 };
 const actualizarCantidadInicialLote = async (req, res) => {
   try {
     const { id } = req.params;
     const { cantidad_inicial_unidades } = req.body;
 
-    
-    if (cantidad_inicial_unidades === undefined || cantidad_inicial_unidades < 0) {
-      return res.status(400).json({
-        success: false,
-        mensaje: "La cantidad inicial de unidades es obligatoria y no puede ser negativa."
-      });
-    }
-
-    
-    const [loteExistente] = await db.query(
-      'SELECT id_lote FROM Lotes WHERE id_lote = ?',
-      [id]
-    );
-
-    if (loteExistente.length === 0) {
+    const loteExiste = await existeLotePorId(id);
+    if (!loteExiste) {
       return res.status(404).json({
         success: false,
-        mensaje: "Lote no encontrado."
+        mensaje: "Lote no encontrado",
+      });
+    }
+    
+    if (
+      cantidad_inicial_unidades === undefined ||
+      cantidad_inicial_unidades < 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        mensaje:
+          "La cantidad inicial de unidades es obligatoria y no puede ser negativa.",
       });
     }
 
-
-    const [resultado] = await db.query(
-      'UPDATE Lotes SET cantidad_inicial_unidades = ? WHERE id_lote = ?',
+    await db.query(
+      "UPDATE Lotes SET cantidad_inicial_unidades = ? WHERE id_lote = ?",
       [cantidad_inicial_unidades, id]
     );
 
-    if (resultado.affectedRows === 0) {
-      return res.status(400).json({
-        success: false,
-        mensaje: "No se pudo actualizar la cantidad inicial."
-      });
-    }
-
     res.status(200).json({
       success: true,
-      mensaje: "Cantidad inicial del lote actualizada correctamente.",
-      data: {
-        id_lote: id,
-        cantidad_inicial_unidades
-      }
+      mensaje: "Cantidad del lote actualizada correctamente.",
     });
-
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       mensaje: "Error al actualizar la cantidad inicial del lote",
-      error: error.message
+      error: error.message,
     });
   }
 };
 
 module.exports = {
-    obtenerLotes,
-    crearLote,
-    obtenerLotePorId,
-    actualizarLote,
-    eliminarLote,
-    actualizarCantidadInicialLote,
-    obtenerLotes_Medicion,
-    obtenerLotes_A_Enviar
+  obtenerLotes,
+  crearLote,
+  obtenerLotePorId,
+  actualizarLote,
+  eliminarLote,
+  actualizarCantidadInicialLote,
+  obtenerLotes_Medicion,
+  obtenerLotes_A_Enviar,
 };

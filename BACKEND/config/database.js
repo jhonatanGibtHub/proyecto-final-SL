@@ -4,7 +4,7 @@ const pool = mysql.createPool({
     host:process.env.DB_HOST || 'localhost',
     user:process.env.DB_USER || 'root',
     password:process.env.DB_PASSWORD || '123456',
-    database:process.env.DB_NAME || 'proyecto_Final_SL',
+    database:process.env.DB_NAME || 'proyecto_final_sl',
     waitForConnections:true,
     connectionLimit:100,
     queueLimit:0
@@ -20,4 +20,5 @@ pool.getConnection((err, connection)=>{
         connection.release();
     }
 })
+
 module.exports = promisePool;

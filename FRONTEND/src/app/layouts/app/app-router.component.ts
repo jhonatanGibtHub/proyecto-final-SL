@@ -4,6 +4,7 @@ import { RouterLink, RouterLinkActive, RouterLinkWithHref, RouterOutlet } from '
 import { UserMenuComponent } from '../../shared/user-menu/user-menu.component';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { Back3Component } from "../../shared/back-3/back-3.component";
+import { Back2Component } from "../../shared/back-2/back-2.component";
 
 @Component({
   selector: 'app-app-router',
@@ -14,7 +15,8 @@ import { Back3Component } from "../../shared/back-3/back-3.component";
     RouterLink,
     RouterLinkWithHref,
     RouterLinkActive,
-    Back3Component
+    Back3Component,
+    Back2Component
 ],
   templateUrl: './app-router.component.html',
   styleUrl: './app-router.component.css'

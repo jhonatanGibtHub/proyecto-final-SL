@@ -1,5 +1,6 @@
 const db = require("../config/database");
 
+// Libreria javascript para poder hacer peticiones http a APIs
 const axios = require("axios");
 
 const obtenerUbicaciones = async (req, res) => {
@@ -11,6 +12,8 @@ const obtenerUbicaciones = async (req, res) => {
       data: ubicaciones,
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       mensaje: "Error al obtener las Ubicaciones",
@@ -19,31 +22,32 @@ const obtenerUbicaciones = async (req, res) => {
   }
 };
 
-const obtenerUbicaciones_Cliente = async (req, res) => {
+const ubicacionesClientes = async (req, res) => {
   try {
-    const [ubicaciones] = await db.query(`
+    const [ubicacionesClientes] = await db.query(`
       SELECT * 
       FROM Ubicaciones
       WHERE tipo <> 'Distribuidor'
     `);
-
     res.json({
       success: true,
-      count: ubicaciones.length,
-      data: ubicaciones,
+      count: ubicacionesClientes.length,
+      data: ubicacionesClientes,
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
-      mensaje: "Error al obtener las Ubicaciones",
+      mensaje: "Error al obtener las Ubicaciones de los clientes",
       error: error.message,
     });
   }
 };
 
-const obtenerUbicaciones_Distribuidor = async (req, res) => {
+const ubicacionesDistribuidor = async (req, res) => {
   try {
-    const [ubicaciones] = await db.query(`
+    const [ubicacionesDisrtibuidores] = await db.query(`
       SELECT * 
       FROM Ubicaciones
       WHERE tipo = 'Distribuidor'
@@ -51,76 +55,81 @@ const obtenerUbicaciones_Distribuidor = async (req, res) => {
 
     res.json({
       success: true,
-      count: ubicaciones.length,
-      data: ubicaciones,
+      count: ubicacionesDisrtibuidores.length,
+      data: ubicacionesDisrtibuidores,
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
-      mensaje: "Error al obtener las Ubicaciones",
+      mensaje: "Error al obtener las Ubicaciones de los distribuidores",
       error: error.message,
     });
   }
+};
+
+const buscarUbicacionAPI = async (query) => {
+  // Realiza una petición HTTP a la API de Nominatim
+  const response = await axios.get(
+    "https://nominatim.openstreetmap.org/search",
+    {
+      params: {
+        q: query, // Texto de búsqueda (dirección)
+        format: "json", // Formato de respuesta
+        addressdetails: 1, // Devuelve detalles de la dirección
+        countrycodes: "pe", // Limita la búsqueda a Perú
+        limit: 1, // Solo trae el resultado más relevante
+      },
+      headers: {
+        "User-Agent": "MiApp/1.0", // Requerido por la API de Nominatim
+      },
+    }
+  );
+
+  // Retorna el primer resultado si existe, si no retorna null
+  return response.data?.length ? response.data[0] : null;
+};
+
+const extraerDatosDireccion = (address = {}) => {
+  const distrito =
+    address.city_district || address.suburb || address.neighbourhood || null;
+
+  const provincia =
+    address.county || address.state_district || address.state || null;
+
+  const region = address.state || null;
+
+  return { distrito, provincia, region };
 };
 
 const crearUbicacion = async (req, res) => {
   try {
     const { nombre, tipo, direccion, ubicacionTexto } = req.body;
 
-    const buscar = async (query) => {
-      const r = await axios.get(
-        'https://nominatim.openstreetmap.org/search',
-        {
-          params: {
-            q: query,
-            format: 'json',
-            addressdetails: 1,
-            countrycodes: 'pe',
-            limit: 1
-          },
-          headers: { 'User-Agent': 'MiApp/1.0' }
-        }
-      );
-      return r.data?.length ? r.data[0] : null;
-    };
+    let lugarEncontrado = await buscarUbicacionAPI(
+      `${direccion}, ${ubicacionTexto}, Perú`
+    );
 
-   
-    let place = await buscar(`${direccion}, ${ubicacionTexto}, Perú`);
-
-    
-    if (!place) {
-      place = await buscar(`${direccion}, Perú`);
+    if (!lugarEncontrado) {
+      lugarEncontrado = await buscarUbicacionAPI(`${direccion}, Perú`);
     }
 
-    if (!place) {
+    if (!lugarEncontrado) {
       return res.status(400).json({
         success: false,
-        mensaje: "No se encontró la ubicación en Perú."
+        mensaje: "No se encontró la ubicación en Perú.",
       });
     }
 
-    const address = place.address || {};
+    const { distrito, provincia, region } = extraerDatosDireccion(
+      lugarEncontrado.address
+    );
 
-   
-    const distrito =
-      address.city_district ||
-      address.suburb ||
-      address.neighbourhood ||
-      null;
+    const latitud = Number.parseFloat(lugarEncontrado.lat);
+    const longitud = Number.parseFloat(lugarEncontrado.lon);
 
-    const provincia =
-      address.county ||
-      address.state_district ||
-      address.state ||
-      null;
-
-    const region =
-      address.state || null;
-
-    const latitud = parseFloat(place.lat);
-    const longitud = parseFloat(place.lon);
-
-    const [resultado] = await db.query(
+    const [ubicacionCreado] = await db.query(
       `INSERT INTO Ubicaciones
       (nombre, tipo, direccion, distrito, provincia, region, latitud, longitud, ciudad)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -128,12 +137,12 @@ const crearUbicacion = async (req, res) => {
         nombre,
         tipo,
         direccion,
-        distrito || ubicacionTexto,
+        distrito,
         provincia,
         region,
         latitud,
         longitud,
-        ubicacionTexto
+        ubicacionTexto,
       ]
     );
 
@@ -141,7 +150,7 @@ const crearUbicacion = async (req, res) => {
       success: true,
       mensaje: "Ubicación creada exitosamente",
       data: {
-        id: resultado.insertId,
+        id: ubicacionCreado.insertId,
         nombre,
         tipo,
         direccion,
@@ -149,15 +158,15 @@ const crearUbicacion = async (req, res) => {
         provincia,
         region,
         latitud,
-        longitud
-      }
+        longitud,
+      },
     });
-
   } catch (error) {
-    
+    console.error(error);
+
     res.status(500).json({
       success: false,
-      mensaje: "Error al crear la ubicación"
+      mensaje: "Error al crear la ubicación",
     });
   }
 };
@@ -167,54 +176,27 @@ const actualizarUbicacion = async (req, res) => {
     const { id } = req.params;
     const { nombre, tipo, direccion, ubicacionTexto } = req.body;
 
-    const buscar = async (query) => {
-      const r = await axios.get(
-        'https://nominatim.openstreetmap.org/search',
-        {
-          params: {
-            q: query,
-            format: 'json',
-            addressdetails: 1,
-            countrycodes: 'pe',
-            limit: 1
-          },
-          headers: { 'User-Agent': 'MiApp/1.0' }
-        }
-      );
-      return r.data?.length ? r.data[0] : null;
-    };
+    let lugarEncontrado = await buscarUbicacionAPI(
+      `${direccion}, ${ubicacionTexto}, Perú`
+    );
 
-    let place = await buscar(`${direccion}, ${ubicacionTexto}, Perú`);
-
-    if (!place) {
-      place = await buscar(`${direccion}, Perú`);
+    if (!lugarEncontrado) {
+      lugarEncontrado = await buscarUbicacionAPI(`${direccion}, Perú`);
     }
 
-    if (!place) {
+    if (!lugarEncontrado) {
       return res.status(400).json({
         success: false,
-        mensaje: "No se encontró la ubicación."
+        mensaje: "No se encontró la ubicación en Perú.",
       });
     }
 
-    const address = place.address || {};
+    const { distrito, provincia, region } = extraerDatosDireccion(
+      lugarEncontrado.address
+    );
 
-    const distrito =
-      address.city_district ||
-      address.suburb ||
-      address.neighbourhood ||
-      null;
-
-    const provincia =
-      address.county ||
-      address.state_district ||
-      address.state ||
-      null;
-
-    const region = address.state || null;
-
-    const latitud = parseFloat(place.lat);
-    const longitud = parseFloat(place.lon);
+    const latitud = Number.parseFloat(lugarEncontrado.lat);
+    const longitud = Number.parseFloat(lugarEncontrado.lon);
 
     await db.query(
       `UPDATE Ubicaciones
@@ -231,36 +213,42 @@ const actualizarUbicacion = async (req, res) => {
         latitud,
         longitud,
         ubicacionTexto,
-        id
+        id,
       ]
     );
 
     res.json({
       success: true,
-      mensaje: "Ubicación actualizada correctamente"
+      mensaje: "Ubicación actualizada correctamente",
     });
-
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
-      mensaje: "Error al actualizar la ubicación"
+      mensaje: "Error al actualizar la ubicación",
     });
   }
+};
+
+const existeUbicacionPorId = async (id) => {
+  const [result] = await db.query(
+    "SELECT id_ubicacion FROM Ubicaciones WHERE id_ubicacion = ?",
+    [id]
+  );
+
+  return result.length > 0;
 };
 
 const eliminarUbicacion = async (req, res) => {
   try {
     const { id } = req.params;
 
-   
-    const [ubicacionExistente] = await db.query(
-      "SELECT * FROM Ubicaciones WHERE id_ubicacion = ?",
-      [id]
-    );
-    if (ubicacionExistente.length === 0) {
+    const ubicacionExiste = await existeUbicacionPorId(id);
+    if (!ubicacionExiste) {
       return res.status(404).json({
         success: false,
-        mensaje: "Ubicación no encontrada.",
+        mensaje: "Ubicacion no encontrada",
       });
     }
 
@@ -271,17 +259,16 @@ const eliminarUbicacion = async (req, res) => {
       mensaje: "Ubicación eliminada exitosamente.",
     });
   } catch (error) {
-  
+    console.error(error);
+
     if (error.code === "ER_ROW_IS_REFERENCED_2") {
       return res.status(409).json({
-        
         success: false,
 
         mensaje:
           "No se puede eliminar esta ubicación. Aún tiene sensores activos, inventario (stock) o movimientos logísticos registrados.",
       });
     }
-
     res.status(500).json({
       success: false,
       mensaje: "Error al eliminar la Ubicación",
@@ -294,23 +281,22 @@ const obtenerUbicacionPorId = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [ubicaciones] = await db.query(
-      "SELECT * FROM Ubicaciones WHERE id_ubicacion = ?",
-      [id]
-    );
-
-    if (ubicaciones.length === 0) {
+    const ubicacionExiste = await existeUbicacionPorId(id);
+    if (!ubicacionExiste) {
       return res.status(404).json({
         success: false,
-        mensaje: "Ubicación no encontrada.",
+        mensaje: "Ubicacion no encontrada",
       });
     }
 
+    const [ubicacion] = await db.query("SELECT * FROM Ubicaciones WHERE id_ubicacion = ?", [id]);
     res.status(200).json({
       success: true,
-      data: ubicaciones[0],
+      data: ubicacion[0],
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       mensaje: "Error al obtener la Ubicación",
@@ -325,6 +311,6 @@ module.exports = {
   actualizarUbicacion,
   eliminarUbicacion,
   obtenerUbicacionPorId,
-  obtenerUbicaciones_Cliente,
-  obtenerUbicaciones_Distribuidor
+  ubicacionesClientes,
+  ubicacionesDistribuidor,
 };

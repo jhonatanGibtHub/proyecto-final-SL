@@ -5,11 +5,13 @@ const {
     crearInventarioStock,
     obtenerInventarioStockPorId,
     eliminarInventarioStock,
-    actualizarCantidadInventario
+    actualizarCantidadInventario,
+    inventariosClientes
 } = require('../controllers/inventarioStockController');
 
 
 router.get('/', obtenerInventarioStock);
+router.get('/inventariosclientes/:id_lote', inventariosClientes);
 
 router.get('/:id', obtenerInventarioStockPorId);
 

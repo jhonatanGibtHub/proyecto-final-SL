@@ -12,14 +12,14 @@
                 </label>
                 <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('id_lote')}">
                     <mat-form-field appearance="outline">
-                        <mat-select id="id_lote" formControlName="id_lote">
+                        <mat-select id="id_lote" formControlName="id_lote" (selectionChange)="onLoteSeleccionado($event)">
                             <mat-option value="">Seleccione un lote</mat-option>
                             <mat-option *ngFor="let item of lotes" [value]="item.id_lote">
                                 <strong>{{ item.vacuna }}</strong> {{ item.cantidad_inicial_unidades }} u
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
+                </div>  
                 <div *ngIf="isFieldInvalid('id_lote')" class="text-error-message">
                     <small>{{ getErrorMessage('id_lote') }}</small>
                 </div>
@@ -37,7 +37,7 @@
                         <mat-select id="ubicacion_origen" formControlName="ubicacion_origen">
                             <mat-option value="">Seleccione ubicación de origen</mat-option>
                             <mat-option *ngFor="let item of ubicaciones_distribuidores" [value]="item.id_ubicacion">
-                                {{item.tipo}} | {{ item.nombre }} | <strong>{{ item.direccion }}</strong>
+                               {{ item.nombre }} | <strong>{{ item.direccion }}</strong>
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -58,8 +58,8 @@
                     <mat-form-field appearance="outline">
                         <mat-select id="ubicacion_destino" formControlName="ubicacion_destino">
                             <mat-option value="">Seleccione ubicación destino</mat-option>
-                            <mat-option *ngFor="let item of ubicaciones_clientes" [value]="item.id_ubicacion">
-                                {{item.tipo}} | {{ item.nombre }} | <strong>{{ item.direccion }}</strong>
+                            <mat-option *ngFor="let item of inventarios_clientes" [value]="item.id_ubicacion">
+                                {{item.nombre_vacuna}} | {{ item.nombre_ubicacion }} | <strong>{{ item.direccion }}</strong>
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -103,7 +103,7 @@
                 </label>
                 <div class="input" [ngClass]="{'is-invalid': isFieldInvalid('fecha_envio')}">
                     <mat-form-field appearance="outline">
-                        <input matInput [matDatepicker]="picker1" formControlName="fecha_envio"/>
+                        <input matInput [matDatepicker]="picker1" formControlName="fecha_envio" [min]="today" />
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
@@ -121,9 +121,21 @@
                     <span>{{ isEditMode ? 'Actualizar Movimiento' : 'Guardar Movimiento' }}</span>
                 </button>
                 <button type="button" class="btn btn-secondary" (click)="onCancel()">
-                    <svg class="icono-1" viewBox="0 0 512 512" fill="#000000">
-                        <polygon points="328.96 30.2933 298.667 0 164.48 134.4 30.2933 0 0 30.2933 134.4 164.48 0 298.667 30.2933 328.96 164.48 194.56 298.667 328.96 328.96 298.667 194.56 164.48"/>
-                    </svg>
+                    <svg class="icono-1" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier">
+              <title>cancel</title>
+              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="work-case" fill="#000000" transform="translate(91.520000, 91.520000)">
+                  <polygon id="Close"
+                    points="328.96 30.2933333 298.666667 1.42108547e-14 164.48 134.4 30.2933333 1.42108547e-14 1.42108547e-14 30.2933333 134.4 164.48 1.42108547e-14 298.666667 30.2933333 328.96 164.48 194.56 298.666667 328.96 328.96 298.666667 194.56 164.48">
+                  </polygon>
+                </g>
+              </g>
+            </g>
+          </svg>
                     <span>Cancelar</span>
                 </button>
             </div>

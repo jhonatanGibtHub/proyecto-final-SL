@@ -17,6 +17,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
+import { InventarioStockService } from '../../../../core/services/inventarioStock.service';
+import { InventarioStock } from '../../../../core/models/inventarioStock';
 
 @Component({
   selector: 'app-app-registro-movimiento-form',
@@ -39,7 +41,10 @@ export class AppRegistroMovimientoFormComponent implements OnInit, OnDestroy {
   lotes: Lote[] = [];
   ubicaciones_distribuidores: Ubicacion[] = [];
   ubicaciones_clientes: Ubicacion[] = [];
+  inventarios_clientes: InventarioStock[] = [];
   transportistas: Transportista[] = [];
+  
+  today: Date = new Date();
 
   @Output() movimientoGuardado = new EventEmitter<void>();
 
@@ -51,6 +56,7 @@ export class AppRegistroMovimientoFormComponent implements OnInit, OnDestroy {
     private readonly movimientoService: RegistroMovimientoService,
     private readonly lotesService: LotesService,
     private readonly ubicacionesService: UbicacionesService,
+    private readonly inventariosService: InventarioStockService,
     private readonly transportistasService: TransportistasService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
@@ -68,7 +74,7 @@ export class AppRegistroMovimientoFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.cargarLotes();
     this.cargarUbicaciones_Distribuidores();
-    this.cargarUbicaciones_Clientes();
+    this.cargarUbicaciones_Clientes(0);
     this.cargarTransportistas();
   }
 
@@ -134,12 +140,26 @@ export class AppRegistroMovimientoFormComponent implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
   }
 
-  cargarUbicaciones_Clientes(): void {
-    const sub = this.ubicacionesService.obtenerUbicacione_Clientes().subscribe({
+  cargarUbicaciones_Clientes(id_lote: number): void {
+    const sub = /*this.ubicacionesService.obtenerUbicacione_Clientes().subscribe({
       next: (res) => { if (res.success && Array.isArray(res.data)) this.ubicaciones_clientes = res.data; },
       error: (err) => console.error('Error al cargar ubicaciones clientes:', err)
-    });
+    });*/
+
+      this.inventariosService.obtenerInventarioClientesStock(id_lote).subscribe({
+        next: (res) => { if (res.success && Array.isArray(res.data)) this.inventarios_clientes = res.data; },
+        error: (err) => console.error('Error al cargar inventarios clientes:', err)
+      });
     this.subscriptions.push(sub);
+  }
+
+  onLoteSeleccionado(event: any): void {
+    const idLoteSeleccionado = event.value;
+    console.log('Lote seleccionado:', idLoteSeleccionado);
+    if (idLoteSeleccionado > 0) {
+      this.cargarUbicaciones_Clientes(idLoteSeleccionado);
+    }
+
   }
 
   cargarTransportistas(): void {

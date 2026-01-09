@@ -39,8 +39,8 @@ export class Back3Component implements AfterViewInit, OnDestroy {
   /* Visual                    */
 
   private fillColor = '#f6fcff';
-  private borderColor = '#e6e6e6';
-  private speed = 0.3;
+  private borderColor = '#d6d6d6';
+  private speed = 0.2;
 
   /* Hover                     */
 
@@ -60,7 +60,7 @@ export class Back3Component implements AfterViewInit, OnDestroy {
   private focusRadius = 300;
   private focusColor = new THREE.Color('#89d2ff');
   private edgeDarkness = 0.15;
-  private edgeFalloff = 300;
+  private edgeFalloff = 400;
 
   private focusOverlay!: THREE.Mesh;
   private focusMaterial!: THREE.ShaderMaterial;

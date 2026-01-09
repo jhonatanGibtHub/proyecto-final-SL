@@ -2,12 +2,13 @@ const db = require("../config/database");
 
 const obtenerMovimientos = async (req, res) => {
   try {
-    const [movimientos] = await db.query(`
+    const [Movimientos] = await db.query(`
            SELECT  
               RM.id_movimiento, 
               RM.id_lote, 
               RM.fecha_envio, 
               RM.fecha_recepcion,
+              RM.estado,
 
               V.nombre_comercial AS vacuna,
               V.temp_min_c AS minimo,
@@ -31,39 +32,42 @@ const obtenerMovimientos = async (req, res) => {
 
               T.nombre AS transportista
 
-          FROM Registro_Movimiento RM
-          JOIN Ubicaciones UO ON RM.ubicacion_origen = UO.id_ubicacion
-          JOIN Ubicaciones UD ON RM.ubicacion_destino = UD.id_ubicacion
-          JOIN Transportistas T ON RM.id_transportista = T.id_transportista
-          JOIN Lotes L ON RM.id_lote = L.id_lote 
-          JOIN Vacunas V ON L.id_vacuna = V.id_vacuna 
+          FROM registro_movimiento RM
 
-          -- Última medición por lote
-          LEFT JOIN (
-              SELECT MT1.id_lote, MT1.temperatura_c, MT1.id_medicion
-              FROM mediciones_temp MT1
-              JOIN (
-                  SELECT id_lote, MAX(id_medicion) AS ultima_medicion
-                  FROM mediciones_temp
-                  GROUP BY id_lote
-              ) MT2 ON MT1.id_lote = MT2.id_lote AND MT1.id_medicion = MT2.ultima_medicion
-          ) MT ON RM.id_lote = MT.id_lote
+          JOIN ubicaciones UO 
+              ON RM.ubicacion_origen = UO.id_ubicacion
 
-          -- Último inventario por ubicación y vacuna
-          LEFT JOIN (
-              SELECT ISK1.id_ubicacion, ISK1.id_vacuna, MAX(ISK1.id_inventario) AS id_inventario
-              FROM inventario_stock ISK1
-              GROUP BY ISK1.id_ubicacion, ISK1.id_vacuna
-          ) ISK ON ISK.id_ubicacion = RM.ubicacion_destino AND ISK.id_vacuna = L.id_vacuna
+          JOIN ubicaciones UD 
+              ON RM.ubicacion_destino = UD.id_ubicacion
 
-          ORDER BY RM.fecha_envio DESC
+          JOIN transportistas T 
+              ON RM.id_transportista = T.id_transportista
+
+          JOIN lotes L 
+              ON RM.id_lote = L.id_lote 
+
+          JOIN vacunas V 
+              ON L.id_vacuna = V.id_vacuna 
+
+          -- Medición actual del lote (1 registro por lote)
+          LEFT JOIN mediciones_temp MT 
+              ON MT.id_lote = RM.id_lote
+
+          -- Inventario actual en el destino (1 registro por vacuna y ubicación)
+          LEFT JOIN inventario_stock ISK 
+              ON ISK.id_ubicacion = RM.ubicacion_destino
+            AND ISK.id_vacuna = L.id_vacuna
+
+          ORDER BY RM.fecha_envio DESC;
         `);
     res.json({
       success: true,
-      count: movimientos.length,
-      data: movimientos,
+      count: Movimientos.length,
+      data: Movimientos,
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       mensaje: "Error al obtener el Historial de Movimientos",
@@ -105,6 +109,8 @@ const crearMovimiento = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       mensaje: "Error al crear el registro de Movimiento" + error.message,
@@ -116,13 +122,13 @@ const crearMovimiento = async (req, res) => {
 const eliminarMovimiento = async (req, res) => {
   try {
     const { id } = req.params;
+
     const [resultado] = await db.query(
-  `UPDATE Registro_Movimiento 
+      `UPDATE Registro_Movimiento 
    SET estado = 'ANULADO' 
    WHERE id_movimiento = ? AND estado = 'ACTIVO'`,
-  [id]
-);
-
+      [id]
+    );
 
     if (resultado.affectedRows === 0) {
       return res.status(404).json({
@@ -133,9 +139,11 @@ const eliminarMovimiento = async (req, res) => {
 
     res.json({
       success: true,
-      mensaje: "Movimiento eliminado exitosamente",
+      mensaje: "Movimiento anulado exitosamente",
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       mensaje: "Error al eliminar el movimiento",
@@ -144,9 +152,26 @@ const eliminarMovimiento = async (req, res) => {
   }
 };
 
+const existeMovimientoPorId = async (id) => {
+  const [result] = await db.query(
+    "SELECT id_movimiento FROM Registro_Movimiento WHERE id_movimiento = ?",
+    [id]
+  );
+  return result.length > 0;
+};
+
 const obtenerMovimientoPorId = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const movimientoExiste = await existeMovimientoPorId(id);
+    if (!movimientoExiste) {
+      return res.status(404).json({
+        success: false,
+        mensaje: "Movimiento no encontrado",
+      });
+    }
+
     const [movimientos] = await db.query(
       `
             SELECT 
@@ -163,18 +188,13 @@ const obtenerMovimientoPorId = async (req, res) => {
       [id]
     );
 
-    if (movimientos.length === 0) {
-      return res.status(404).json({
-        success: false,
-        mensaje: "Movimiento no encontrado",
-      });
-    }
-
     res.json({
       success: true,
       data: movimientos[0],
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       mensaje: "Error al obtener el movimiento",
@@ -194,7 +214,15 @@ const actualizarMovimiento = async (req, res) => {
       fecha_envio,
     } = req.body;
 
-    const [resultado] = await db.query(
+    const movimientoExiste = await existeMovimientoPorId(id);
+    if (!movimientoExiste) {
+      return res.status(404).json({
+        success: false,
+        mensaje: "Movimiento no encontrado",
+      });
+    }
+
+    await db.query(
       "UPDATE Registro_Movimiento SET id_lote = ?, ubicacion_origen = ?, ubicacion_destino = ?, id_transportista = ?, fecha_envio = ? WHERE id_movimiento = ?",
       [
         id_lote,
@@ -206,27 +234,13 @@ const actualizarMovimiento = async (req, res) => {
       ]
     );
 
-    if (resultado.affectedRows === 0) {
-      return res.status(404).json({
-        success: false,
-        mensaje: "Movimiento no encontrado",
-      });
-    }
-
     res.json({
       success: true,
       mensaje: "Movimiento actualizado exitosamente",
-      data: {
-        id,
-        id_lote,
-        ubicacion_origen,
-        ubicacion_destino,
-        id_transportista,
-        fecha_envio,
-      },
     });
   } catch (error) {
     console.error(error);
+
     res.status(500).json({
       success: false,
       mensaje: "Error al actualizar el movimiento",
@@ -239,19 +253,19 @@ const marcarRecepcionAutomatica = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [movimientoExistente] = await db.query(
-      "SELECT fecha_recepcion FROM Registro_Movimiento WHERE id_movimiento = ?",
-      [id]
-    );
-
-    if (movimientoExistente.length === 0) {
+    const movimientoExiste = await existeMovimientoPorId(id);
+    if (!movimientoExiste) {
       return res.status(404).json({
         success: false,
-        mensaje: "Registro de Movimiento no encontrado.",
+        mensaje: "Movimiento no encontrado",
       });
     }
 
-    
+    const [movimientoExistente] = await db.query(
+      "SELECT * FROM Registro_Movimiento WHERE id_movimiento = ?",
+      [id]
+    );
+
     if (movimientoExistente[0].fecha_recepcion !== null) {
       return res.status(400).json({
         success: false,
@@ -259,23 +273,20 @@ const marcarRecepcionAutomatica = async (req, res) => {
       });
     }
 
-    
     const fechaActual = new Date();
-    const [resultado] = await db.query(
-      "UPDATE Registro_Movimiento SET fecha_recepcion = ? WHERE id_movimiento = ?",
+
+    await db.query(
+      "UPDATE Registro_Movimiento SET fecha_recepcion = ?, estado = 'COMPLETADO' WHERE id_movimiento = ?",
       [fechaActual, id]
     );
 
     res.status(200).json({
       success: true,
       mensaje: "Recepción de lote registrada automáticamente.",
-      data: {
-        id_movimiento: id,
-        fecha_recepcion: fechaActual,
-      },
     });
   } catch (error) {
     console.error(error);
+
     res.status(500).json({
       success: false,
       mensaje: "Error al registrar la recepción automática del movimiento",

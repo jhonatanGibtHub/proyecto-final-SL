@@ -9,9 +9,12 @@
         No hay movimientos registrados
       </div>
 
-      <div class="dropdown-item" *ngFor="let mov of movimientos" (click)="verMovimiento(mov)">
-        <strong>{{ mov.origen }}</strong> → {{ mov.destino }}
-      </div>
+      <ng-container *ngFor="let mov of movimientos">
+        <div class="dropdown-item" *ngIf="mov.estado === 'ACTIVO' " (click)="verMovimiento(mov)">
+          {{mov.vacuna}} |
+          <strong>{{ mov.origen }}</strong> → {{ mov.destino }}
+        </div>
+      </ng-container>
     </div>
   </div>
 
@@ -51,9 +54,9 @@
       <div class="item">
         <span class="label">Temperatura</span>
         <span class="value temperatura">
-          {{ movimientoSeleccionado.temperatura != null 
-             ? movimientoSeleccionado.temperatura + ' °C' 
-             : 'No tiene sensor' }}
+          {{ movimientoSeleccionado.temperatura != null
+          ? movimientoSeleccionado.temperatura + ' °C'
+          : 'No tiene sensor' }}
         </span>
       </div>
 

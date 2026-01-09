@@ -1,43 +1,56 @@
 const db = require("../config/database");
 
-const crearAlertaInterna = async ({ id_medicion, id_lote, tipo_alerta }) => {
+const crearAlerta = async ({ id_medicion, id_lote, tipo_alerta }) => {
   try {
-    const tiposValidos = ["Máx. Excedida", "Mín. Violada"];
-    if (!tiposValidos.includes(tipo_alerta)) {
-      console.error("Tipo de alerta inválido intentando crear alerta interna.");
-      return;
-    }
-
     await db.query(
-      "INSERT INTO Alertas_Cadena_Frio (id_medicion, id_lote, tipo_alerta, estado) VALUES (?, ?, ?, ?)",
-      [id_medicion, id_lote, tipo_alerta, "Activa"]
+      `
+        INSERT INTO Alertas_Cadena_Frio 
+          (
+          id_medicion, 
+          id_lote, 
+          tipo_alerta, 
+          estado
+          ) 
+        VALUES (?, ?, ?, ?)
+
+      `[(id_medicion, id_lote, tipo_alerta, "Activa")]
     );
+
+    res.status(201).json({
+      success: true,
+      mensaje: "Alerta registrada.",
+    });
   } catch (error) {
-    console.error("Error al crear la Alerta de forma interna:", error.message);
+    console.error(error);
+    
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al crear una nueva alerta.",
+      error: error.message,
+    });
   }
 };
 
 const actualizarOCrearAlerta = async (req, res) => {
-  const { id_medicion, id_lote, tipo_alerta, estado } = req.body;
   try {
+    const { id_medicion, id_lote, tipo_alerta, estado } = req.body;
 
-    
-    const [alertaExistente] = await db.query(
-      `SELECT * FROM Alertas_Cadena_Frio 
-             WHERE id_lote = ?`,
+    const [isExists] = await db.query(
+      `
+      SELECT * FROM Alertas_Cadena_Frio 
+             WHERE id_lote = ?
+      `,
       [id_lote]
     );
 
-    if (alertaExistente.length === 0) {
-      
+    if (isExists.length === 0) {
       await db.query(
         `INSERT INTO Alertas_Cadena_Frio (id_medicion, id_lote, tipo_alerta, estado)
                  VALUES (?, ?, ?, ?)`,
         [id_medicion, id_lote, tipo_alerta, estado]
       );
     } else {
-    
-      const id_alerta = alertaExistente[0].id_alerta;
+      const id_alerta = isExists[0].id_alerta;
       await db.query(
         `UPDATE Alertas_Cadena_Frio 
                  SET estado = ?, id_medicion = ? , tipo_alerta = ?
@@ -47,6 +60,12 @@ const actualizarOCrearAlerta = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
+
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al actualizar una nueva alerta.",
+      error: error.message,
+    });
   }
 };
 
@@ -56,6 +75,7 @@ const obtenerAlertas = async (req, res) => {
             SELECT 
                 A.id_alerta, 
                 A.id_medicion, 
+                L.id_lote AS id_lote,
                 V.nombre_comercial AS vacuna,
                 MT.temperatura_c AS temp_violada,
                 A.tipo_alerta,
@@ -74,23 +94,13 @@ const obtenerAlertas = async (req, res) => {
       data: alertas,
     });
   } catch (error) {
+    console.error(error);
+    
     res.status(500).json({
       success: false,
       mensaje: "Error al obtener el Historial de Alertas",
       error: error.message,
     });
-  }
-};
-
-const crearAlerta = async (req, res) => {
-  const { id_medicion, id_lote, tipo_alerta } = req.body;
-  try {
-    await crearAlertaInterna({ id_medicion, id_lote, tipo_alerta });
-    res.status(201).json({ success: true, mensaje: "Alerta registrada." });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ success: false, mensaje: "Error al registrar la Alerta" });
   }
 };
 
@@ -111,14 +121,12 @@ const cambiarEstadoAlerta = async (req, res) => {
 
     const estadosValidos = ["Activa", "Resuelta", "Desechado"];
     if (!estadosValidos.includes(estado)) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          mensaje: `Estado inválido. Debe ser uno de: ${estadosValidos.join(
-            ", "
-          )}.`,
-        });
+      return res.status(400).json({
+        success: false,
+        mensaje: `Estado inválido. Debe ser uno de: ${estadosValidos.join(
+          ", "
+        )}.`,
+      });
     }
 
     await db.query(
@@ -132,13 +140,13 @@ const cambiarEstadoAlerta = async (req, res) => {
       data: { id, nuevo_estado: estado },
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        mensaje: "Error al cambiar el estado de la Alerta",
-        error: error.message,
-      });
+    console.error(error);
+    
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al cambiar el estado de la Alerta",
+      error: error.message,
+    });
   }
 };
 
@@ -177,6 +185,8 @@ const obtenerAlertaPorId = async (req, res) => {
       data: alertas[0],
     });
   } catch (error) {
+    console.error(error);
+    
     res.status(500).json({
       success: false,
       mensaje: "Error al obtener la alerta",
@@ -206,6 +216,8 @@ const eliminarAlerta = async (req, res) => {
       mensaje: "Alerta eliminada exitosamente",
     });
   } catch (error) {
+    console.error(error);
+    
     res.status(500).json({
       success: false,
       mensaje: "Error al eliminar la alerta",
@@ -215,7 +227,6 @@ const eliminarAlerta = async (req, res) => {
 };
 
 module.exports = {
-  crearAlertaInterna,
   obtenerAlertas,
   cambiarEstadoAlerta,
   crearAlerta,

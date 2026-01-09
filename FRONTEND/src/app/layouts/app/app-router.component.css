@@ -19,7 +19,7 @@
 .btn-aside {
     display: inline-flex;
     justify-content: end;
-    padding: 15px 25px;
+    padding:8px 25px;
     gap: 20px;  
     span {
         font-size: var(--font-12);
@@ -28,6 +28,15 @@
     svg {
         color: var(--color-font);
     }
+}
+
+.btn-aside:nth-child(5) {
+    margin-bottom: 20px;
+
+}
+.btn-aside:nth-child(10) {
+    margin-bottom: 20px;
+
 }
 
 .btn-aside:hover {
@@ -75,7 +84,7 @@ header {
     display: flex;
     align-items: center;
     padding: var(--header-padding);
-    justify-content: space-between;
+    justify-content: space-between; 
 }
 
 main {
@@ -100,7 +109,7 @@ main {
 aside {
     display: flex;
     flex-direction: column;
-    padding-top: 10px;
+    padding-top: 20px;
     width: 300px;
     height: 100%;
     overflow-x: hidden;
@@ -126,11 +135,25 @@ section {
     transition: all 0.3s ease;
 }
 
-.bg-container {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    overflow: hidden;
+.layer-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+}
+
+/* Capa base */
+.layer {
+  position: absolute;
+  inset: 0;
+}
+
+
+/* Fondos */
+.background-layer {
+  z-index: 1;
 }
 
 

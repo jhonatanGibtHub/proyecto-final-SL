@@ -9,6 +9,8 @@ export interface InventarioStock {
   fecha_ultima_actualizacion?: string;
   direccion?: string;
   cantidad_sumada?: number;
+   nombre_vacuna?: string;
+  nombre_ubicacion?: string;
 }
 
 export interface InventarioStockResponse {

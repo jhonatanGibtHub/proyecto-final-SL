@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const {
     obtenerVacunas,
-    crearVacunas,
-    actualizarVacunas,
-    eliminarVacunas,
+    crearVacuna,
+    actualizarVacuna,
+    eliminarVacuna,
     obtenerVacunaPorId
 } = require('../controllers/vacunasController');
 
@@ -12,10 +12,10 @@ router.get('/', obtenerVacunas);
 
 router.get('/:id', obtenerVacunaPorId);
 
-router.post('/', crearVacunas); 
+router.post('/', crearVacuna); 
 
-router.put('/:id', actualizarVacunas); 
+router.put('/:id', actualizarVacuna); 
 
-router.delete('/:id', eliminarVacunas); 
+router.delete('/:id', eliminarVacuna); 
 
 module.exports = router;

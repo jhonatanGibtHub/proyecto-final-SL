@@ -11,6 +11,7 @@ export interface RegistroMovimiento {
     ubicacion_origen_nombre?: string; 
     ubicacion_destino_nombre?: string; 
     transportista?: string;
+    estado?:string;
 
     origen_latitud?:number;
     origen_longitud?:number;

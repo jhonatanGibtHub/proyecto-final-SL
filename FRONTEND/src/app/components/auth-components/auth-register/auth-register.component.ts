@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../core/services/notificacion/notificacion-type.service';
@@ -11,9 +12,13 @@ import { NotificationService } from '../../../core/services/notificacion/notific
   templateUrl: './auth-register.component.html',
   styleUrl: './auth-register.component.css'
 })
-export class AuthRegisterComponent {
+export class AuthRegisterComponent implements OnDestroy {
+
   registerForm: FormGroup;
-   error: string = '';
+  error: string = '';
+
+  private subscriptions = new Subscription();
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -30,38 +35,35 @@ export class AuthRegisterComponent {
 
   onSubmit() {
     if (this.registerForm.invalid) {
-      // Marca TODOS los campos como touched
       this.registerForm.markAllAsTouched();
       return;
     }
 
-
     const formData = this.registerForm.value;
-    this.authService.registro(formData).subscribe({
+
+    const subRegistro = this.authService.registro(formData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.authService.login(formData).subscribe(
-            {
-              next: (response) => {
-                this.router.navigate(['/auth/app']);
-                const mensajeSucces = response.mensaje;
-                this.notificationService.success(
-                  mensajeSucces
-                );
-              }
+
+          const subLogin = this.authService.login(formData).subscribe({
+            next: (response) => {
+              this.router.navigate(['/auth/app']);
+              const mensajeSucces = response.mensaje;
+              this.notificationService.success(mensajeSucces);
             }
-          );
+          });
+
+          this.subscriptions.add(subLogin);
         }
       },
       error: (err) => {
         this.error = "No se pudo conectar con la base de datos.";
         const mensajeError = err.error?.mensaje;
-        this.notificationService.error(
-          mensajeError || this.error
-        );
+        this.notificationService.error(mensajeError || this.error);
       }
     });
 
+    this.subscriptions.add(subRegistro);
   }
 
   isFieldInvalid(fieldName: string): boolean {
@@ -79,17 +81,13 @@ export class AuthRegisterComponent {
     }
     if (field?.hasError('minlength')) {
       const requiredLength = field.errors?.['minlength']?.requiredLength;
-
-      switch (fieldName) {
-        case 'password':
-          return `Mínimo ${requiredLength} caracteres`;
-        case 'nombre':
-          return `Mínimo ${requiredLength} caracteres`;
-        default:
-          return `Mínimo ${requiredLength} caracteres`;
-      }
+      return `Mínimo ${requiredLength} caracteres`;
     }
     return '';
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
 }

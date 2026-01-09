@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { environment } from '../../../environment/environment';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { NotificationService } from '../../../core/services/notificacion/notificacion-type.service';
@@ -14,10 +15,12 @@ declare const google: any;
   templateUrl: './auth-login.component.html',
   styleUrl: './auth-login.component.css'
 })
-export class AuthLoginComponent implements OnInit {
+export class AuthLoginComponent implements OnInit, OnDestroy {
 
   loginForm!: FormGroup;
   error: string = '';
+
+  private subscriptions = new Subscription();
 
   constructor(
     private fb: FormBuilder,
@@ -51,39 +54,40 @@ export class AuthLoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
-    this.authService.login(this.loginForm.value).subscribe({
+
+    const sub = this.authService.login(this.loginForm.value).subscribe({
       next: (response) => {
         this.router.navigate(['/app']);
         const mensajeSucces = response.mensaje;
-          this.notificationService.success(
-            mensajeSucces
-          );
+        this.notificationService.success(mensajeSucces);
       },
       error: (err) => {
         this.error = "No se pudo conectar con la base de datos.";
-          const mensajeError = err.error?.mensaje;
-          this.notificationService.error(
-            mensajeError || this.error
-          );
+        const mensajeError = err.error?.mensaje;
+        this.notificationService.error(mensajeError || this.error);
       }
     });
+
+    this.subscriptions.add(sub);
   }
 
   onCredential(response: any) {
     const idToken = response.credential;
-    this.authService.loginGoogle(idToken).subscribe({
-      next: (token) => {
+
+    const sub = this.authService.loginGoogle(idToken).subscribe({
+      next: () => {
         this.router.navigate(['/app']);
         this.notificationService.success(
-            "Se ha iniciado sesion correctamente."
-          );
+          "Se ha iniciado sesion correctamente."
+        );
       }
     });
+
+    this.subscriptions.add(sub);
   }
 
   isFieldInvalid(fieldName: string): boolean {
@@ -103,6 +107,10 @@ export class AuthLoginComponent implements OnInit {
       return 'Mínimo 6 caracteres';
     }
     return '';
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
 }

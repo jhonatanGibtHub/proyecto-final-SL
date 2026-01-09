@@ -229,6 +229,7 @@ export class MapaMonitoreoComponent implements AfterViewInit, OnInit, OnDestroy 
         this.marker.bindPopup("Vacunas entregadas con éxito").openPopup();
         this.actualizarInventarioAlFinalizarMovimiento();
         this.recepcionar();
+        this.cargarMovimientos();
       }
     }, 40);
   }

@@ -21,8 +21,6 @@ export class AlertasCadenaFrioService {
     return this.http.post<AlertaCadenaFrioResponse>(this.apiUrl, alerta);
   }
 
-
-
   enviarAlerta(
     medicion: number,
     lote: number,

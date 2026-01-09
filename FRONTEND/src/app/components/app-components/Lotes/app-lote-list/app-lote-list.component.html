@@ -1,12 +1,16 @@
 <div class="flex-between">
     <h2 class="page-tittle">Lotes de distribución</h2>
     <div class="flex-end">
-        <button (click)="abrirModalNuevo()" class="btn btn-yellow">
-            <svg class="icono-1" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11 8C11 7.448 11.448 7 12 7C12.552 7 13 7.448 13 8V11H16C16.552 11 17 11.448 17 12C17 12.552 16.552 13 16 13H13V16C13 16.552 12.552 17 12 17C11.448 17 11 16.552 11 16V13H8C7.448 13 7 12.552 7 12C7 11.448 7.448 11 8 11H11V8Z"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M23 4C23 2.343 21.657 1 20 1H4C2.343 1 1 2.343 1 4V20C1 21.657 2.343 23 4 23H20C21.657 23 23 21.657 23 20V4ZM21 4C21 3.448 20.552 3 20 3H4C3.448 3 3 3.448 3 4V20C3 20.552 3.448 21 4 21H20C20.552 21 21 20.552 21 20V4Z"/>
-            </svg>
+        <button (click)="abrirModalNuevo()" class="btn btn-blue">
+           
             <span>Nuevo Lote</span>
+            <svg class = "icono-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        
+            <path id="Vector" d="M6 12H12M12 12H18M12 12V18M12 12V6" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"></path>
+         
+       
+      </svg>
         </button>
     </div>
 </div>
@@ -28,7 +32,7 @@
             <td>{{ lote.vacuna }}</td>
             <td>{{ lote.fecha_fabricacion | date:'short' }}</td>
             <td>{{ lote.fecha_caducidad | date:'short' }}</td>
-            <td>{{ lote.cantidad_inicial_unidades === 0 ? 'Enviado' : lote.cantidad_inicial_unidades }}</td>
+            <td>{{ lote.cantidad_inicial_unidades === 0 ? 'Entregado' : lote.cantidad_inicial_unidades }}</td>
             <td>
                 <div class="acciones">
                     <button (click)="abrirModalEditar(lote.id_lote!)" *ngIf="lote.cantidad_inicial_unidades != 0">

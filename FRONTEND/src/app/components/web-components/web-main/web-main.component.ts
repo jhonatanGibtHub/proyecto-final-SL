@@ -123,7 +123,6 @@ export class WebMainComponent implements AfterViewInit, OnDestroy {
 
     });
 
-    // ---------- MESSAGE ----------
 
 
     // ESTADO INICIAL
