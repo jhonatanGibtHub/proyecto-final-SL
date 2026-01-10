@@ -15,7 +15,7 @@
                         <mat-select id="id_lote" formControlName="id_lote" (selectionChange)="onLoteSeleccionado($event)">
                             <mat-option value="">Seleccione un lote</mat-option>
                             <mat-option *ngFor="let item of lotes" [value]="item.id_lote">
-                                <strong>{{ item.vacuna }}</strong> {{ item.cantidad_inicial_unidades }} u
+                                {{item.id_lote}} | <strong>{{ item.vacuna }}</strong> {{ item.cantidad_inicial_unidades }} u
                             </mat-option>
                         </mat-select>
                     </mat-form-field>

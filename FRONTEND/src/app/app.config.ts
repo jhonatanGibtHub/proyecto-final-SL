@@ -4,12 +4,11 @@ import { routes } from './app.routes';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { environment } from './environment/environment';
-import { AuthInterceptor } from './core/interceptors/auth.interceptor';
-import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -29,7 +28,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withFetch(),
       withInterceptors([
-        //errorInterceptor
+        authInterceptor,
+        errorInterceptor
       ])),
     {
       provide: 'SocialAuthServiceConfig',
@@ -43,16 +43,6 @@ export const appConfig: ApplicationConfig = {
         ],
         onError: (err) => console.error('Google auth error', err),
       } as SocialAuthServiceConfig,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorInterceptor,
-      multi: true
     },
      { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ]

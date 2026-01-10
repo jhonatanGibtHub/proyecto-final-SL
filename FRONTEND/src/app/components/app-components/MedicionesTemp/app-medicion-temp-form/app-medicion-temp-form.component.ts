@@ -68,7 +68,7 @@ export class AppMedicionTempFormComponent implements OnInit, OnDestroy {
     this.showModal = true;
     this.error = '';
     this.successMessage = '';
-    this.cargarLotes(); // Siempre actualizar lotes al abrir modal
+    this.cargarLotes();
     if (medicionId) {
       this.isEditMode = true;
       this.medicionId = medicionId;

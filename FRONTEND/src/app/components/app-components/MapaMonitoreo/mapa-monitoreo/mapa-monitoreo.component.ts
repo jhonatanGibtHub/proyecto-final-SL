@@ -207,7 +207,7 @@ export class MapaMonitoreoComponent implements AfterViewInit, OnInit, OnDestroy 
     });
 
     this.marker = L.marker([coords[0].lat, coords[0].lng], { icon: carIcon }).addTo(this.map);
-    this.map.setView([coords[0].lat, coords[0].lng], 15);
+    this.map.setView([coords[0].lat, coords[0].lng]);
 
     let i = 0;
     this.iniciarEnvioTemperatura();

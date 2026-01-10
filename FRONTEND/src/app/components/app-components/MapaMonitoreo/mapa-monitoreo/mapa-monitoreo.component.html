@@ -11,7 +11,7 @@
 
       <ng-container *ngFor="let mov of movimientos">
         <div class="dropdown-item" *ngIf="mov.estado === 'ACTIVO' " (click)="verMovimiento(mov)">
-          {{mov.vacuna}} |
+          <strong>Lote id : </strong> {{mov.id_lote}} | {{mov.vacuna}} |
           <strong>{{ mov.origen }}</strong> → {{ mov.destino }}
         </div>
       </ng-container>

@@ -3,63 +3,85 @@ const db = require("../config/database");
 const obtenerMovimientos = async (req, res) => {
   try {
     const [Movimientos] = await db.query(`
-           SELECT  
-              RM.id_movimiento, 
-              RM.id_lote, 
-              RM.fecha_envio, 
-              RM.fecha_recepcion,
-              RM.estado,
+           SELECT 
+                RM.id_movimiento,
+                RM.id_lote,
+                RM.fecha_envio,
+                RM.fecha_recepcion,
+                RM.estado,
 
-              V.nombre_comercial AS vacuna,
-              V.temp_min_c AS minimo,
-              V.temp_max_c AS maximo, 
+                V.nombre_comercial AS vacuna,
+                V.temp_min_c AS minimo,
+                V.temp_max_c AS maximo,
 
-              UO.direccion AS origen,
-              UO.latitud AS origen_latitud,
-              UO.longitud AS origen_longitud,
+                UO.direccion AS origen,
+                UO.latitud AS origen_latitud,
+                UO.longitud AS origen_longitud,
 
-              UD.direccion AS destino,
-              UD.latitud AS destino_latitud,
-              UD.longitud AS destino_longitud,
+                UD.direccion AS destino,
+                UD.latitud AS destino_latitud,
+                UD.longitud AS destino_longitud,
 
-              L.fecha_caducidad AS caducidad, 
-              L.cantidad_inicial_unidades AS cantidad, 
+                L.fecha_caducidad AS caducidad,
+                L.cantidad_inicial_unidades AS cantidad,
 
-              MT.temperatura_c AS temperatura, 
-              MT.id_medicion AS medicion, 
+                MT.temperatura_c AS temperatura,
+                MT.id_medicion AS medicion,
 
-              ISK.id_inventario AS inventario,
+                ISK.id_inventario AS inventario,
 
-              T.nombre AS transportista
+                T.nombre AS transportista
 
-          FROM registro_movimiento RM
+            FROM Registro_Movimiento RM
 
-          JOIN ubicaciones UO 
-              ON RM.ubicacion_origen = UO.id_ubicacion
+            JOIN Ubicaciones UO 
+                ON RM.ubicacion_origen = UO.id_ubicacion
 
-          JOIN ubicaciones UD 
-              ON RM.ubicacion_destino = UD.id_ubicacion
+            JOIN Ubicaciones UD 
+                ON RM.ubicacion_destino = UD.id_ubicacion
 
-          JOIN transportistas T 
-              ON RM.id_transportista = T.id_transportista
+            JOIN Transportistas T 
+                ON RM.id_transportista = T.id_transportista
 
-          JOIN lotes L 
-              ON RM.id_lote = L.id_lote 
+            JOIN Lotes L 
+                ON RM.id_lote = L.id_lote
 
-          JOIN vacunas V 
-              ON L.id_vacuna = V.id_vacuna 
+            JOIN Vacunas V 
+                ON L.id_vacuna = V.id_vacuna
 
-          -- Medición actual del lote (1 registro por lote)
-          LEFT JOIN mediciones_temp MT 
-              ON MT.id_lote = RM.id_lote
+            -- Última medición por lote
+            LEFT JOIN (
+                SELECT 
+                    MT1.id_lote, 
+                    MT1.temperatura_c, 
+                    MT1.id_medicion
+                FROM mediciones_temp MT1
+                JOIN (
+                    SELECT 
+                        id_lote, 
+                        MAX(id_medicion) AS ultima_medicion
+                    FROM mediciones_temp
+                    GROUP BY id_lote
+                ) MT2 
+                    ON MT1.id_lote = MT2.id_lote 
+                  AND MT1.id_medicion = MT2.ultima_medicion
+            ) MT 
+                ON RM.id_lote = MT.id_lote
 
-          -- Inventario actual en el destino (1 registro por vacuna y ubicación)
-          LEFT JOIN inventario_stock ISK 
-              ON ISK.id_ubicacion = RM.ubicacion_destino
-            AND ISK.id_vacuna = L.id_vacuna
+            -- Último inventario por ubicación y vacuna
+            LEFT JOIN (
+                SELECT 
+                    ISK1.id_ubicacion, 
+                    ISK1.id_vacuna, 
+                    MAX(ISK1.id_inventario) AS id_inventario
+                FROM inventario_stock ISK1
+                GROUP BY ISK1.id_ubicacion, ISK1.id_vacuna
+            ) ISK 
+                ON ISK.id_ubicacion = RM.ubicacion_destino 
+              AND ISK.id_vacuna = L.id_vacuna
 
-          ORDER BY RM.fecha_envio DESC;
-        `);
+            ORDER BY RM.fecha_envio DESC;
+`);
     res.json({
       success: true,
       count: Movimientos.length,

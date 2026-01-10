@@ -26,7 +26,7 @@ export class Back2Component implements OnInit, OnDestroy {
   private cubes: CubeData[] = [];
 
   // Configuración controlable
-  private numberOfCubes = 30;
+  private numberOfCubes = 50;
   private maxRotationSpeed = 0.005;
   private minRiseSpeed = 0.0016;
   private maxRiseSpeed = 0.01;
@@ -117,7 +117,7 @@ export class Back2Component implements OnInit, OnDestroy {
       const edgesMaterial = new THREE.LineBasicMaterial({
         color: this.edgeColor,
         transparent: true,
-        opacity: 0.03
+        opacity: 0.25
       });
 
       const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
